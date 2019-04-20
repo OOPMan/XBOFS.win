@@ -45,6 +45,11 @@
     <ClInclude Include="device.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ViGEmClient\src\ViGEmClient.vcxproj">
+      <Project>{7db06674-1f4f-464b-8e1c-172e9587f9dc}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F6104731-5815-4BBA-A558-E859DD039413}</ProjectGuid>
     <TemplateGuid>{b287f7f7-abf3-440d-b608-cb36380f2981}</TemplateGuid>
@@ -135,9 +140,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>DbgengRemoteDebugger</DebuggerFlavor>
+    <IncludePath>$(SolutionDir)ViGEmClient\include;$(SolutionDir)PDCurses;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)PDCurses\wincon;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebuggerFlavor>DbgengRemoteDebugger</DebuggerFlavor>
+    <IncludePath>$(SolutionDir)ViGEmClient\include;$(SolutionDir)PDCurses;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)PDCurses\wincon;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <DebuggerFlavor>DbgengRemoteDebugger</DebuggerFlavor>
@@ -172,18 +181,30 @@
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP;WINAPI_PARTITION_DESKTOP=1;WINAPI_PARTITION_SYSTEM=1;WINAPI_PARTITION_APP=1;WINAPI_PARTITION_PC_APP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);onecoreuap.lib;winusb.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);onecoreuap.lib;winusb.lib;pdcurses.lib</AdditionalDependencies>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir) &amp; call pre-build.cmd</Command>
+      <Message>Pre-build tasks</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PreprocessorDefinitions>WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP;WINAPI_PARTITION_DESKTOP=1;WINAPI_PARTITION_SYSTEM=1;WINAPI_PARTITION_APP=1;WINAPI_PARTITION_PC_APP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);onecoreuap.lib;winusb.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);onecoreuap.lib;winusb.lib;pdcurses.lib</AdditionalDependencies>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir) &amp; call pre-build.cmd</Command>
+      <Message>Pre-build tasks</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>

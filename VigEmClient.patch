@@ -1,0 +1,48 @@
+diff --git a/src/ViGEmClient.cpp b/src/ViGEmClient.cpp
+index 3d499e1..2ab7d8a 100644
+--- a/src/ViGEmClient.cpp
++++ b/src/ViGEmClient.cpp
+@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
+ 
+-
+-#define WIN32_LEAN_AND_MEAN
+ #include <Windows.h>
+ #include <SetupAPI.h>
+ #include <initguid.h>
+diff --git a/src/ViGEmClient.vcxproj b/src/ViGEmClient.vcxproj
+index da880bf..f7a318f 100644
+--- a/src/ViGEmClient.vcxproj
++++ b/src/ViGEmClient.vcxproj
+@@ -75,26 +75,26 @@
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LIB|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+-    <PlatformToolset>v141</PlatformToolset>
++    <PlatformToolset>WindowsApplicationForDrivers10.0</PlatformToolset>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+-    <PlatformToolset>v141</PlatformToolset>
++    <PlatformToolset>WindowsApplicationForDrivers10.0</PlatformToolset>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LIB|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+-    <PlatformToolset>v141</PlatformToolset>
++    <PlatformToolset>WindowsApplicationForDrivers10.0</PlatformToolset>
+     <WholeProgramOptimization>true</WholeProgramOptimization>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+-    <PlatformToolset>v141</PlatformToolset>
++    <PlatformToolset>WindowsApplicationForDrivers10.0</PlatformToolset>
+     <WholeProgramOptimization>true</WholeProgramOptimization>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
