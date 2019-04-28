@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E0515A5-B0AA-4821-90DE-C764A2C35AF2}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		LICENSE.txt = LICENSE.txt
 		pre-build.cmd = pre-build.cmd
 		README.md = README.md
 		VigEmClient.patch = VigEmClient.patch
