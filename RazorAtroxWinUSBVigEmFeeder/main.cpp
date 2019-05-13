@@ -66,9 +66,7 @@ void renderUI(STATUS winUsbStatus, STATUS vigEmStatus) {
     mvprintw(2, 0, "WinUSB Status: %s", statusToString(winUsbStatus));
     mvprintw(3, 0, "VigEm Status: %s", statusToString(vigEmStatus));
     mvprintw(5, 0, "Press:");
-    mvprintw(6, 0, "* W to reset WinUSB connection to Razer Atrox");
-    mvprintw(7, 0, "* V to reset VigEm XB360 controller");
-    mvprintw(8, 0, "* Q to exit");
+    mvprintw(6, 0, "* Q and then a button on the controller to exit");
     refresh();
 }
 
