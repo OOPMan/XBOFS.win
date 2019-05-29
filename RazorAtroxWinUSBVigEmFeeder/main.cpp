@@ -60,13 +60,18 @@ char* statusToString(STATUS status) {
 /*
 Render the PDCurses UI
 */
-void renderUI(STATUS winUsbStatus, STATUS vigEmStatus) {
+void renderUI(STATUS winUsbStatus, STATUS vigEmStatus, bool vigEmClientIsNull, bool vigEmTargetIsNull, 
+              _VIGEM_ERRORS vigEmConnectError, _VIGEM_ERRORS vigEmTargetAddError) {
     erase();
     mvprintw(0, 0, "Razer Atrox WinUSB VigEm Feeder");
     mvprintw(2, 0, "WinUSB Status: %s", statusToString(winUsbStatus));
     mvprintw(3, 0, "VigEm Status: %s", statusToString(vigEmStatus));
     mvprintw(5, 0, "Press:");
     mvprintw(6, 0, "* Q and then a button on the controller to exit");
+    mvprintw(8, 0, "vigEmClient is NULL: %s", vigEmClientIsNull ? "YES" : "NO");
+    mvprintw(9, 0, "vigEmTarget is NULL: %s", vigEmTargetIsNull ? "YES" : "NO");
+    mvprintw(10, 0, "vigEmClient Connect Error Code: %#010x", vigEmConnectError);
+    mvprintw(11, 0, "vigEmTarget Add Error Code: %#010x", vigEmTargetAddError);
     refresh();
 }
 
@@ -176,6 +181,8 @@ LONG __cdecl _tmain(LONG Argc, LPTSTR *Argv) {
     int failedReads = 0;
     PVIGEM_CLIENT vigEmClient = vigem_alloc();
     PVIGEM_TARGET vigEmController = vigem_target_x360_alloc();
+    _VIGEM_ERRORS vigEmClientConnectError = VIGEM_ERROR_NONE;
+    _VIGEM_ERRORS vigEmTargetAddError = VIGEM_ERROR_NONE;
     int failedWrites = 0;
 
     // Init        
@@ -196,10 +203,12 @@ LONG __cdecl _tmain(LONG Argc, LPTSTR *Argv) {
         // Process VigEm component
         switch (vigEmStatus) {
         case DISCONNECTED:
-            vigEmStatus = VIGEM_SUCCESS(vigem_connect(vigEmClient)) ? INIT : DISCONNECTED;
+            vigEmClientConnectError = vigem_connect(vigEmClient);
+            vigEmStatus = VIGEM_SUCCESS(vigEmClientConnectError) ? INIT : DISCONNECTED;
             break;
         case INIT: 
-            vigEmStatus = VIGEM_SUCCESS(vigem_target_add(vigEmClient, vigEmController)) ? CONNECTED : INIT;
+            vigEmTargetAddError = vigem_target_add(vigEmClient, vigEmController);
+            vigEmStatus = VIGEM_SUCCESS(vigEmTargetAddError) ? CONNECTED : INIT;
             break;            
         case CONNECTED: failedWrites += dispatchInputToVigEmController(vigEmClient, vigEmController, razerAtroxButtonState) ? 0 : 1; break;
         }
@@ -211,7 +220,7 @@ LONG __cdecl _tmain(LONG Argc, LPTSTR *Argv) {
         }
         // TODO: Handle failed writes
         // Render UI
-        renderUI(winUsbStatus, vigEmStatus);
+        renderUI(winUsbStatus, vigEmStatus, vigEmClient == nullptr, vigEmController == nullptr, vigEmClientConnectError, vigEmTargetAddError);
         auto key = getch();
         if (key == 'Q' || key == 'q') break;
     }
