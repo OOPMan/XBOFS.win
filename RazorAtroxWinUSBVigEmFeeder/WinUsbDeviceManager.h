@@ -1,5 +1,9 @@
 #pragma once
 #include "pch.h"
+#include "WinUsbDevice.h"
+#include <unordered_map>
+#include <vector>
+#include <string>
 /*
 
 */
@@ -13,6 +17,8 @@ public:
     DWORD ThreadStart(void);
     void startMyThread();
 protected:
+    std::unordered_map<TCHAR*, WinUsbDevice*> devicePathWinUsbDeviceMap;
+    std::vector<TCHAR*> retrieveDevicePaths();
 private:
 };
 
