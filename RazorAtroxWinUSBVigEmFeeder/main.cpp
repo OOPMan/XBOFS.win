@@ -1,4 +1,7 @@
 #include "pch.h"
+#include "easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
 
 #include <stdio.h>
 #include <curses.h>
