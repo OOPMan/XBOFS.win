@@ -39,11 +39,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="device.cpp" />
+    <ClCompile Include="easylogging++.cc" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="WinUsbDevice.cpp" />
+    <ClCompile Include="WinUsbDeviceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="device.h" />
+    <ClInclude Include="easylogging++.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="WinUsbDevice.h" />
+    <ClInclude Include="WinUsbDeviceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ViGEmClient\src\ViGEmClient.vcxproj">

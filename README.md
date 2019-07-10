@@ -17,7 +17,7 @@ controller. All 8 face buttons work without any need to install ancient, beta dr
 3. Head over to https://zadig.akeo.ie and download **Zadig 2.4**
 4. Head over to https://github.com/OOPMan/RazorAtroxWinUSBVigEmFeeder/releases and download the latest versions of 
   
-   1. ``RazorAtroxWinUSBVigEmFeeder.exe``
+   1. ``RazorAtroxWinUSBVigEmFeeder_x64.exe``
    2. ``razer_atrox_zadig_preset.cfg``
 
 5. Plug in your **Razer Atrox XBO**
@@ -33,13 +33,13 @@ controller. All 8 face buttons work without any need to install ancient, beta dr
       ``Razer Atrox WinUSB Drivers`` folder that was extracted
    4. Right-click on the file ``Razer\_Atrox\_Arcade\_Stick.inf`` and select *Install* from the menu
    5. You should get a message stating the driver was installed correctly
-8. Run ``RazorAtroxWinUSBVigEmFeeder.exe`` and wait for both status lines to state ``CONNECTED``. You may 
+8. Run ``RazorAtroxWinUSBVigEmFeeder_x64.exe`` and wait for both status lines to state ``CONNECTED``. You may 
    see a pop-up notification about a new XB360 controller being detected. This is created by the tool using VigEmBus 
    and is a virtual controller that all input from the Atrox will be directed to
 9. You should now be able to play any of your fighting games in Steam. They will detect the Atrox as a standard XB360 
    controller. Note that the input from the stick is mapped to the D-Pad on the virtual XB360 controller not the analog 
    stick. Additionally, Windows Store games like Killer Instinct will work fine too.
-10. When you are done playing, activate the *RazorAtroxWinUSBVigEmFeeder.exe* window, hit *Q* and press a button on the Atrox. The application will exit and the virtual XB360 controller will disappear
+10. When you are done playing, activate the *RazorAtroxWinUSBVigEmFeeder_x64.exe* window, hit *Q* and press a button on the Atrox. The application will exit and the virtual XB360 controller will disappear
 
 
 ## Uninstallation
