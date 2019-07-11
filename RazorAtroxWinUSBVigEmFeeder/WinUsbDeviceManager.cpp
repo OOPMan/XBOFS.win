@@ -6,8 +6,7 @@
 
 
 WinUsbDeviceManager::WinUsbDeviceManager()
-{
-    this->devicePathWinUsbDeviceMap.insert_or_assign(TEXT("HELLO"), new WinUsbDevice());    
+{    
 }
 
 
@@ -21,6 +20,24 @@ DWORD WINAPI WinUsbDeviceManager::staticRunEventLoop(void * winUsbDeviceManagerI
 }
 
 DWORD WinUsbDeviceManager::runEventLoop(void) {
+    // TODO: Check condition should allow some way to break out
+    while (true) {
+        auto updatedDevicePaths = this->retrieveDevicePaths();
+        // Check existing device paths to see if any paths were removed in the updated set
+        for (auto devicePath : this->devicePaths) {            
+            if (updatedDevicePaths.find(devicePath) == updatedDevicePaths.end()) {
+                // TODO: Handle devicePath removed scenario
+            }
+        }
+        // Check the updated set for new devicePaths
+        for (auto devicePath : updatedDevicePaths) {
+            if (this->devicePathWinUsbDeviceMap.find(devicePath) == this->devicePathWinUsbDeviceMap.end()) {
+                // TODO: Handle devicePath added scenario
+            }
+        }       
+        this->devicePaths = updatedDevicePaths;
+        Sleep(1000);
+    }
     return 0;
 }
 
@@ -32,12 +49,12 @@ void WinUsbDeviceManager::runEventLoopInThread() {
 /*
 Retrieve a vector of TCHAR* representing device paths that the device manager will work with
 */
-std::vector<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
-    CONFIGRET               configurationManagerResult = CR_SUCCESS;
-    HRESULT                 resultHandle = S_OK;
-    PTSTR                   deviceInterfaceList = NULL;
-    ULONG                   deviceInterfaceListLength = 0;    
-    std::vector<TCHAR*>     devicePaths;
+std::set<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
+    CONFIGRET           configurationManagerResult = CR_SUCCESS;
+    HRESULT             resultHandle = S_OK;
+    PTSTR               deviceInterfaceList = NULL;
+    ULONG               deviceInterfaceListLength = 0;    
+    std::set<TCHAR*>    devicePaths;
     //
     // Enumerate all devices exposing the interface. Do this in a loop
     // in case a new interface is discovered while this code is executing,
@@ -88,12 +105,12 @@ std::vector<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
         token = _tcstok_s(deviceInterfaceList, separator, &next_token);
         while (token != NULL) {
             // TODO: Add to vector
-            devicePaths.push_back(token);
+            devicePaths.insert(token);            
             token = _tcstok_s(deviceInterfaceList, separator, &next_token);
 
         }
         this->logger->debug("%d device interfaces detected", devicePaths.size());
-    }
+    }    
     HeapFree(GetProcessHeap(), 0, deviceInterfaceList);
     return devicePaths;
 }

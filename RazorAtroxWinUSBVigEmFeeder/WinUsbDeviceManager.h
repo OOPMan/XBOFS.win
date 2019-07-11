@@ -4,8 +4,8 @@
 #include "easylogging++.h"
 
 #include <unordered_map>
-#include <vector>
 #include <string>
+#include <set>
 
 /*
 
@@ -20,8 +20,10 @@ public:
     void runEventLoopInThread();
 protected:
     el::Logger* logger = el::Loggers::getLogger("WinUsbDeviceManager");
+    std::set<TCHAR*> devicePaths;
     std::unordered_map<TCHAR*, WinUsbDevice*> devicePathWinUsbDeviceMap;
-    std::vector<TCHAR*> retrieveDevicePaths();
+
+    std::set<TCHAR*> retrieveDevicePaths();
 private:
 };
 
