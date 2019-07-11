@@ -13,9 +13,9 @@ public:
     WinUsbDeviceManager();
     ~WinUsbDeviceManager();
     // TODO: Rename these later
-    static DWORD WINAPI StaticThreadStart(void* Param);
-    DWORD ThreadStart(void);
-    void startMyThread();
+    static DWORD WINAPI staticRunEventLoop(void* Param);
+    DWORD runEventLoop(void);
+    void runEventLoopInThread();
 protected:
     std::unordered_map<TCHAR*, WinUsbDevice*> devicePathWinUsbDeviceMap;
     std::vector<TCHAR*> retrieveDevicePaths();
