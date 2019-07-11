@@ -1,5 +1,6 @@
 #include "WinUsbDeviceManager.h"
 
+
 #include <cfgmgr32.h>
 #include <string.h>
 
@@ -47,12 +48,13 @@ std::vector<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
             (LPGUID)&GUID_DEVINTERFACE_RazorAtroxWinUSBVigEmFeeder,
             NULL,
             CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
+        this->logger->debug("Device interface list length: %d", deviceInterfaceListLength);
 
         if (configurationManagerResult != CR_SUCCESS) {
             resultHandle = HRESULT_FROM_WIN32(CM_MapCrToWin32Err(configurationManagerResult, ERROR_INVALID_DATA));
             break;
-        }
-
+        }              
+        
         deviceInterfaceList = (PTSTR)HeapAlloc(GetProcessHeap(),
             HEAP_ZERO_MEMORY,
             deviceInterfaceListLength * sizeof(TCHAR));
@@ -75,7 +77,7 @@ std::vector<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
         }
     } while (configurationManagerResult == CR_BUFFER_SMALL);
     // Handle errors
-    if (resultHandle != S_OK) {
+    if (resultHandle != S_OK || deviceInterfaceList == TEXT('\0')) {
         // TODO: Log error
     }
     else {
@@ -90,6 +92,7 @@ std::vector<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
             token = _tcstok_s(deviceInterfaceList, separator, &next_token);
 
         }
+        this->logger->debug("%d device interfaces detected", devicePaths.size());
     }
     HeapFree(GetProcessHeap(), 0, deviceInterfaceList);
     return devicePaths;
