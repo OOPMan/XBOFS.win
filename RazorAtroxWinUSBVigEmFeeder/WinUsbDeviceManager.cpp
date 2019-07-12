@@ -25,15 +25,16 @@ DWORD WinUsbDeviceManager::runEventLoop(void) {
         auto updatedDevicePaths = this->retrieveDevicePaths();
         // Check existing device paths to see if any paths were removed in the updated set
         for (auto devicePath : this->devicePaths) {            
-            if (updatedDevicePaths.find(devicePath) == updatedDevicePaths.end()) {
-                // TODO: Handle devicePath removed scenario
-            }
+            if (updatedDevicePaths.find(devicePath) != updatedDevicePaths.end()) continue; 
+            // TODO: Handle devicePath removed scenario            
         }
         // Check the updated set for new devicePaths
         for (auto devicePath : updatedDevicePaths) {
-            if (this->devicePathWinUsbDeviceMap.find(devicePath) == this->devicePathWinUsbDeviceMap.end()) {
-                // TODO: Handle devicePath added scenario
-            }
+            if (this->devicePathWinUsbDeviceMap.find(devicePath) != this->devicePathWinUsbDeviceMap.end()) continue;            
+            auto winUsbDevice = new WinUsbDevice(devicePath);
+            this->devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });
+            auto threadHandle = winUsbDevice->runEventLoopInThread();
+            this->devicePathHandleMap.insert({ devicePath, threadHandle });            
         }       
         this->devicePaths = updatedDevicePaths;
         Sleep(1000);
@@ -41,9 +42,14 @@ DWORD WinUsbDeviceManager::runEventLoop(void) {
     return 0;
 }
 
-void WinUsbDeviceManager::runEventLoopInThread() {
-    DWORD threadID;
-    CreateThread(NULL, 0, staticRunEventLoop, (void*)this, 0, &threadID);
+DWORD WinUsbDeviceManager::getThreadId() {
+    return this->threadId;
+}
+
+/*
+*/
+HANDLE WinUsbDeviceManager::runEventLoopInThread() {    
+    return CreateThread(NULL, 0, staticRunEventLoop, (void*)this, 0, &this->threadId);
 }
 
 /*

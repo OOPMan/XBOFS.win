@@ -15,13 +15,17 @@ class WinUsbDeviceManager
 public:
     WinUsbDeviceManager();
     ~WinUsbDeviceManager();    
+
     static DWORD WINAPI staticRunEventLoop(void* Param);
+    DWORD getThreadId();
     DWORD runEventLoop(void);
-    void runEventLoopInThread();
+    HANDLE runEventLoopInThread();
 protected:
+    DWORD threadId;
     el::Logger* logger = el::Loggers::getLogger("WinUsbDeviceManager");
     std::set<TCHAR*> devicePaths;
     std::unordered_map<TCHAR*, WinUsbDevice*> devicePathWinUsbDeviceMap;
+    std::unordered_map<TCHAR*, HANDLE> devicePathHandleMap;
 
     std::set<TCHAR*> retrieveDevicePaths();
 private:
