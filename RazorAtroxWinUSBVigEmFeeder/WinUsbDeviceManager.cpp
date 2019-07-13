@@ -19,9 +19,9 @@ DWORD WINAPI WinUsbDeviceManager::staticRunEventLoop(void * winUsbDeviceManagerI
     return winUsbDeviceManager->runEventLoop();
 }
 
-DWORD WinUsbDeviceManager::runEventLoop(void) {
-    // TODO: Check condition should allow some way to break out
-    while (true) {
+DWORD WinUsbDeviceManager::runEventLoop(void) {    
+    this->runEventLoopFlag.test_and_set();
+    while (this->runEventLoopFlag.test_and_set()) {
         auto updatedDevicePaths = this->retrieveDevicePaths();
         // Check existing device paths to see if any paths were removed in the updated set
         for (auto devicePath : this->devicePaths) {            

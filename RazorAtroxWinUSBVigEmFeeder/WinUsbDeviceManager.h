@@ -1,11 +1,12 @@
 #pragma once
-#include "pch.h"
-#include "WinUsbDevice.h"
-#include "easylogging++.h"
-
 #include <unordered_map>
 #include <string>
 #include <set>
+#include <atomic>
+
+#include "pch.h"
+#include "WinUsbDevice.h"
+#include "easylogging++.h"
 
 /*
 
@@ -13,6 +14,8 @@
 class WinUsbDeviceManager
 {
 public:
+    std::atomic_flag runEventLoopFlag = ATOMIC_FLAG_INIT;
+
     WinUsbDeviceManager();
     ~WinUsbDeviceManager();    
 
