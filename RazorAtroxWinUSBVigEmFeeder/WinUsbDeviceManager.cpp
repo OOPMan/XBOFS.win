@@ -1,10 +1,5 @@
 #include "WinUsbDeviceManager.h"
 
-
-#include <cfgmgr32.h>
-#include <string.h>
-
-
 WinUsbDeviceManager::WinUsbDeviceManager()
 {    
 }
@@ -24,18 +19,32 @@ DWORD WinUsbDeviceManager::runEventLoop(void) {
     while (this->runEventLoopFlag.test_and_set()) {
         auto updatedDevicePaths = this->retrieveDevicePaths();
         // Check existing device paths to see if any paths were removed in the updated set
-        for (auto devicePath : this->devicePaths) {            
-            if (updatedDevicePaths.find(devicePath) != updatedDevicePaths.end()) continue; 
-            // TODO: Handle devicePath removed scenario            
-        }
+        //for (auto devicePath : this->devicePaths) {            
+        //for (auto iterator = this->devicePaths
+        //    if (updatedDevicePaths.find(devicePath) != updatedDevicePaths.end()) continue; 
+        //    if (this->devicePathHandleMap.find(devicePath) != this->devicePathHandleMap.end()) continue;
+        //    // TODO: Handle devicePath removed scenario            
+        //}
         // Check the updated set for new devicePaths
         for (auto devicePath : updatedDevicePaths) {
             if (this->devicePathWinUsbDeviceMap.find(devicePath) != this->devicePathWinUsbDeviceMap.end()) continue;            
+            this->logger->info("Adding WinUsbDevice at %s", devicePath);
+            std::pair<WinUsbDevice*, HANDLE> test;
+            test.first = new WinUsbDevice(devicePath);
             auto winUsbDevice = new WinUsbDevice(devicePath);
-            this->devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });
+            this->devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });            
             auto threadHandle = winUsbDevice->runEventLoopInThread();
-            this->devicePathHandleMap.insert({ devicePath, threadHandle });            
         }       
+        // Check for closed thread handles
+        /*for (auto pair : this->devicePathHandleMap) {
+            if (WaitForSingleObject(pair.second, 0) == WAIT_OBJECT_0) {
+                if (!CloseHandle(pair.second)) this->logger->info("Failed to close handle for %s", pair.first);
+                else {
+                    this->devicePathHandleMap.erase(pair.first);
+                    if (this->devicePathWinUsbDeviceMap.find(pair.first) != this->devicePathWinUsbDeviceMap)
+                }
+            }
+        }*/
         this->devicePaths = updatedDevicePaths;
         Sleep(1000);
     }
@@ -59,28 +68,29 @@ std::set<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
     CONFIGRET           configurationManagerResult = CR_SUCCESS;
     HRESULT             resultHandle = S_OK;
     PTSTR               deviceInterfaceList = NULL;
-    ULONG               deviceInterfaceListLength = 0;    
-    std::set<TCHAR*>    devicePaths;
+    ULONG               deviceInterfaceListSize = 0;    
+    std::set<TCHAR*>    newDevicePaths;
     //
     // Enumerate all devices exposing the interface. Do this in a loop
     // in case a new interface is discovered while this code is executing,
     // causing CM_Get_Device_Interface_List to return CR_BUFFER_SMALL.
     //
     do {
-        configurationManagerResult = CM_Get_Device_Interface_List_Size(&deviceInterfaceListLength,
+        configurationManagerResult = CM_Get_Device_Interface_List_Size(&deviceInterfaceListSize,
             (LPGUID)&GUID_DEVINTERFACE_RazorAtroxWinUSBVigEmFeeder,
             NULL,
-            CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
-        this->logger->debug("Device interface list length: %d", deviceInterfaceListLength);
+            CM_GET_DEVICE_INTERFACE_LIST_PRESENT);              
 
         if (configurationManagerResult != CR_SUCCESS) {
             resultHandle = HRESULT_FROM_WIN32(CM_MapCrToWin32Err(configurationManagerResult, ERROR_INVALID_DATA));
             break;
         }              
-        
+
+        this->logger->info("Device interface list size in bytes: %d", deviceInterfaceListSize * sizeof(TCHAR));
+
         deviceInterfaceList = (PTSTR)HeapAlloc(GetProcessHeap(),
             HEAP_ZERO_MEMORY,
-            deviceInterfaceListLength * sizeof(TCHAR));
+            deviceInterfaceListSize * sizeof(TCHAR));
 
         if (deviceInterfaceList == NULL) {
             resultHandle = E_OUTOFMEMORY;
@@ -90,7 +100,7 @@ std::set<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
         configurationManagerResult = CM_Get_Device_Interface_List((LPGUID)&GUID_DEVINTERFACE_RazorAtroxWinUSBVigEmFeeder,
             NULL,
             deviceInterfaceList,
-            deviceInterfaceListLength,
+            deviceInterfaceListSize,
             CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
 
         if (configurationManagerResult != CR_SUCCESS) {            
@@ -101,22 +111,22 @@ std::set<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
     } while (configurationManagerResult == CR_BUFFER_SMALL);
     // Handle errors
     if (resultHandle != S_OK || deviceInterfaceList == TEXT('\0')) {
-        // TODO: Log error
+        // TODO: Log error        
     }
-    else {
-        // Transform deviceInterfaceList to a vector
-        TCHAR *next_token = NULL;
-        TCHAR *token = NULL;
-        const TCHAR separator = TEXT('\0');
-        token = _tcstok_s(deviceInterfaceList, separator, &next_token);
-        while (token != NULL) {
-            // TODO: Add to vector
-            devicePaths.insert(token);            
-            token = _tcstok_s(deviceInterfaceList, separator, &next_token);
-
+    else {        
+        auto deviceInterfaceListMarker = deviceInterfaceList;
+        auto position = 0;
+        while (position < deviceInterfaceListSize) {
+            auto devicePath = std::basic_string<TCHAR>(deviceInterfaceListMarker);
+            auto devicePathSize = devicePath.size();
+            newDevicePaths.insert((TCHAR*)devicePath.c_str());
+            deviceInterfaceListMarker += devicePathSize + 1;
+            position += devicePathSize + 1;
+            this->logger->info("New device path detected: %s", devicePath);
         }
-        this->logger->debug("%d device interfaces detected", devicePaths.size());
+        deviceInterfaceListMarker = NULL;
+        this->logger->info("%d device interfaces detected", newDevicePaths.size());        
     }    
     HeapFree(GetProcessHeap(), 0, deviceInterfaceList);
-    return devicePaths;
+    return newDevicePaths;
 }

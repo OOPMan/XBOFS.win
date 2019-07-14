@@ -1,12 +1,13 @@
 #pragma once
-#include <unordered_map>
-#include <string>
-#include <set>
-#include <atomic>
-
 #include "pch.h"
 #include "WinUsbDevice.h"
-#include "easylogging++.h"
+
+#include <cfgmgr32.h>
+
+struct WinUsbDeviceData {
+    WinUsbDevice* winUsbDevice;
+    HANDLE winUsbDeviceHandle;
+};
 
 /*
 
@@ -27,8 +28,7 @@ protected:
     DWORD threadId;
     el::Logger* logger = el::Loggers::getLogger("WinUsbDeviceManager");
     std::set<TCHAR*> devicePaths;
-    std::unordered_map<TCHAR*, WinUsbDevice*> devicePathWinUsbDeviceMap;
-    std::unordered_map<TCHAR*, HANDLE> devicePathHandleMap;
+    std::unordered_map<TCHAR*, WinUsbDevice*> devicePathWinUsbDeviceMap;    
 
     std::set<TCHAR*> retrieveDevicePaths();
 private:
