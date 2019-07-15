@@ -58,11 +58,10 @@ public:
     WinUsbDevice(TCHAR* devicePath);
     ~WinUsbDevice();
 
+    DWORD getThreadId();    
     static DWORD WINAPI staticRunEventLoop(void* Param);
-    DWORD getThreadId();
-    HANDLE getThreadHandle();
     DWORD runEventLoop(void);
-    HANDLE runEventLoopInThread();
+    
 protected:
     TCHAR* devicePath;
     DWORD threadId;

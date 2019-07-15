@@ -1,13 +1,25 @@
 #include "WinUsbDevice.h"
 
+/*
+Constructs the WinUsbDevice instance and starts its event loop in a separate thread
+*/
 WinUsbDevice::WinUsbDevice(TCHAR* devicePath)
 {
     this->devicePath = devicePath;
+    this->logger->info("Starting event loop for %s", devicePath);
+    this->threadHandle = CreateThread(NULL, 0, staticRunEventLoop, (void*)this, 0, &this->threadId);
 }
 
-
+/*
+Signals the event loop to terminate cleanly, waits for the thread handle to signal it is complete and then closes the thread handle
+*/
 WinUsbDevice::~WinUsbDevice()
 {
+    this->logger->info("Terminating event loop for %s", this->devicePath);
+    this->runEventLoopFlag.clear();
+    while (WaitForSingleObject(this->threadHandle, 10) != WAIT_OBJECT_0) {};
+    CloseHandle(this->threadHandle);
+    this->logger->info("Terminated event loop for %s", this->devicePath);
 }
 
 DWORD WINAPI WinUsbDevice::staticRunEventLoop(void * winUsbDeviceInstance) {
@@ -16,26 +28,17 @@ DWORD WINAPI WinUsbDevice::staticRunEventLoop(void * winUsbDeviceInstance) {
 }
 
 DWORD WinUsbDevice::runEventLoop(void) {
+    this->logger->info("Started event loop for %s", this->devicePath);
     this->runEventLoopFlag.test_and_set();
     while (this->runEventLoopFlag.test_and_set()) {
         // TODO: Implement
     }
+    this->logger->info("Completed event loop for %s", this->devicePath);
     return 0;
 }
 
 DWORD WinUsbDevice::getThreadId() {
     return this->threadId;
-}
-
-HANDLE WinUsbDevice::getThreadHandle() {
-    return this->threadHandle;
-}
-
-/*
-*/
-HANDLE WinUsbDevice::runEventLoopInThread() {
-    this->threadHandle = CreateThread(NULL, 0, staticRunEventLoop, (void*)this, 0, &this->threadId);
-    return this->threadHandle;
 }
 
 /*
