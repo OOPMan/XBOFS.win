@@ -17,35 +17,20 @@ DWORD WINAPI WinUsbDeviceManager::staticRunEventLoop(void * winUsbDeviceManagerI
 DWORD WinUsbDeviceManager::runEventLoop(void) {    
     this->runEventLoopFlag.test_and_set();
     while (this->runEventLoopFlag.test_and_set()) {
-        auto updatedDevicePaths = this->retrieveDevicePaths();
-        // Check existing device paths to see if any paths were removed in the updated set
-        //for (auto devicePath : this->devicePaths) {            
-        //for (auto iterator = this->devicePaths
-        //    if (updatedDevicePaths.find(devicePath) != updatedDevicePaths.end()) continue; 
-        //    if (this->devicePathHandleMap.find(devicePath) != this->devicePathHandleMap.end()) continue;
-        //    // TODO: Handle devicePath removed scenario            
-        //}
+        auto devicePaths = this->retrieveDevicePaths();        
         // Check the updated set for new devicePaths
-        for (auto devicePath : updatedDevicePaths) {
+        for (auto devicePath : devicePaths) {
             if (this->devicePathWinUsbDeviceMap.find(devicePath) != this->devicePathWinUsbDeviceMap.end()) continue;            
-            this->logger->info("Adding WinUsbDevice at %s", devicePath);
-            std::pair<WinUsbDevice*, HANDLE> test;
-            test.first = new WinUsbDevice(devicePath);
+            this->logger->info("Adding WinUsbDevice at %s", devicePath);                      
             auto winUsbDevice = new WinUsbDevice(devicePath);
-            this->devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });            
-            auto threadHandle = winUsbDevice->runEventLoopInThread();
-        }       
-        // Check for closed thread handles
-        /*for (auto pair : this->devicePathHandleMap) {
-            if (WaitForSingleObject(pair.second, 0) == WAIT_OBJECT_0) {
-                if (!CloseHandle(pair.second)) this->logger->info("Failed to close handle for %s", pair.first);
-                else {
-                    this->devicePathHandleMap.erase(pair.first);
-                    if (this->devicePathWinUsbDeviceMap.find(pair.first) != this->devicePathWinUsbDeviceMap)
-                }
-            }
-        }*/
-        this->devicePaths = updatedDevicePaths;
+            this->devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });                        
+        }  
+        // Check for WinUsbDevices to remove
+        for (auto tuple : this->devicePathWinUsbDeviceMap) {
+            if (devicePaths.find(tuple.first) != devicePaths.end()) continue;
+            delete tuple.second;
+            this->devicePathWinUsbDeviceMap.erase(tuple.first);
+        }        
         Sleep(1000);
     }
     return 0;

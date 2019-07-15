@@ -26,8 +26,7 @@ public:
     HANDLE runEventLoopInThread();
 protected:
     DWORD threadId;
-    el::Logger* logger = el::Loggers::getLogger("WinUsbDeviceManager");
-    std::set<TCHAR*> devicePaths;
+    el::Logger* logger = el::Loggers::getLogger("WinUsbDeviceManager");    
     std::unordered_map<TCHAR*, WinUsbDevice*> devicePathWinUsbDeviceMap;    
 
     std::set<TCHAR*> retrieveDevicePaths();
