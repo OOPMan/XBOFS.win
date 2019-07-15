@@ -51,18 +51,16 @@ enum STATUS {
 */
 class WinUsbDevice
 {
-public:
-    std::atomic_flag runEventLoopFlag = ATOMIC_FLAG_INIT;
-    
-
+public:      
     WinUsbDevice(TCHAR* devicePath);
     ~WinUsbDevice();
 
     DWORD getThreadId();    
     static DWORD WINAPI staticRunEventLoop(void* Param);
-    DWORD runEventLoop(void);
+    DWORD runEventLoop(void);    
     
 protected:
+    std::atomic_flag runEventLoopFlag = ATOMIC_FLAG_INIT;
     TCHAR* devicePath;
     DWORD threadId;
     HANDLE threadHandle = NULL;
