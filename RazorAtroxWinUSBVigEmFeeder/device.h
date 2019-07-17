@@ -31,3 +31,37 @@ VOID
 CloseDevice(
     _Inout_ PDEVICE_DATA DeviceData
     );
+
+struct RAZER_ATROX_DATA_PACKET
+{
+    UCHAR data[30];
+    ULONG transferred;
+};
+
+struct RAZER_ATROX_BUTTON_STATE
+{
+    BOOL buttonX;
+    BOOL buttonY;
+    BOOL buttonA;
+    BOOL buttonB;
+    BOOL rightButton;
+    BOOL leftButton;
+    BOOL rightTrigger;
+    BOOL leftTrigger;
+    BOOL buttonMenu;
+    BOOL buttonView;
+    BOOL buttonGuide;
+    BOOL stickUp;
+    BOOL stickLeft;
+    BOOL stickDown;
+    BOOL stickRight;
+};
+
+enum RAZER_ATROX_PACKET_TYPES
+{
+    UNKNOWN,
+    DUMMY,
+    HEARTBEAT,
+    GUIDE,
+    BUTTON_INPUT
+};

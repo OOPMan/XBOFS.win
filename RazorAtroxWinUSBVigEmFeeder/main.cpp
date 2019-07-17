@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "easylogging++.h"
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -7,43 +6,6 @@ INITIALIZE_EASYLOGGINGPP
 #include <curses.h>
 #include <ViGEm/Client.h>
 
-UCHAR RAZER_ATROX_INIT[] = {
-    0x05, 0x20, 0x08, 0x01, 0x05
-};
-
-struct RAZER_ATROX_DATA_PACKET
-{
-    UCHAR data[30];
-    ULONG transferred;
-};
-
-struct RAZER_ATROX_BUTTON_STATE
-{
-    BOOL buttonX;
-    BOOL buttonY;
-    BOOL buttonA;
-    BOOL buttonB;
-    BOOL rightButton;
-    BOOL leftButton;
-    BOOL rightTrigger;
-    BOOL leftTrigger;
-    BOOL buttonMenu;
-    BOOL buttonView;
-    BOOL buttonGuide;
-    BOOL stickUp;
-    BOOL stickLeft;
-    BOOL stickDown;
-    BOOL stickRight;
-};
-
-enum RAZER_ATROX_PACKET_TYPES
-{
-    UNKNOWN,
-    DUMMY,
-    HEARTBEAT,
-    GUIDE,
-    BUTTON_INPUT
-};
 
 enum STATUS {
     DISCONNECTED,    
@@ -121,6 +83,9 @@ Sent the INIT packet to the Razor Atrox
 bool initRazorAtrox(DEVICE_DATA &winUsbDeviceData) {
     if (winUsbDeviceData.WinusbHandle == INVALID_HANDLE_VALUE) return false;   
     ULONG cbSent = 0;    
+    UCHAR RAZER_ATROX_INIT[] = {
+        0x05, 0x20, 0x08, 0x01, 0x05
+    };
     return WinUsb_WritePipe(winUsbDeviceData.WinusbHandle, 0x01, RAZER_ATROX_INIT, 5, &cbSent, 0);
 }
 
