@@ -42,11 +42,67 @@ DWORD WinUsbDevice::getThreadId() {
 }
 
 /*
+Attempt to open and initialize the WinUsb device
+*/
+bool WinUsbDevice::openDevice() {
+    HRESULT hr = S_OK;
+    BOOL    bResult;
+    this->deviceHandlesOpen = false;
+    // Attempt to open device handle
+    this->deviceHandle = CreateFile(this->devicePath,
+        GENERIC_WRITE | GENERIC_READ,
+        FILE_SHARE_WRITE | FILE_SHARE_READ,
+        NULL,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED,
+        NULL);
+    if (INVALID_HANDLE_VALUE == this->deviceHandle) {
+        hr = HRESULT_FROM_WIN32(GetLastError());
+        // TODO: Log error
+        return false;
+    }
+    // Initialize WinUsb handle
+    bResult = WinUsb_Initialize(this->deviceHandle, &this->winUsbHandle);
+    if (FALSE == bResult) {
+        hr = HRESULT_FROM_WIN32(GetLastError());
+        CloseHandle(this->deviceHandle);
+        // TODO: Log error
+        return false;
+    }
+    this->deviceHandlesOpen = true;
+    // Make GetDescriptor call to device in order to ensure communications with it work
+    BOOL winUsbGetDescriptorResult;
+    USB_DEVICE_DESCRIPTOR winUsbDeviceDescriptor;
+    ULONG bytesReceived;
+    winUsbGetDescriptorResult = WinUsb_GetDescriptor(
+        this->winUsbHandle, USB_DEVICE_DESCRIPTOR_TYPE, 0, 0, (PBYTE)&winUsbDeviceDescriptor, sizeof(winUsbDeviceDescriptor), &bytesReceived
+    );
+    if (winUsbGetDescriptorResult == FALSE || bytesReceived != sizeof(winUsbDeviceDescriptor)) {
+        // TODO: Log
+        this->closeDevice();
+        return false;
+    }
+    // TODO: Log
+    return true;
+}
+
+/*
+Attempt to close the WinUsb device
+*/
+bool WinUsbDevice::closeDevice() {
+    if (!this->deviceHandlesOpen) return false;
+    WinUsb_Free(this->winUsbHandle);
+    CloseHandle(this->deviceHandle);
+    this->deviceHandlesOpen = false;    
+    return true;    
+}
+
+/*
 Process data read from Razer Atrox
 */
-RAZER_ATROX_PACKET_TYPES WinUsbDevice::processInputFromRazerAtrox(RAZER_ATROX_DATA_PACKET &dataPacket, RAZER_ATROX_BUTTON_STATE &buttonState) {
-    if (dataPacket.transferred == 0) return UNKNOWN;
-    switch (dataPacket.data[0]) {
+RAZER_ATROX_PACKET_TYPES WinUsbDevice::processInputFromRazerAtrox() {
+    if (this->dataPacket.transferred == 0) return UNKNOWN;
+    switch (this->dataPacket.data[0]) {
     case 0x01: // Dummy packet?
         return DUMMY;
     case 0x03: // Heartbeat packet?
@@ -77,61 +133,41 @@ RAZER_ATROX_PACKET_TYPES WinUsbDevice::processInputFromRazerAtrox(RAZER_ATROX_DA
 /*
 Blocking data read from end-point 0x81
 */
-bool WinUsbDevice::readInputFromRazerAtrox(DEVICE_DATA &winUsbDeviceData, RAZER_ATROX_DATA_PACKET &dataPacket)
+bool WinUsbDevice::readInputFromRazerAtrox()
 {
-    if (winUsbDeviceData.WinusbHandle == INVALID_HANDLE_VALUE) return false;
-    return WinUsb_ReadPipe(winUsbDeviceData.WinusbHandle, 0x81, dataPacket.data, 30, &dataPacket.transferred, NULL);
+    if (this->winUsbHandle == INVALID_HANDLE_VALUE) return false;
+    return WinUsb_ReadPipe(this->winUsbHandle, 0x81, this->dataPacket.data, 30, &this->dataPacket.transferred, NULL);
 }
 
 /*
 Sent the INIT packet to the Razor Atrox
 */
-bool WinUsbDevice::initRazorAtrox(DEVICE_DATA &winUsbDeviceData) {
-    if (winUsbDeviceData.WinusbHandle == INVALID_HANDLE_VALUE) return false;
+bool WinUsbDevice::initRazorAtrox() {
+    if (this->winUsbHandle == INVALID_HANDLE_VALUE) return false;
     ULONG cbSent = 0;
-    return WinUsb_WritePipe(winUsbDeviceData.WinusbHandle, 0x01, RAZER_ATROX_INIT, 5, &cbSent, 0);
-}
-
-/*
-Initialize the WinUSB device
-*/
-bool WinUsbDevice::initDevice(DEVICE_DATA &winUsbDeviceData) {
-    BOOL noWinUsbDevice;
-    BOOL winUsbGetDescriptorResult;
-    USB_DEVICE_DESCRIPTOR winUsbDeviceDescriptor;
-    ULONG bytesReceived;
-    HRESULT openWinUsbDeviceResult = OpenDevice(&winUsbDeviceData, &noWinUsbDevice);
-    if (FAILED(openWinUsbDeviceResult)) return false;
-    winUsbGetDescriptorResult = WinUsb_GetDescriptor(
-        winUsbDeviceData.WinusbHandle, USB_DEVICE_DESCRIPTOR_TYPE, 0, 0, (PBYTE)&winUsbDeviceDescriptor, sizeof(winUsbDeviceDescriptor), &bytesReceived
-    );
-    if (winUsbGetDescriptorResult == FALSE || bytesReceived != sizeof(winUsbDeviceDescriptor)) {
-        CloseDevice(&winUsbDeviceData);
-        return false;
-    }
-    return true;
+    return WinUsb_WritePipe(this->winUsbHandle, 0x01, this->RAZER_ATROX_INIT, 5, &cbSent, 0);
 }
 
 /*
 Dispatch data to the VigEm XB360 controller
 */
-bool WinUsbDevice::dispatchInputToVigEmController(PVIGEM_CLIENT vigEmClient, PVIGEM_TARGET vigEmController, RAZER_ATROX_BUTTON_STATE &buttonState) {
+bool WinUsbDevice::dispatchInputToVigEmController() {
     XUSB_REPORT controllerData{};
-    if (buttonState.buttonGuide)    controllerData.wButtons |= XUSB_GAMEPAD_GUIDE;
-    if (buttonState.buttonMenu)     controllerData.wButtons |= XUSB_GAMEPAD_START;
-    if (buttonState.buttonView)     controllerData.wButtons |= XUSB_GAMEPAD_BACK;
-    if (buttonState.buttonA)        controllerData.wButtons |= XUSB_GAMEPAD_A;
-    if (buttonState.buttonB)        controllerData.wButtons |= XUSB_GAMEPAD_B;
-    if (buttonState.buttonX)        controllerData.wButtons |= XUSB_GAMEPAD_X;
-    if (buttonState.buttonY)        controllerData.wButtons |= XUSB_GAMEPAD_Y;
-    if (buttonState.leftButton)     controllerData.wButtons |= XUSB_GAMEPAD_LEFT_SHOULDER;
-    if (buttonState.rightButton)    controllerData.wButtons |= XUSB_GAMEPAD_RIGHT_SHOULDER;
-    if (buttonState.stickUp)        controllerData.wButtons |= XUSB_GAMEPAD_DPAD_UP;
-    if (buttonState.stickDown)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_DOWN;
-    if (buttonState.stickLeft)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_LEFT;
-    if (buttonState.stickRight)     controllerData.wButtons |= XUSB_GAMEPAD_DPAD_RIGHT;
-    if (buttonState.leftTrigger)    controllerData.bLeftTrigger = 0xff;
-    if (buttonState.rightTrigger)   controllerData.bRightTrigger = 0xff;
-    const auto controllerUpdateResult = vigem_target_x360_update(vigEmClient, vigEmController, controllerData);
+    if (this->buttonState.buttonGuide)    controllerData.wButtons |= XUSB_GAMEPAD_GUIDE;
+    if (this->buttonState.buttonMenu)     controllerData.wButtons |= XUSB_GAMEPAD_START;
+    if (this->buttonState.buttonView)     controllerData.wButtons |= XUSB_GAMEPAD_BACK;
+    if (this->buttonState.buttonA)        controllerData.wButtons |= XUSB_GAMEPAD_A;
+    if (this->buttonState.buttonB)        controllerData.wButtons |= XUSB_GAMEPAD_B;
+    if (this->buttonState.buttonX)        controllerData.wButtons |= XUSB_GAMEPAD_X;
+    if (this->buttonState.buttonY)        controllerData.wButtons |= XUSB_GAMEPAD_Y;
+    if (this->buttonState.leftButton)     controllerData.wButtons |= XUSB_GAMEPAD_LEFT_SHOULDER;
+    if (this->buttonState.rightButton)    controllerData.wButtons |= XUSB_GAMEPAD_RIGHT_SHOULDER;
+    if (this->buttonState.stickUp)        controllerData.wButtons |= XUSB_GAMEPAD_DPAD_UP;
+    if (this->buttonState.stickDown)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_DOWN;
+    if (this->buttonState.stickLeft)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_LEFT;
+    if (this->buttonState.stickRight)     controllerData.wButtons |= XUSB_GAMEPAD_DPAD_RIGHT;
+    if (this->buttonState.leftTrigger)    controllerData.bLeftTrigger = 0xff;
+    if (this->buttonState.rightTrigger)   controllerData.bRightTrigger = 0xff;
+    const auto controllerUpdateResult = vigem_target_x360_update(this->vigEmClient, this->vigEmTarget, controllerData);
     return VIGEM_SUCCESS(controllerUpdateResult);
 }
