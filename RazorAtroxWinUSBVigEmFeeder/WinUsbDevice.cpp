@@ -3,10 +3,10 @@
 /*
 Constructs the WinUsbDevice instance and starts its event loop in a separate thread
 */
-WinUsbDevice::WinUsbDevice(TCHAR* devicePath)
+WinUsbDevice::WinUsbDevice(tstring devicePath)
 {
     this->devicePath = devicePath;
-    this->logger->info("Starting event loop for %s", devicePath);
+    this->logger->info("Starting event loop for %v", devicePath);
     this->threadHandle = CreateThread(NULL, 0, staticRunEventLoop, (void*)this, 0, &this->threadId);
 }
 
@@ -15,11 +15,11 @@ Signals the event loop to terminate cleanly, waits for the thread handle to sign
 */
 WinUsbDevice::~WinUsbDevice()
 {
-    this->logger->info("Terminating event loop for %s", this->devicePath);
+    this->logger->info("Terminating event loop for %v", this->devicePath);
     this->runEventLoopFlag.clear();
     while (WaitForSingleObject(this->threadHandle, 10) != WAIT_OBJECT_0) {};
     CloseHandle(this->threadHandle);
-    this->logger->info("Terminated event loop for %s", this->devicePath);
+    this->logger->info("Terminated event loop for %v", this->devicePath);
 }
 
 DWORD WINAPI WinUsbDevice::staticRunEventLoop(void * winUsbDeviceInstance) {
@@ -30,60 +30,64 @@ DWORD WINAPI WinUsbDevice::staticRunEventLoop(void * winUsbDeviceInstance) {
 DWORD WinUsbDevice::runEventLoop(void) {
     int failedReads = 0;
     int failedWrites = 0;
-    this->logger->info("Started event loop for %s", this->devicePath);
+    this->logger->info("Started event loop for %v", this->devicePath);
     this->runEventLoopFlag.test_and_set();
-    this->logger->info("Allocating VigEmClient for %s", this->devicePath);
+    this->logger->info("Allocating VigEmClient for %v", this->devicePath);
     this->vigEmClient = vigem_alloc();
-    this->logger->info("Allocating VigEmTarget for %s", this->devicePath);
+    this->logger->info("Allocating VigEmTarget for %v", this->devicePath);
     this->vigEmTarget = vigem_target_x360_alloc();
     // TODO: turn this block into a method?
-    this->logger->info("Opening WinUSB device for %s", this->devicePath);
-    if (!this->openDevice()) {
-        this->logger->error("Unable to open WinUSB device for %s", this->devicePath);
-        this->runEventLoopFlag.clear();
-    }
-    // TODO: turn this block into a method?
-    this->logger->info("Init Razer Atrox for %s", this->devicePath);
-    if (!this->initRazorAtrox()) {
-        this->logger->error("Unable to init Razer Atrox for %s", this->devicePath);
-        this->runEventLoopFlag.clear();        
-    }
-    // TODO: turn this block into a method?
-    this->logger->info("Connecting VigEmClient for %s", this->devicePath);
+    this->logger->info("Connecting VigEmClient for %v", this->devicePath);
     if (!VIGEM_SUCCESS(vigem_connect(this->vigEmClient))) {
-        this->logger->error("Unable to connect VigEmClient for %s", this->devicePath);
+        this->logger->error("Unable to connect VigEmClient for %v", this->devicePath);
         this->runEventLoopFlag.clear();      
     }
     // TODO: turn this block into a method?
-    this->logger->info("Adding VigEmTarget for %s", this->devicePath);
+    this->logger->info("Adding VigEmTarget for %v", this->devicePath);
     if (!VIGEM_SUCCESS(vigem_target_add(this->vigEmClient, this->vigEmTarget))) {
-        this->logger->error("Unable to add VigEmTarget for %s", this->devicePath);
+        this->logger->error("Unable to add VigEmTarget for %v", this->devicePath);
         this->runEventLoopFlag.clear();
     }
     // Loop reading input, processing it and dispatching it
-    while (this->runEventLoopFlag.test_and_set() && failedReads < 5) {        
-        if (!this->readInputFromRazerAtrox()) {
-            this->logger->warn("Failed to read input from Razer Atrox for %s", this->devicePath);
-            failedReads += 1;
+    while (this->runEventLoopFlag.test_and_set()) {                
+        this->logger->info("Opening WinUSB device for %v", this->devicePath);
+        if (!this->openDevice()) {
+            this->logger->error("Unable to open WinUSB device for %v", this->devicePath);
             continue;
         }
-        this->processInputFromRazerAtrox();
-        if (!this->dispatchInputToVigEmController()) failedWrites += 1;        
+        this->logger->info("Init Razer Atrox for %v", this->devicePath);
+        if (!this->initRazorAtrox()) {
+            this->logger->error("Unable to init Razer Atrox for %v", this->devicePath);
+            continue;
+        }
+        int currentFailedReads = 0;
+        while (this->runEventLoopFlag.test_and_set() && currentFailedReads < 5) {
+            if (!this->readInputFromRazerAtrox()) {
+                this->logger->warn("Failed to read input from Razer Atrox for %v", this->devicePath);
+                currentFailedReads += 1;
+                continue;
+            }
+            this->processInputFromRazerAtrox();
+            if (!this->dispatchInputToVigEmController()) failedWrites += 1;
+        }
+        if (currentFailedReads >= 5) this->logger->warn("Failed to read input from Razer Atrox 5 or more times for %v", this->devicePath);
+        failedReads += currentFailedReads;
+        currentFailedReads = 0;
     }
-    this->logger->info("Completed Read-Process-Dispatch loop %s", this->devicePath);
-    this->logger->info("There were %d failed reads for %s", failedReads, this->devicePath);
-    this->logger->info("There were %d failed writes for %s", failedWrites, this->devicePath);
-    this->logger->info("Closing WinUSB device for %s", this->devicePath);
+    this->logger->info("Completed Read-Process-Dispatch loop %v", this->devicePath);
+    this->logger->info("There were %v failed reads for %v", failedReads, this->devicePath);
+    this->logger->info("There were %v failed writes for %v", failedWrites, this->devicePath);
+    this->logger->info("Closing WinUSB device for %v", this->devicePath);
     this->closeDevice();
-    this->logger->info("Removing VigEmTarget for %s", this->devicePath);
+    this->logger->info("Removing VigEmTarget for %v", this->devicePath);
     vigem_target_remove(this->vigEmClient, this->vigEmTarget);
-    this->logger->info("Disconnecting VigEmClient for %s", this->devicePath);
+    this->logger->info("Disconnecting VigEmClient for %v", this->devicePath);
     vigem_disconnect(vigEmClient);
-    this->logger->info("Free VigEmTarget for %s", this->vigEmTarget);
+    this->logger->info("Free VigEmTarget for %v", this->vigEmTarget);
     vigem_target_free(this->vigEmTarget);
-    this->logger->info("Free VigEmClient for %s", this->devicePath);
+    this->logger->info("Free VigEmClient for %v", this->devicePath);
     vigem_free(this->vigEmClient);
-    this->logger->info("Completed event loop for %s", this->devicePath);
+    this->logger->info("Completed event loop for %v", this->devicePath);
     return 0;
 }
 
@@ -99,7 +103,7 @@ bool WinUsbDevice::openDevice() {
     BOOL    bResult;
     this->deviceHandlesOpen = false;
     // Attempt to open device handle
-    this->deviceHandle = CreateFile(this->devicePath,
+    this->deviceHandle = CreateFile(this->devicePath.c_str(),
         GENERIC_WRITE | GENERIC_READ,
         FILE_SHARE_WRITE | FILE_SHARE_READ,
         NULL,
@@ -108,7 +112,7 @@ bool WinUsbDevice::openDevice() {
         NULL);
     if (INVALID_HANDLE_VALUE == this->deviceHandle) {
         hr = HRESULT_FROM_WIN32(GetLastError());
-        // TODO: Log error
+        this->logger->error("Failed to open device handle for %v due to %v", this->devicePath, hr);
         return false;
     }
     // Initialize WinUsb handle
@@ -116,7 +120,7 @@ bool WinUsbDevice::openDevice() {
     if (FALSE == bResult) {
         hr = HRESULT_FROM_WIN32(GetLastError());
         CloseHandle(this->deviceHandle);
-        // TODO: Log error
+        this->logger->error("Failed to initiallize WinUsb handle for %v due to %v", this->devicePath, hr);
         return false;
     }
     this->deviceHandlesOpen = true;
@@ -128,11 +132,11 @@ bool WinUsbDevice::openDevice() {
         this->winUsbHandle, USB_DEVICE_DESCRIPTOR_TYPE, 0, 0, (PBYTE)&winUsbDeviceDescriptor, sizeof(winUsbDeviceDescriptor), &bytesReceived
     );
     if (winUsbGetDescriptorResult == FALSE || bytesReceived != sizeof(winUsbDeviceDescriptor)) {
-        // TODO: Log
+        this->logger->error("Failed to read USB descriptor for %v", this->devicePath);
         this->closeDevice();
         return false;
     }
-    // TODO: Log
+    this->logger->info("Opened WinUsbn device for %v", this->devicePath);
     return true;
 }
 

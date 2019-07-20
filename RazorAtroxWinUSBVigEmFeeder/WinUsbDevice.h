@@ -9,7 +9,7 @@
 class WinUsbDevice
 {
 public:      
-    WinUsbDevice(TCHAR* devicePath);
+    WinUsbDevice(tstring devicePath);
     ~WinUsbDevice();
 
     DWORD getThreadId();    
@@ -19,9 +19,9 @@ public:
 protected:
     std::atomic_flag runEventLoopFlag       = ATOMIC_FLAG_INIT;
     bool deviceHandlesOpen                  = false;
-    TCHAR* devicePath                       = NULL;
-    WINUSB_INTERFACE_HANDLE winUsbHandle    = NULL;
-    HANDLE                  deviceHandle    = NULL;
+    tstring devicePath;
+    WINUSB_INTERFACE_HANDLE winUsbHandle;
+    HANDLE                  deviceHandle;
     RAZER_ATROX_DATA_PACKET dataPacket      = {};
     RAZER_ATROX_BUTTON_STATE buttonState    = {};
     PVIGEM_CLIENT vigEmClient               = NULL;
