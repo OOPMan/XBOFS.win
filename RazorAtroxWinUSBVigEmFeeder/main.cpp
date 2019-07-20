@@ -1,11 +1,13 @@
 #include "pch.h"
+#include "WinUsbDeviceManager.h"
 
-INITIALIZE_EASYLOGGINGPP
-
+#include <memory>
 #include <stdio.h>
 #include <curses.h>
 #include <ViGEm/Client.h>
 
+
+INITIALIZE_EASYLOGGINGPP
 
 enum STATUS {
     DISCONNECTED,    
@@ -133,7 +135,10 @@ bool dispatchInputToVigEmController(PVIGEM_CLIENT vigEmClient, PVIGEM_TARGET vig
     return VIGEM_SUCCESS(controllerUpdateResult);
 }
 
-LONG __cdecl _tmain(LONG Argc, LPTSTR *Argv) {
+LONG __cdecl _tmain(LONG Argc, LPTSTR *Argv) {    
+    std::unique_ptr<WinUsbDeviceManager> manager(new WinUsbDeviceManager());
+    manager->runEventLoop();
+    /*
     // Variables
     WINDOW *window;
     STATUS winUsbStatus = DISCONNECTED;
@@ -189,4 +194,5 @@ LONG __cdecl _tmain(LONG Argc, LPTSTR *Argv) {
     vigem_disconnect(vigEmClient);
     vigem_free(vigEmClient);
     endwin();
+    */
 }
