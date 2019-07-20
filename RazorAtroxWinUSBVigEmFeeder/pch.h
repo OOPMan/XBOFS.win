@@ -12,3 +12,5 @@
 
 #include "easylogging++.h"
 #include "device.h"
+
+typedef std::basic_string<TCHAR> tstring;
