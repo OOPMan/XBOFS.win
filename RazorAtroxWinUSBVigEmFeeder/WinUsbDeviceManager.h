@@ -27,9 +27,9 @@ public:
 protected:
     DWORD threadId;
     el::Logger* logger = el::Loggers::getLogger("WinUsbDeviceManager");    
-    std::unordered_map<TCHAR*, WinUsbDevice*> devicePathWinUsbDeviceMap;    
+    std::unordered_map<tstring, WinUsbDevice*> devicePathWinUsbDeviceMap;    
 
-    std::set<TCHAR*> retrieveDevicePaths();
+    std::set<tstring> retrieveDevicePaths();
 private:
 };
 

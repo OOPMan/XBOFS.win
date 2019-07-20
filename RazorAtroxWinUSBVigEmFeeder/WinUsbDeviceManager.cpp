@@ -7,6 +7,8 @@ WinUsbDeviceManager::WinUsbDeviceManager()
 
 WinUsbDeviceManager::~WinUsbDeviceManager()
 {
+    for (auto tuple : this->devicePathWinUsbDeviceMap) delete tuple.second;            
+    this->devicePathWinUsbDeviceMap.clear();
 }
 
 DWORD WINAPI WinUsbDeviceManager::staticRunEventLoop(void * winUsbDeviceManagerInstance) {
@@ -15,13 +17,15 @@ DWORD WINAPI WinUsbDeviceManager::staticRunEventLoop(void * winUsbDeviceManagerI
 }
 
 DWORD WinUsbDeviceManager::runEventLoop(void) {    
+    this->logger->info("Started event loop for WinUsbDeviceManager");
     this->runEventLoopFlag.test_and_set();
     while (this->runEventLoopFlag.test_and_set()) {
+        this->logger->info("Retrieving device paths");
         auto devicePaths = this->retrieveDevicePaths();        
         // Check the updated set for new devicePaths
         for (auto devicePath : devicePaths) {
             if (this->devicePathWinUsbDeviceMap.find(devicePath) != this->devicePathWinUsbDeviceMap.end()) continue;            
-            this->logger->info("Adding WinUsbDevice at %s", devicePath);                      
+            this->logger->info("Adding WinUsbDevice at %v", devicePath);                      
             auto winUsbDevice = new WinUsbDevice(devicePath);
             this->devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });                        
         }  
@@ -33,6 +37,7 @@ DWORD WinUsbDeviceManager::runEventLoop(void) {
         }        
         Sleep(1000);
     }
+    this->logger->info("Completed event loop for WinUsbDeviceManager");
     return 0;
 }
 
@@ -49,12 +54,12 @@ HANDLE WinUsbDeviceManager::runEventLoopInThread() {
 /*
 Retrieve a vector of TCHAR* representing device paths that the device manager will work with
 */
-std::set<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
-    CONFIGRET           configurationManagerResult = CR_SUCCESS;
-    HRESULT             resultHandle = S_OK;
-    PTSTR               deviceInterfaceList = NULL;
-    ULONG               deviceInterfaceListSize = 0;    
-    std::set<TCHAR*>    newDevicePaths;
+std::set<tstring> WinUsbDeviceManager::retrieveDevicePaths() {
+    CONFIGRET           configurationManagerResult  = CR_SUCCESS;
+    HRESULT             resultHandle                = S_OK;
+    PTSTR               deviceInterfaceList         = NULL;
+    ULONG               deviceInterfaceListSize     = 0;    
+    std::set<tstring>   newDevicePaths;
     //
     // Enumerate all devices exposing the interface. Do this in a loop
     // in case a new interface is discovered while this code is executing,
@@ -71,7 +76,7 @@ std::set<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
             break;
         }              
 
-        this->logger->info("Device interface list size in bytes: %d", deviceInterfaceListSize * sizeof(TCHAR));
+        this->logger->info("Device interface list size in bytes: %v", deviceInterfaceListSize * sizeof(TCHAR));
 
         deviceInterfaceList = (PTSTR)HeapAlloc(GetProcessHeap(),
             HEAP_ZERO_MEMORY,
@@ -102,15 +107,16 @@ std::set<TCHAR*> WinUsbDeviceManager::retrieveDevicePaths() {
         auto deviceInterfaceListMarker = deviceInterfaceList;
         auto position = 0;
         while (position < deviceInterfaceListSize) {
-            auto devicePath = std::basic_string<TCHAR>(deviceInterfaceListMarker);
+            auto devicePath = tstring(deviceInterfaceListMarker);
             auto devicePathSize = devicePath.size();
-            newDevicePaths.insert((TCHAR*)devicePath.c_str());
+            if (!devicePathSize) break;            
+            newDevicePaths.insert(devicePath);
             deviceInterfaceListMarker += devicePathSize + 1;
             position += devicePathSize + 1;
-            this->logger->info("New device path detected: %s", devicePath);
+            this->logger->info("New device path detected: %v", devicePath);
         }
         deviceInterfaceListMarker = NULL;
-        this->logger->info("%d device interfaces detected", newDevicePaths.size());        
+        this->logger->info("%v device interfaces detected", newDevicePaths.size());        
     }    
     HeapFree(GetProcessHeap(), 0, deviceInterfaceList);
     return newDevicePaths;
