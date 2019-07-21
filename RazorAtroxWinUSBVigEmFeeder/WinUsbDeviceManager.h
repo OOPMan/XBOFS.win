@@ -4,11 +4,6 @@
 
 #include <cfgmgr32.h>
 
-struct WinUsbDeviceData {
-    WinUsbDevice* winUsbDevice;
-    HANDLE winUsbDeviceHandle;
-};
-
 /*
 
 */
