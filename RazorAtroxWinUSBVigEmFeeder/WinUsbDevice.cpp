@@ -49,17 +49,16 @@ DWORD WinUsbDevice::runEventLoop(void) {
         this->runEventLoopFlag.clear();
     }
     // Loop reading input, processing it and dispatching it
-    while (this->runEventLoopFlag.test_and_set()) {                
-        this->logger->info("Opening WinUSB device for %v", this->devicePath);
+    while (this->runEventLoopFlag.test_and_set()) {                        
         if (!this->openDevice()) {
             this->logger->error("Unable to open WinUSB device for %v", this->devicePath);
             continue;
-        }
-        this->logger->info("Init Razer Atrox for %v", this->devicePath);
+        }        
         if (!this->initRazorAtrox()) {
             this->logger->error("Unable to init Razer Atrox for %v", this->devicePath);
             continue;
         }
+        this->logger->info("Reading input from Razer Atrox for %v", this->devicePath);
         int currentFailedReads = 0;
         while (this->runEventLoopFlag.test_and_set() && currentFailedReads < 5) {
             if (!this->readInputFromRazerAtrox()) {
@@ -102,6 +101,7 @@ bool WinUsbDevice::openDevice() {
     HRESULT hr = S_OK;
     BOOL    bResult;
     this->deviceHandlesOpen = false;
+    this->logger->info("Opening WinUSB device for %v", this->devicePath);
     // Attempt to open device handle
     this->deviceHandle = CreateFile(this->devicePath.c_str(),
         GENERIC_WRITE | GENERIC_READ,
@@ -120,7 +120,7 @@ bool WinUsbDevice::openDevice() {
     if (FALSE == bResult) {
         hr = HRESULT_FROM_WIN32(GetLastError());
         CloseHandle(this->deviceHandle);
-        this->logger->error("Failed to initiallize WinUsb handle for %v due to %v", this->devicePath, hr);
+        this->logger->error("Failed to initiallize WinUSB handle for %v due to %v", this->devicePath, hr);
         return false;
     }
     this->deviceHandlesOpen = true;
@@ -136,7 +136,7 @@ bool WinUsbDevice::openDevice() {
         this->closeDevice();
         return false;
     }
-    this->logger->info("Opened WinUsbn device for %v", this->devicePath);
+    this->logger->info("Opened WinUSB device for %v", this->devicePath);
     return true;
 }
 
@@ -197,6 +197,7 @@ bool WinUsbDevice::readInputFromRazerAtrox()
 Sent the INIT packet to the Razor Atrox
 */
 bool WinUsbDevice::initRazorAtrox() {
+    this->logger->info("Init Razer Atrox for %v", this->devicePath);
     if (this->winUsbHandle == INVALID_HANDLE_VALUE) return false;
     ULONG cbSent = 0;
     return WinUsb_WritePipe(this->winUsbHandle, 0x01, this->RAZER_ATROX_INIT, 5, &cbSent, 0);
