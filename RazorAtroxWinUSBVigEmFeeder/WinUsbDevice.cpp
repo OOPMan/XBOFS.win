@@ -3,9 +3,11 @@
 /*
 Constructs the WinUsbDevice instance and starts its event loop in a separate thread
 */
-WinUsbDevice::WinUsbDevice(tstring devicePath)
+WinUsbDevice::WinUsbDevice(tstring devicePath, DWORD parentThreadId, DWORD uiManagerThreadId)
 {
     this->devicePath = devicePath;
+    this->parentThreadId = parentThreadId;
+    this->uiManagerThreadId = uiManagerThreadId;
     this->logger->info("Starting event loop for %v", devicePath);
     this->threadHandle = CreateThread(NULL, 0, staticRunEventLoop, (void*)this, 0, &this->threadId);
 }
@@ -22,14 +24,20 @@ WinUsbDevice::~WinUsbDevice()
     this->logger->info("Terminated event loop for %v", this->devicePath);
 }
 
+DWORD WinUsbDevice::getThreadId() {
+    return this->threadId;
+}
+
 DWORD WINAPI WinUsbDevice::staticRunEventLoop(void * winUsbDeviceInstance) {
     WinUsbDevice* winUsbDevice = (WinUsbDevice*)winUsbDeviceInstance;
     return winUsbDevice->runEventLoop();
 }
 
-DWORD WinUsbDevice::runEventLoop(void) {
+DWORD WinUsbDevice::runEventLoop(void) {    
     int failedReads = 0;
     int failedWrites = 0;
+    MSG threadMessage;
+    PeekMessage(&threadMessage, NULL, WM_USER, WM_USER, PM_NOREMOVE);
     this->logger->info("Started event loop for %v", this->devicePath);
     this->runEventLoopFlag.test_and_set();
     this->logger->info("Allocating VigEmClient for %v", this->devicePath);
@@ -88,10 +96,6 @@ DWORD WinUsbDevice::runEventLoop(void) {
     vigem_free(this->vigEmClient);
     this->logger->info("Completed event loop for %v", this->devicePath);
     return 0;
-}
-
-DWORD WinUsbDevice::getThreadId() {
-    return this->threadId;
 }
 
 /*
