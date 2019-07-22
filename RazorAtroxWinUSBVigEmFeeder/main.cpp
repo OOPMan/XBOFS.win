@@ -135,7 +135,9 @@ bool dispatchInputToVigEmController(PVIGEM_CLIENT vigEmClient, PVIGEM_TARGET vig
     return VIGEM_SUCCESS(controllerUpdateResult);
 }
 
-LONG __cdecl _tmain(LONG Argc, LPTSTR *Argv) {            
+LONG __cdecl _tmain(LONG Argc, LPTSTR *Argv) {  
+    el::Configurations conf("easyloggingpp.conf");
+    el::Loggers::setDefaultConfigurations(conf, true);    
     el::Logger* logger  = el::Loggers::getLogger("RazerAtroxWinUSBVigEmFeeder");
     DWORD threadId      = GetCurrentThreadId();
     logger->info("Application start-up. Hit any key and press enter to exit");
