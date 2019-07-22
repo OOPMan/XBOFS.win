@@ -60,5 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+    <None Include="easyloggingpp.conf" />
   </ItemGroup>
 </Project>

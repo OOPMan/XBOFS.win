@@ -35,6 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="easyloggingpp.conf" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
