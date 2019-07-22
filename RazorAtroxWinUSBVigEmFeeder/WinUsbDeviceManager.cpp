@@ -1,22 +1,39 @@
 #include "WinUsbDeviceManager.h"
 
-WinUsbDeviceManager::WinUsbDeviceManager()
+/*
+Constructs the WinUsbDeviceManager and starts its event loop in a separate thread
+*/
+WinUsbDeviceManager::WinUsbDeviceManager(DWORD parentThreadId, DWORD uiManagerThreadId)
 {    
+    this->parentThreadId = parentThreadId;
+    this->uiManagerThreadId = uiManagerThreadId;
+    this->logger->info("Starting event loop for WinUsbDeviceManager");
+    this->threadHandle = CreateThread(NULL, 0, staticRunEventLoop, (void*)this, 0, &this->threadId);
 }
-
 
 WinUsbDeviceManager::~WinUsbDeviceManager()
 {
+    this->logger->info("Terminating event loop for WinUsbDeviceManager");
     for (auto tuple : this->devicePathWinUsbDeviceMap) delete tuple.second;            
     this->devicePathWinUsbDeviceMap.clear();
+    this->runEventLoopFlag.clear();
+    while (WaitForSingleObject(this->threadHandle, 10) != WAIT_OBJECT_0) {};
+    CloseHandle(this->threadHandle);
+    this->logger->info("Terminated event loop for WinUsbDeviceManager");
 }
 
-DWORD WINAPI WinUsbDeviceManager::staticRunEventLoop(void * winUsbDeviceManagerInstance) {
+DWORD WinUsbDeviceManager::getThreadId() {
+    return this->threadId;
+}
+
+DWORD WINAPI WinUsbDeviceManager::staticRunEventLoop(void * winUsbDeviceManagerInstance) {    
     WinUsbDeviceManager* winUsbDeviceManager = (WinUsbDeviceManager*)winUsbDeviceManagerInstance;
     return winUsbDeviceManager->runEventLoop();
 }
 
 DWORD WinUsbDeviceManager::runEventLoop(void) {    
+    MSG threadMessage;
+    PeekMessage(&threadMessage, NULL, WM_USER, WM_USER, PM_NOREMOVE);
     this->logger->info("Started event loop for WinUsbDeviceManager");
     this->runEventLoopFlag.test_and_set();
     while (this->runEventLoopFlag.test_and_set()) {        
@@ -25,7 +42,7 @@ DWORD WinUsbDeviceManager::runEventLoop(void) {
         for (auto devicePath : devicePaths) {
             if (this->devicePathWinUsbDeviceMap.find(devicePath) != this->devicePathWinUsbDeviceMap.end()) continue;            
             this->logger->info("Adding WinUsbDevice at %v", devicePath);                      
-            auto winUsbDevice = new WinUsbDevice(devicePath);
+            auto winUsbDevice = new WinUsbDevice(devicePath, this->threadId, this->uiManagerThreadId);
             this->devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });                        
         }  
         // Check for WinUsbDevices to remove
@@ -33,22 +50,14 @@ DWORD WinUsbDeviceManager::runEventLoop(void) {
             if (devicePaths.find(tuple.first) != devicePaths.end()) continue;
             delete tuple.second;
             this->devicePathWinUsbDeviceMap.erase(tuple.first);
-        }        
+        }     
+        // TODO: Processes messages in thread message queue
         Sleep(1000);
     }
     this->logger->info("Completed event loop for WinUsbDeviceManager");
     return 0;
 }
 
-DWORD WinUsbDeviceManager::getThreadId() {
-    return this->threadId;
-}
-
-/*
-*/
-HANDLE WinUsbDeviceManager::runEventLoopInThread() {    
-    return CreateThread(NULL, 0, staticRunEventLoop, (void*)this, 0, &this->threadId);
-}
 
 /*
 Retrieve a vector of TCHAR* representing device paths that the device manager will work with

@@ -9,19 +9,21 @@
 */
 class WinUsbDeviceManager
 {
-public:
-    std::atomic_flag runEventLoopFlag = ATOMIC_FLAG_INIT;
-
-    WinUsbDeviceManager();
+public:    
+    WinUsbDeviceManager(DWORD parentThreadId, DWORD uiManagerThreadId);
     ~WinUsbDeviceManager();    
 
-    static DWORD WINAPI staticRunEventLoop(void* Param);
     DWORD getThreadId();
-    DWORD runEventLoop(void);
-    HANDLE runEventLoopInThread();
+    static DWORD WINAPI staticRunEventLoop(void* Param);    
+    DWORD runEventLoop(void);    
+
 protected:
-    DWORD threadId;
-    el::Logger* logger = el::Loggers::getLogger("WinUsbDeviceManager");    
+    std::atomic_flag runEventLoopFlag           = ATOMIC_FLAG_INIT;
+    DWORD parentThreadId                        = 0;
+    DWORD uiManagerThreadId                     = 0;
+    DWORD threadId                              = 0;
+    HANDLE threadHandle                         = NULL;
+    el::Logger* logger                          = el::Loggers::getLogger("WinUsbDeviceManager");    
     std::unordered_map<tstring, WinUsbDevice*> devicePathWinUsbDeviceMap;    
 
     std::set<tstring> retrieveDevicePaths();
