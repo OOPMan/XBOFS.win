@@ -9,7 +9,6 @@
 #include <set>
 #include <atomic>
 
-
 #include "easylogging++.h"
 #include "device.h"
 
