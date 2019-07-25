@@ -13,9 +13,10 @@ WinUsbDeviceManager::WinUsbDeviceManager(DWORD parentThreadId, DWORD uiManagerTh
 
 WinUsbDeviceManager::~WinUsbDeviceManager()
 {
-    this->logger->info("Terminating event loop for WinUsbDeviceManager");
+    // TODO: This is not working properly when exiting the software
+    this->logger->info("Terminating event loop for WinUsbDeviceManager");   
     for (auto tuple : this->devicePathWinUsbDeviceMap) delete tuple.second;            
-    this->devicePathWinUsbDeviceMap.clear();
+    this->devicePathWinUsbDeviceMap.clear();      
     this->runEventLoopFlag.clear();
     while (WaitForSingleObject(this->threadHandle, 10) != WAIT_OBJECT_0) {};
     CloseHandle(this->threadHandle);
