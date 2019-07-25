@@ -1,29 +1,23 @@
 #pragma once
 #include "pch.h"
+#include "Thread.h"
 
 #include <ViGEm/Client.h>
 
 
 /*
 */
-class WinUsbDevice
+class WinUsbDevice : public Thread
 {
 public:      
-    WinUsbDevice(tstring devicePath, DWORD parentThreadId, DWORD uiManagerThreadId);
-    ~WinUsbDevice();
+    WinUsbDevice(tstring devicePath, std::string identifier, DWORD parentThreadId, DWORD uiManagerThreadId);
+    ~WinUsbDevice() {};
 
-    DWORD getThreadId();    
-    static DWORD WINAPI staticRunEventLoop(void* Param);
-    DWORD runEventLoop(void);    
+    DWORD run(void);    
     
-protected:
-    std::atomic_flag runEventLoopFlag       = ATOMIC_FLAG_INIT;
-    DWORD parentThreadId                    = 0;
-    DWORD uiManagerThreadId                 = 0;
-    DWORD threadId                          = 0;
-    HANDLE threadHandle                     = NULL;
-    el::Logger* logger                      = el::Loggers::getLogger("WinUsbDevice");
-    tstring devicePath;
+protected:    
+    const tstring devicePath;
+    
     bool deviceHandlesOpen                  = false;        
     UCHAR RAZER_ATROX_INIT[5]               = { 0x05, 0x20, 0x08, 0x01, 0x05 };
     RAZER_ATROX_DATA_PACKET dataPacket      = {};
@@ -32,14 +26,12 @@ protected:
     PVIGEM_TARGET vigEmTarget               = NULL;       
     WINUSB_INTERFACE_HANDLE winUsbHandle;
     HANDLE deviceHandle;
-    
+        
     bool openDevice();
     bool closeDevice();    
     bool initRazorAtrox();
     bool readInputFromRazerAtrox();
     RAZER_ATROX_PACKET_TYPES processInputFromRazerAtrox();
     bool dispatchInputToVigEmController();
-    
-private:
 };
 

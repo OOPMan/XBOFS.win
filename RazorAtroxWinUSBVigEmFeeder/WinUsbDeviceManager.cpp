@@ -1,4 +1,5 @@
 #include "WinUsbDeviceManager.h"
+#include "utils.h";
 
 /*
 Constructs the WinUsbDeviceManager and starts its event loop in a separate thread
@@ -18,8 +19,13 @@ DWORD WinUsbDeviceManager::run() {
         // Check the updated set for new devicePaths
         for (auto devicePath : devicePaths) {
             if (devicePathWinUsbDeviceMap.find(devicePath) != devicePathWinUsbDeviceMap.end()) continue;            
-            this->logger->info("Adding WinUsbDevice at %v", devicePath);                      
-            auto winUsbDevice = new WinUsbDevice(devicePath, this->threadId, this->uiManagerThreadId);
+            this->logger->info("Adding WinUsbDevice at %v", devicePath);  
+            #ifdef UNICODE
+            auto identifier = utf8_encode(devicePath);
+            #else
+            auto identifier = devicePath;
+            #endif // UNICODE             
+            auto winUsbDevice = new WinUsbDevice(devicePath, identifier, this->threadId, this->uiManagerThreadId);
             devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });                        
         }  
         // Check for WinUsbDevices to remove
@@ -32,7 +38,7 @@ DWORD WinUsbDeviceManager::run() {
         if (PeekMessage(&threadMessage, NULL, WM_USER, WM_APP, PM_REMOVE) == TRUE && threadMessage.message == RAWUVEF_STOP) loop = false;
         Sleep(1000);
     }
-    this->logger->info("Complete scan loop for %v", this->identifier);    
+    this->logger->info("Completed scan loop for %v", this->identifier);    
     for (auto tuple : devicePathWinUsbDeviceMap) delete tuple.second;    
     return 0;
 }
