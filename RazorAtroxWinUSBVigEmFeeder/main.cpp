@@ -140,7 +140,7 @@ LONG __cdecl _tmain(LONG Argc, LPTSTR *Argv) {
     el::Loggers::setDefaultConfigurations(conf, true);    
     el::Logger* logger  = el::Loggers::getLogger("RazerAtroxWinUSBVigEmFeeder");
     DWORD threadId      = GetCurrentThreadId();
-    logger->info("Application start-up. Hit any key and press enter to exit");
+    logger->info("Application start-up. Press enter to exit");
     std::unique_ptr<WinUsbDeviceManager> manager(new WinUsbDeviceManager(threadId, threadId));   
     getchar();     
     logger->info("Application shut-down");    

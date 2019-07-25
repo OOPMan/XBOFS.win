@@ -13,3 +13,7 @@
 #include "device.h"
 
 typedef std::basic_string<TCHAR> tstring;
+
+enum THREAD_MESSAGES {
+    RAWUVEF_STOP = WM_USER + 0
+};
