@@ -1,8 +1,20 @@
 #pragma once
-class PDCursesUIManager
+#include "pch.h"
+#include "thread.h"
+#include "WinUsbDeviceManager.h"
+
+#include <curses.h>
+
+class PDCursesUIManager : public Thread
 {
 public:
-    PDCursesUIManager();
-    ~PDCursesUIManager();
+    PDCursesUIManager(DWORD parentThreadId);
+    ~PDCursesUIManager() {};
+
+    DWORD run();
+    void wait();
+protected:
+    WINDOW *window;
+    WinUsbDeviceManager *winUsbDeviceManager;    
 };
 
