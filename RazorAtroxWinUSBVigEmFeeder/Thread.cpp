@@ -34,3 +34,7 @@ DWORD Thread::startThread(LPVOID data) {
     PeekMessage(&threadMessage, NULL, WM_USER, WM_USER, PM_NOREMOVE);    
     return thread->run();
 }
+
+BOOL Thread::notifyUIManager(UINT messageValue, LPARAM lParam) {
+    return PostThreadMessage(this->uiManagerThreadId, messageValue, this->threadId, lParam);
+}

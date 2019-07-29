@@ -23,5 +23,6 @@ protected:
     HANDLE threadHandle = NULL;
 
     static DWORD startThread(LPVOID data);
+    BOOL notifyUIManager(UINT messageValue, LPARAM lParam);
 };
 
