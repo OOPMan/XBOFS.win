@@ -8,13 +8,15 @@ WinUsbDeviceManager::WinUsbDeviceManager(DWORD parentThreadId, DWORD uiManagerTh
 : Thread("WinUsbDeviceManager", "WinUsbDeviceManager", parentThreadId, uiManagerThreadId)
 {}
 
-DWORD WinUsbDeviceManager::run() {            
+DWORD WinUsbDeviceManager::run() {    
+    this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_MANAGER_STARTED, NULL);
     this->logger->info("Started thread for %v", this->identifier);
     MSG threadMessage;
     bool loop = true;
     std::unordered_map<tstring, WinUsbDevice*> devicePathWinUsbDeviceMap;    
     this->logger->info("Starting scan loop for %v", this->identifier);
-    while (loop) {        
+    while (loop) {
+        this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_MANAGER_SCANNING, NULL);
         auto devicePaths = this->retrieveDevicePaths();        
         // Check the updated set for new devicePaths
         for (auto devicePath : devicePaths) {
@@ -36,9 +38,13 @@ DWORD WinUsbDeviceManager::run() {
         }     
         // TODO: Processes messages in thread message queue
         if (PeekMessage(&threadMessage, NULL, WM_USER, WM_APP, PM_REMOVE) == TRUE && threadMessage.message == RAWUVEF_STOP) loop = false;
-        Sleep(1000);
+        else {
+            this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_MANAGER_SLEEPING, NULL);
+            Sleep(1000);
+        }
     }
     this->logger->info("Completed scan loop for %v", this->identifier);    
+    this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_MANAGER_TERMINATING, NULL);
     for (auto tuple : devicePathWinUsbDeviceMap) delete tuple.second;    
     return 0;
 }
