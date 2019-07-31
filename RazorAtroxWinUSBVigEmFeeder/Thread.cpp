@@ -2,13 +2,13 @@
 
 Thread::Thread(std::string identifier, std::string loggerName, DWORD parentThreadId, DWORD uiManagerThreadId)
 : identifier(identifier), logger(el::Loggers::getLogger(loggerName)), parentThreadId(parentThreadId), uiManagerThreadId(uiManagerThreadId)
-{    
+{       
     this->logger->info("Starting thread for %v", this->identifier);    
     this->threadHandle = CreateThread(NULL, 0, startThread, (LPVOID)this, 0, &this->threadId);
 }
 
 Thread::~Thread()
-{
+{    
     this->logger->info("Stopping thread for %v", this->identifier);
     PostThreadMessage(this->threadId, RAWUVEF_STOP, NULL, NULL);
     while (WaitForSingleObject(this->threadHandle, 10) != WAIT_OBJECT_0) {};

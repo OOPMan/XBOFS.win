@@ -14,23 +14,23 @@ DWORD WinUsbDevice::run() {
     int failedReads = 0;
     int failedWrites = 0;
     MSG threadMessage;
-    this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_STARTED, NULL);
+    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_STARTED, NULL);
     this->logger->info("Started thread for %v", this->identifier);
     this->logger->info("Allocating VigEmClient for %v", this->identifier);
     this->vigEmClient = vigem_alloc();
     this->logger->info("Allocating VigEmTarget for %v", this->identifier);
     this->vigEmTarget = vigem_target_x360_alloc();
     this->logger->info("Connecting VigEmClient for %v", this->identifier);
-    this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_VIGEM_CONNECT, NULL);
+    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_VIGEM_CONNECT, NULL);
     if (!VIGEM_SUCCESS(vigem_connect(this->vigEmClient))) {
-        this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_ERROR, NULL);
+        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
         this->logger->error("Unable to connect VigEmClient for %v", this->identifier);
         loop = false;
     }
-    this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_VIGEM_TARGET_ADD, NULL);
+    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_VIGEM_TARGET_ADD, NULL);
     this->logger->info("Adding VigEmTarget for %v", this->identifier);
     if (!VIGEM_SUCCESS(vigem_target_add(this->vigEmClient, this->vigEmTarget))) {
-        this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_ERROR, NULL);
+        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
         this->logger->error("Unable to add VigEmTarget for %v", this->identifier);
         loop = false;
     }
@@ -38,19 +38,19 @@ DWORD WinUsbDevice::run() {
     this->logger->info("Starting Read-Process-Dispatch loop for %v", this->identifier);
     while (loop) {                        
         if (PeekMessage(&threadMessage, NULL, WM_USER, WM_APP, PM_REMOVE) == TRUE && threadMessage.message == RAWUVEF_STOP) loop = false;
-        this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_OPEN, NULL);
+        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_OPEN, NULL);
         if (!this->openDevice()) {
-            this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_ERROR, NULL);
+            this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
             this->logger->error("Unable to open WinUSB device for %v", this->identifier);
             continue;
         }        
-        this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_INIT, NULL);
+        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_INIT, NULL);
         if (!this->initRazorAtrox()) {
-            this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_ERROR, NULL);
+            this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
             this->logger->error("Unable to init Razer Atrox for %v", this->identifier);
             continue;
         }
-        this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_READ_INPUT, NULL);
+        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_READ_INPUT, NULL);
         this->logger->info("Reading input from Razer Atrox for %v", this->identifier);
         int currentFailedReads = 0;
         while (loop && currentFailedReads < 5) {
@@ -64,13 +64,13 @@ DWORD WinUsbDevice::run() {
             if (!this->dispatchInputToVigEmController()) failedWrites += 1;
         }
         if (currentFailedReads >= 5) {
-            this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_ERROR, NULL);
+            this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
             this->logger->warn("Failed to read input from Razer Atrox 5 or more times for %v", this->identifier);
         }
         failedReads += currentFailedReads;
         currentFailedReads = 0;
     }
-    this->notifyUIManager(RAWEVEF_WIN_USB_DEVICE_TERMINATING, NULL);
+    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_TERMINATING, NULL);
     this->logger->info("Completed Read-Process-Dispatch loop for %v", this->identifier);
     this->logger->info("There were %v failed reads for %v", failedReads, this->identifier);
     this->logger->info("There were %v failed writes for %v", failedWrites, this->identifier);
