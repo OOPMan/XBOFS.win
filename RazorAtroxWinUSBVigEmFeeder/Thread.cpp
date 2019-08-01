@@ -11,8 +11,9 @@ Thread::~Thread()
 {    
     this->logger->info("Stopping thread for %v", this->identifier);
     PostThreadMessage(this->threadId, RAWUVEF_STOP, NULL, NULL);
-    while (WaitForSingleObject(this->threadHandle, 10) != WAIT_OBJECT_0) {};
+    while (WaitForSingleObject(this->threadHandle, INFINITE) != WAIT_OBJECT_0);
     CloseHandle(this->threadHandle);
+    this->notifyUIManager(RAWUVEF_STOPPED, NULL);
     this->logger->info("Stopped thread for %v", this->identifier);
 }
 
