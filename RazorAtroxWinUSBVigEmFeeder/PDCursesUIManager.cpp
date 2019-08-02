@@ -1,5 +1,7 @@
 #include "PDCursesUIManager.h"
 
+#include <forward_list>
+
 PDCursesUIManager::PDCursesUIManager(DWORD parentThreadId) 
 : Thread("PDCursesUIManager", "PDCursesUIManager", parentThreadId, parentThreadId)
 {
@@ -10,30 +12,12 @@ void PDCursesUIManager::wait()
     WaitForSingleObject(this->threadHandle, INFINITE);
 }
 
-std::string PDCursesUIManager::threadMessageToString(THREAD_MESSAGES threadMessage)
-{    
-    switch (threadMessage) {
-    case RAWUVEF_WIN_USB_DEVICE_MANAGER_STARTED: return "Started";
-    case RAWUVEF_WIN_USB_DEVICE_MANAGER_SCANNING: 
-    case RAWUVEF_WIN_USB_DEVICE_MANAGER_SLEEPING: return "Active";
-    case RAWUVEF_WIN_USB_DEVICE_MANAGER_TERMINATING: return "Terminating...";
-    case RAWUVEF_WIN_USB_DEVICE_MANAGER_ERROR: return "Error!";
-    case RAWUVEF_WIN_USB_DEVICE_STARTED: return "Started";
-    case RAWUVEF_WIN_USB_DEVICE_VIGEM_CONNECT: return "VigEmClient connect...";
-    case RAWUVEF_WIN_USB_DEVICE_VIGEM_TARGET_ADD: return "VigEmClient target add...";
-    case RAWUVEF_WIN_USB_DEVICE_OPEN: return "Device Open...";
-    case RAWUVEF_WIN_USB_DEVICE_INIT: return "Device Init...";
-    case RAWUVEF_WIN_USB_DEVICE_READ_INPUT: return "Reading input...";
-    case RAWUVEF_WIN_USB_DEVICE_TERMINATING: return "Terminating...";
-    case RAWUVEF_WIN_USB_DEVICE_ERROR: return "Error!";
-    }
-    return "Unknown Thread Message";
-}
-
-bool PDCursesUIManager::checkMailbox() 
+int PDCursesUIManager::checkMailbox() 
 {    
     MSG message;
+    int messageCount = 0;
     while (PeekMessage(&message, NULL, WM_USER, WM_APP, PM_REMOVE) != FALSE) {
+        messageCount++;
         DWORD threadId = message.wParam;
         THREAD_MESSAGES threadMessage = (THREAD_MESSAGES)message.message;        
         switch (threadMessage) {
@@ -51,34 +35,43 @@ bool PDCursesUIManager::checkMailbox()
         case RAWUVEF_WIN_USB_DEVICE_INIT:
         case RAWUVEF_WIN_USB_DEVICE_READ_INPUT:
         case RAWUVEF_WIN_USB_DEVICE_TERMINATING:
-        case RAWUVEF_WIN_USB_DEVICE_ERROR:
-            this->winUsbDeviceStatusMap.insert_or_assign(threadId, threadMessage);
+        case RAWUVEF_WIN_USB_DEVICE_ERROR:            
+            if (this->winUsbDeviceStatusMap.find(threadId) == this->winUsbDeviceStatusMap.end()) this->winUsbDeviceThreadIdList.push_back(threadId);
+            this->winUsbDeviceStatusMap.insert_or_assign(threadId, threadMessage);            
             break;
-        case RAWUVEF_STOPPED:
+        case RAWUVEF_STOPPED:        
+        {
             if (this->winUsbDeviceStatusMap.find(threadId) == this->winUsbDeviceStatusMap.end()) {
                 this->logger->warn("Thread %v not in WinUsbDeviceStatusMap", threadId);
                 break;
-            }
+            }            
+            auto predicate = [threadId](DWORD threadIdB) { return threadId == threadIdB; };
+            this->winUsbDeviceThreadIdList.remove_if(predicate);            
             this->winUsbDeviceStatusMap.erase(threadId);
             break;
-        case RAWUVEF_STOP: return false;
+        }
+        default:
+            this->logger->warn("Unsupported message: %d", threadMessage);
         }
     }
-    return true;      
+    return messageCount;      
 }
 
 void PDCursesUIManager::render(bool exiting)
 {
     erase();
     mvwprintw(this->window, 0, 0, "Razer Atrox WinUSB VigEm Feeder %s", exiting ? "" : "(Press Q to exit)");    
-    mvwprintw(this->window, 2, 0, "WinUSB Device Manager (Thread ID %d) status: %s", this->winUsbDeviceManager->getThreadId(), this->threadMessageToString(this->winUsbDeviceManagerStatus));
+    mvwprintw(this->window, 2, 0, "WinUSB Device Manager (Thread ID %d) status: %s", this->winUsbDeviceManager->getThreadId(), threadMessageToString(this->winUsbDeviceManagerStatus).data());  
     auto counter = 0;
-    for (auto tuple : this->winUsbDeviceStatusMap) {
-        // For some reason we have to use the string data here or pdcurses prints out gibberish
-        auto status = this->threadMessageToString(tuple.second).data();
-        mvwprintw(this->window, 3 + counter, 0, "WinUSB Device %d (Thread ID %d) status: %s", counter, tuple.first, status);
-    }
-    if (exiting) mvwprintw(this->window, 5 + counter, 0, "Exiting. Waiting for all threads to exit...");
+    std::list<std::pair<DWORD, std::string>> statusList;
+    for (auto threadId : this->winUsbDeviceThreadIdList) statusList.push_back(std::make_pair(
+        threadId, threadMessageToString(this->winUsbDeviceStatusMap[threadId])
+    ));    
+    for (auto tuple : statusList) {
+        mvwprintw(this->window, 3 + counter, 0, "WinUSB Device %d (Thread ID %d) status: %s", counter, tuple.first, tuple.second.data());
+        counter++;
+    }    
+    if (exiting) mvwprintw(this->window, 4 + counter, 0, "Exiting. Waiting for all threads to exit...");
     refresh();    
 }
 
@@ -94,8 +87,7 @@ DWORD PDCursesUIManager::run()
     this->winUsbDeviceManager = new WinUsbDeviceManager(this->threadId, this->threadId);
     this->logger->info("Entering GUI processing loop");
     while (true) {
-        if (!this->checkMailbox()) break;
-        this->render(false);        
+        if (this->checkMailbox() > 0) this->render(false);        
         auto key = getch();
         if (key == 'Q' || key == 'q') break;
     }

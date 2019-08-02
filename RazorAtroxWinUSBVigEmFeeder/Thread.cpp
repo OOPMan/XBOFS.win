@@ -1,5 +1,25 @@
 #include "Thread.h"
 
+std::string threadMessageToString(THREAD_MESSAGES threadMessage)
+{
+    switch (threadMessage) {
+    case RAWUVEF_WIN_USB_DEVICE_MANAGER_STARTED: return "Started";
+    case RAWUVEF_WIN_USB_DEVICE_MANAGER_SCANNING:
+    case RAWUVEF_WIN_USB_DEVICE_MANAGER_SLEEPING: return "Active";
+    case RAWUVEF_WIN_USB_DEVICE_MANAGER_TERMINATING: return "Terminating...";
+    case RAWUVEF_WIN_USB_DEVICE_MANAGER_ERROR: return "Error!";
+    case RAWUVEF_WIN_USB_DEVICE_STARTED: return "Started";
+    case RAWUVEF_WIN_USB_DEVICE_VIGEM_CONNECT: return "VigEmClient connect...";
+    case RAWUVEF_WIN_USB_DEVICE_VIGEM_TARGET_ADD: return "VigEmClient target add...";
+    case RAWUVEF_WIN_USB_DEVICE_OPEN: return "Device Open...";
+    case RAWUVEF_WIN_USB_DEVICE_INIT: return "Device Init...";
+    case RAWUVEF_WIN_USB_DEVICE_READ_INPUT: return "Reading input...";
+    case RAWUVEF_WIN_USB_DEVICE_TERMINATING: return "Terminating...";
+    case RAWUVEF_WIN_USB_DEVICE_ERROR: return "Error!";
+    }
+    return "Unknown Thread Message";
+}
+
 Thread::Thread(std::string identifier, std::string loggerName, DWORD parentThreadId, DWORD uiManagerThreadId)
 : identifier(identifier), logger(el::Loggers::getLogger(loggerName)), parentThreadId(parentThreadId), uiManagerThreadId(uiManagerThreadId)
 {       

@@ -17,10 +17,11 @@ protected:
     WINDOW *window;
     WinUsbDeviceManager *winUsbDeviceManager;    
     THREAD_MESSAGES winUsbDeviceManagerStatus;
+        
+    std::list<DWORD> winUsbDeviceThreadIdList;    
     std::unordered_map<DWORD, THREAD_MESSAGES> winUsbDeviceStatusMap;
     
     void render(bool exiting);
-    bool checkMailbox();
-    std::string threadMessageToString(THREAD_MESSAGES threadMessage);
+    int checkMailbox();
 };
 
