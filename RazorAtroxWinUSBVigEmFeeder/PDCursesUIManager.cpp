@@ -61,16 +61,12 @@ void PDCursesUIManager::render(bool exiting)
 {
     erase();
     mvwprintw(this->window, 0, 0, "Razer Atrox WinUSB VigEm Feeder %s", exiting ? "" : "(Press Q to exit)");    
-    mvwprintw(this->window, 2, 0, "WinUSB Device Manager (Thread ID %d) status: %s", this->winUsbDeviceManager->getThreadId(), threadMessageToString(this->winUsbDeviceManagerStatus).data());  
-    auto counter = 0;
-    std::list<std::pair<DWORD, std::string>> statusList;
-    for (auto threadId : this->winUsbDeviceThreadIdList) statusList.push_back(std::make_pair(
-        threadId, threadMessageToString(this->winUsbDeviceStatusMap[threadId])
-    ));    
-    for (auto tuple : statusList) {
-        mvwprintw(this->window, 3 + counter, 0, "WinUSB Device %d (Thread ID %d) status: %s", counter, tuple.first, tuple.second.data());
+    mvwprintw(this->window, 2, 0, "WinUSB Device Manager (Thread ID %d) status: %s", this->winUsbDeviceManager->getThreadId(), threadMessageToString(this->winUsbDeviceManagerStatus).c_str());  
+    auto counter = 0;            
+    for (auto threadId : this->winUsbDeviceThreadIdList) {
+        mvwprintw(this->window, 3 + counter, 0, "WinUSB Device %d (Thread ID %d) status: %s", counter, threadId, threadMessageToString(this->winUsbDeviceStatusMap.at(threadId)).c_str());
         counter++;
-    }    
+    }
     if (exiting) mvwprintw(this->window, 4 + counter, 0, "Exiting. Waiting for all threads to exit...");
     refresh();    
 }
