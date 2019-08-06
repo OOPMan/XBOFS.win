@@ -35,15 +35,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="easyloggingpp.conf" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="device.cpp" />
+    <ClCompile Include="easylogging++.cc" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PDCursesUIManager.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="WinUsbDevice.cpp" />
+    <ClCompile Include="WinUsbDeviceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="device.h" />
+    <ClInclude Include="easylogging++.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PDCursesUIManager.h" />
+    <ClInclude Include="Thread.h" />
+    <ClInclude Include="utils.h" />
+    <ClInclude Include="WinUsbDevice.h" />
+    <ClInclude Include="WinUsbDeviceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ViGEmClient\src\ViGEmClient.vcxproj">
@@ -194,8 +207,9 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP;WINAPI_PARTITION_DESKTOP=1;WINAPI_PARTITION_SYSTEM=1;WINAPI_PARTITION_APP=1;WINAPI_PARTITION_PC_APP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP;WINAPI_PARTITION_DESKTOP=1;WINAPI_PARTITION_SYSTEM=1;WINAPI_PARTITION_APP=1;WINAPI_PARTITION_PC_APP=1;ELPP_UNICODE;ELPP_THREAD_SAFE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);onecoreuap.lib;winusb.lib;pdcurses.lib</AdditionalDependencies>
