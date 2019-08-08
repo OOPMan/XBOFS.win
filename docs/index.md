@@ -36,7 +36,7 @@ Coming Soon
 3. Browse to https://github.com/OOPMan/XBOFS.win/releases and download the latest version **XBOFS.win.zip** 
    bundle. Extract this bundle somewhere. I recommend the root of your C: drive
 4. Browse to https://zadig.akeo.ie and download **Zadig 2.4**
-5. Open the [ZaDig WinUSB driver installation guide](zadig.md) and follow the instructions there to install 
+5. Open the [ZaDig WinUSB driver installation guide](/zadig.md) and follow the instructions there to install 
    a **WinUSB** driver for your supported controller
 
 
@@ -78,7 +78,7 @@ Coming Soon
 ## Support
 
 ##### XBOFS.win doesn't seem to be able to detect my controller
-This usually indicates an issue with the **WinUSB** driver installation. Please check the [ZaDig WinUSB driver installation guide](zadig.md) and confirm
+This usually indicates an issue with the **WinUSB** driver installation. Please check the [ZaDig WinUSB driver installation guide](/zadig.md) and confirm
 that when you plug in your controller, **Device Manager** updates to a state as displayed (controller name may differ):
 
 ![Device Manager](images/winusb_device_manager.jpg)
@@ -118,7 +118,7 @@ Long story short, I bought a Razer Atrox on special and rather than return it I 
 through a lot of hoops. The problemn ended up being solvable and here we are. More details can be found [here](https://forums.vigem.org/topic/282/xbo-arcade-sticks-vigem-and-a-whole-ton-of-fun/)
 
 ##### Can you support my device?
-It's might be possible. Take a look at the [device contributor guide](device_contributor_guide.md) to see how you can collect the data I need to do so...
+It's might be possible. Take a look at the [device contributor guide](/device_contributor_guide.md) to see how you can collect the data I need to do so...
 
 ## Credits
 
