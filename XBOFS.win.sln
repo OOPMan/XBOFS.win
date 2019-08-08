@@ -3,17 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RazorAtroxWinUSBVigEmFeeder", "RazorAtroxWinUSBVigEmFeeder\RazorAtroxWinUSBVigEmFeeder.vcxproj", "{F6104731-5815-4BBA-A558-E859DD039413}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XBOFS.win", "XBOFS.win\XBOFS.win.vcxproj", "{F6104731-5815-4BBA-A558-E859DD039413}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ViGEmClient", "ViGEmClient\src\ViGEmClient.vcxproj", "{7DB06674-1F4F-464B-8E1C-172E9587F9DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E0515A5-B0AA-4821-90DE-C764A2C35AF2}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		_config.yml = _config.yml
+		CNAME = CNAME
 		LICENSE.txt = LICENSE.txt
 		pre-build.cmd = pre-build.cmd
 		README.md = README.md
 		VigEmClient.patch = VigEmClient.patch
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B758C57A-D285-4991-96CF-8B166A4FE290}"
+	ProjectSection(SolutionItems) = preProject
+		docs\device_contributor_guide.md = docs\device_contributor_guide.md
+		docs\index.md = docs\index.md
+		docs\zadig.md = docs\zadig.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "presets", "presets", "{98CB9F55-4522-4F47-8C9F-79070A0C1464}"
+	ProjectSection(SolutionItems) = preProject
+		presets\razer_atrox_zadig_preset.cfg = presets\razer_atrox_zadig_preset.cfg
 	EndProjectSection
 EndProject
 Global
@@ -83,6 +97,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B758C57A-D285-4991-96CF-8B166A4FE290} = {1E0515A5-B0AA-4821-90DE-C764A2C35AF2}
+		{98CB9F55-4522-4F47-8C9F-79070A0C1464} = {1E0515A5-B0AA-4821-90DE-C764A2C35AF2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B5964061-63A6-4D2B-9142-462BCF9B6748}
