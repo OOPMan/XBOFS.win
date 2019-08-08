@@ -117,6 +117,8 @@ Please do one of the following:
 Long story short, I bought a Razer Atrox on special and rather than return it I decided to see if I could work out why it didn't work without jumping
 through a lot of hoops. The problemn ended up being solvable and here we are. More details can be found [here](https://forums.vigem.org/topic/282/xbo-arcade-sticks-vigem-and-a-whole-ton-of-fun/)
 
+##### Can you support my device?
+It's might be possible. Take a look at the [device contributor guide](device_contributor_guide.md) to see how you can collect the data I need to do so...
 
 ## Credits
 
