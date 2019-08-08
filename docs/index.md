@@ -30,49 +30,49 @@ Coming Soon
 
 ## Installation
 
-1. Browse  to https://github.com/ViGEm/ViGEmBus/releases/ and download the latest **VigEmBus** installer. If you are 
-   on Windows 7 you also need to download the files in the Windows 7 Prerequisites section
-2. Install **VigEmBus** and reboot
-3. Browse to https://github.com/OOPMan/XBOFS.win/releases and download the latest version **XBOFS.win.zip** 
-   bundle. Extract this bundle somewhere. I recommend the root of your C: drive
-4. Browse to https://zadig.akeo.ie and download **Zadig 2.4**
-5. Open the [ZaDig WinUSB driver installation guide](/zadig.md) and follow the instructions there to install 
-   a **WinUSB** driver for your supported controller
+01. Browse  to [https://github.com/ViGEm/ViGEmBus/releases/latest](https://github.com/ViGEm/ViGEmBus/releases/latest) and download the 
+    latest **VigEmBus** installer. If you are on Windows 7 you also need to download the files in the Windows 7 Prerequisites section
+02. Install **VigEmBus** and reboot
+03. Browse to [https://github.com/OOPMan/XBOFS.win/releases/latest](https://github.com/OOPMan/XBOFS.win/releases/latest) and download the 
+    latest **XBOFS.win.zip** bundle. Extract this bundle somewhere. I recommend the root of your C: drive
+04. Browse to [https://zadig.akeo.ie](https://zadig.akeo.ie) and download **Zadig 2.4** to the *XBOFS.win* folder extracted in the previous step
+05. Open the [ZaDig WinUSB driver installation guide](/zadig.md) and follow the instructions there to install 
+    a **WinUSB** driver for your supported controller
 
 
 ## Updating
 
-1. Head over to https://github.com/OOPMan/XBOFS.win/releases and download the latest version **XBOFS.win.zip** 
-   bundle. Extract this bundle over your existing folder containg **XBOFS.win**, overwriting any files if asked
-2. Restart your computer
+01. Browser to [https://github.com/OOPMan/XBOFS.win/releases/latest](https://github.com/OOPMan/XBOFS.win/releases/latest) and download 
+    the latest **XBOFS.win.zip** bundle. Extract this bundle over your existing folder containg **XBOFS.win**, overwriting any files if asked
+02. Restart your computer
 
 
 ## Usage
 
-1. Open the folder that you extracted the **XBOFS.win.zip** bundle into
-2. Run **XBOFS.win.exe** 
-3. Connect your supported controller(s)
-4. Wait for the interface to indicate your device(s) is **Reading input...**. You may 
-   see a pop-up notification about a new XB360 controller(s) being detected, this is normal
-5. You can now minimize the **XBOFS.win.exe** window if you so choose
-6. You should now be able to play games using your supported controller(s). Any game that supports a standard XB360 
-   controller should work, regardless of whether it is a Steam game, Windows store game or any other platform that 
-   supports the XB360 controller. Note that the input from the stick is mapped to the D-Pad on the virtual XB360 
-   controller not the analog stick
-7. When you are done playing, activate the **XBOXFS.win.exe** window and hit *Q*. The application will exit (it can
-   take up to 20 seconds to do so) and the virtual XB360 controller(s) will disappear
+01. Open the folder that you extracted the **XBOFS.win.zip** bundle into
+02. Run **XBOFS.win.exe** 
+03. Connect your supported controller(s)
+04. Wait for the interface to indicate your device(s) is **Reading input...**. You may 
+    see a pop-up notification about a new XB360 controller(s) being detected, this is normal
+05. You can now minimize the **XBOFS.win.exe** window if you so choose
+06. You should now be able to play games using your supported controller(s). Any game that supports a standard XB360 
+    controller should work, regardless of whether it is a Steam game, Windows store game or any other platform that 
+    supports the XB360 controller. Note that the input from the stick is mapped to the D-Pad on the virtual XB360 
+    controller not the analog stick
+07. When you are done playing, activate the **XBOXFS.win.exe** window and hit *Q*. The application will exit (it can
+    take up to 20 seconds to do so) and the virtual XB360 controller(s) will disappear
 
 
 ## Uninstallation
 
-1. Hit *Win* \+ *R*
-2. Enter *devmgmt.msc* in the Run box and press enter
-3. Click *View* and then click *Show hidden devices*
-4. Locate the item in the tree labelled *Universal Serial Bus devices*
-5. Right-click the item associated with your supported controller and click *Uninstall device*
-6. In the dialog box, mark the checkbox labelled *Delete the driver software for this device*
-7. Click *Uninstall*
-8. Replug your supported controller. It will now use whichever driver was previously configured for it
+01. Hit *Win* \+ *R*
+02. Enter *devmgmt.msc* in the Run box and press enter
+03. Click *View* and then click *Show hidden devices*
+04. Locate the item in the tree labelled *Universal Serial Bus devices*
+05. Right-click the item associated with your supported controller and click *Uninstall device*
+06. In the dialog box, mark the checkbox labelled *Delete the driver software for this device*
+07. Click *Uninstall*
+08. Replug your supported controller. It will now use whichever driver was previously configured for it
 
 
 ## Support
@@ -118,7 +118,7 @@ Long story short, I bought a Razer Atrox on special and rather than return it I 
 through a lot of hoops. The problemn ended up being solvable and here we are. More details can be found [here](https://forums.vigem.org/topic/282/xbo-arcade-sticks-vigem-and-a-whole-ton-of-fun/)
 
 ##### Can you support my device?
-It's might be possible. Take a look at the [device contributor guide](/device_contributor_guide.md) to see how you can collect the data I need to do so...
+It might be possible. Take a look at the [device contributor guide](/device_contributor_guide.md) to see how you can collect the data I need to do so...
 
 ## Credits
 
