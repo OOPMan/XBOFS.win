@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		_config.yml = _config.yml
+		CNAME = CNAME
 		LICENSE.txt = LICENSE.txt
 		pre-build.cmd = pre-build.cmd
 		README.md = README.md
@@ -21,6 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B758C57A-D
 	ProjectSection(SolutionItems) = preProject
 		docs\index.md = docs\index.md
 		docs\zadig.md = docs\zadig.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "presets", "presets", "{98CB9F55-4522-4F47-8C9F-79070A0C1464}"
+	ProjectSection(SolutionItems) = preProject
+		presets\razer_atrox_zadig_preset.cfg = presets\razer_atrox_zadig_preset.cfg
 	EndProjectSection
 EndProject
 Global
@@ -93,6 +99,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B758C57A-D285-4991-96CF-8B166A4FE290} = {1E0515A5-B0AA-4821-90DE-C764A2C35AF2}
+		{98CB9F55-4522-4F47-8C9F-79070A0C1464} = {1E0515A5-B0AA-4821-90DE-C764A2C35AF2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B5964061-63A6-4D2B-9142-462BCF9B6748}
