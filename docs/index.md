@@ -80,12 +80,14 @@ Coming Soon
 ##### XBOFS.win doesn't seem to be able to detect my controller
 This usually indicates an issue with the **WinUSB** driver installation. Please check the [ZaDig WinUSB driver installation guide](zadig.md) and confirm
 that when you plug in your controller, **Device Manager** updates to a state as displayed (controller name may differ):
+
 ![Device Manager](images/winusb_device_manager.jpg)
 If this does not happen then you should follow the guide from step 1 to see if it fixes the problem. If your problem is still not fixed then please [submit an issue](https://github.com/OOPMan/XBOFS.win/issues)
 
 ##### XBOFS.win doesn't seem to be able to create a virtual XB360 Controller
 This usually indicates an issue with the **VigEmBus** driver installation. Please confirm that the **Virtual Gamepad Emulation Bus** item appears in **Device Manager**
 under the **System Devices** node:
+
 ![Device Manager](images/vigembus_device_manager.jpg)
 If this item is missing you have not installed **VigEmBus**. Check the [installation guide](#installation) for details on how to do so. If your problem is still not fixed then please [submit an issue](https://github.com/OOPMan/XBOFS.win/issues)
 
