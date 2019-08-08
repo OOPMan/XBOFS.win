@@ -30,14 +30,13 @@ Coming Soon
 
 ## Installation
 
-1. Head over to https://github.com/ViGEm/ViGEmBus/releases/ and download the latest **VigEmBus** installer. If you are 
+1. Browse  to https://github.com/ViGEm/ViGEmBus/releases/ and download the latest **VigEmBus** installer. If you are 
    on Windows 7 you also need to download the files in the Windows 7 Prerequisites section
 2. Install **VigEmBus** and reboot
-3. Head over to https://github.com/OOPMan/XBOFS.win/releases and download the latest version **XBOFS.win.zip** 
-   bundle. Extract this bundle somewhere. I recommend a new folder on your desktop or the root of your C: drive
-4. Head over to https://zadig.akeo.ie and download **Zadig 2.4**
-5. Plug in your supported controller
-6. Head over to the [ZaDig WinUSB driver installation guide](zadig.md) and follow the instructions there to install 
+3. Browse to https://github.com/OOPMan/XBOFS.win/releases and download the latest version **XBOFS.win.zip** 
+   bundle. Extract this bundle somewhere. I recommend the root of your C: drive
+4. Browse to https://zadig.akeo.ie and download **Zadig 2.4**
+5. Open the [ZaDig WinUSB driver installation guide](zadig.md) and follow the instructions there to install 
    a **WinUSB** driver for your supported controller
 
 
