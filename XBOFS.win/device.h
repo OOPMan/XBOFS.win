@@ -10,7 +10,7 @@
 // Must match "DeviceInterfaceGUIDs" registry value specified in the INF file.
 //
 // 5ACF052A-3BE5-46AE-905E-356BA17671BD
-DEFINE_GUID(GUID_DEVINTERFACE_RazorAtroxWinUSBVigEmFeeder,
+DEFINE_GUID(GUID_DEVINTERFACE_XBOFS_WIN_CONTROLLER,
     0x5ACF052A, 0x3BE5, 0x46AE, 0x90, 0x5E, 0x35, 0x6B, 0xA1, 0x76, 0x71, 0xBD);
 
 typedef struct _DEVICE_DATA {

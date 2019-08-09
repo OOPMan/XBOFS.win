@@ -171,7 +171,7 @@ Return value:
     //
     do {
         cr = CM_Get_Device_Interface_List_Size(&DeviceInterfaceListLength,
-                                               (LPGUID)&GUID_DEVINTERFACE_RazorAtroxWinUSBVigEmFeeder,
+                                               (LPGUID)&GUID_DEVINTERFACE_XBOFS_WIN_CONTROLLER,
                                                NULL,
                                                CM_GET_DEVICE_INTERFACE_LIST_PRESENT);
 
@@ -189,7 +189,7 @@ Return value:
             break;
         }
 
-        cr = CM_Get_Device_Interface_List((LPGUID)&GUID_DEVINTERFACE_RazorAtroxWinUSBVigEmFeeder,
+        cr = CM_Get_Device_Interface_List((LPGUID)&GUID_DEVINTERFACE_XBOFS_WIN_CONTROLLER,
                                           NULL,
                                           DeviceInterfaceList,
                                           DeviceInterfaceListLength,

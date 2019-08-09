@@ -60,7 +60,7 @@ int PDCursesUIManager::checkMailbox()
 void PDCursesUIManager::render(bool exiting)
 {
     erase();
-    mvwprintw(this->window, 0, 0, "XBOFS.win v0.3 %s", exiting ? "" : "(Press Q to exit)");    
+    mvwprintw(this->window, 0, 0, "XBOFS.win v0.3a %s", exiting ? "" : "(Press Q to exit)");    
     mvwprintw(this->window, 2, 0, "WinUSB Device Manager (Thread ID %d) status: %s", this->winUsbDeviceManager->getThreadId(), threadMessageToString(this->winUsbDeviceManagerStatus).c_str());  
     auto counter = 0;            
     for (auto threadId : this->winUsbDeviceThreadIdList) {

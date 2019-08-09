@@ -2,6 +2,17 @@
 **XBOFS.win** allows you to use your **XBO Fight Stick** controller on Windows without having to install ancient, beta 
 drivers and rewire buttons
 
+# Features
+* All buttons on supported controllers work, no rewiring or fiddling required
+* Multiple supported controllers can be connected
+* Supported controllers work in Steam, Windows Store games, etc
+
+
+# Supported controllers
+* Razer Atrox XBO
+* Madcatz TE2 XBO
+
+
 ## Contents
 1. [Requirements](#requirements)
    1. [Supported controllers](#supported-controllers)
@@ -20,13 +31,17 @@ drivers and rewire buttons
 1. Windows 7 or newer
 2. 1 or more supported controllers
 
-##### Supported controllers
-1. Razer Atrox XBO
-
 
 ## Screenshots and Videos
 
-Coming Soon
+Initial program state when run:
+![](images/screenshots/01.jpg)
+Program state after a supported controller is connected:
+![](images/screenshots/02.jpg)
+Device manager displays the real connected controller as well as the virtual XB360 controller
+![](images/screenshots/03.jpg)
+Steam only sees the virtual XB360 controller
+![](images/screenshots/04.jpg)
 
 ## Installation
 
@@ -37,7 +52,8 @@ Coming Soon
     latest **XBOFS.win.zip** bundle. Extract this bundle somewhere. I recommend the root of your C: drive
 04. Browse to [https://zadig.akeo.ie](https://zadig.akeo.ie) and download **Zadig 2.4** to the *XBOFS.win* folder extracted in the previous step
 05. Open the [ZaDig WinUSB driver installation guide](/zadig.md) and follow the instructions there to install 
-    a **WinUSB** driver for your supported controller
+    a **WinUSB** driver for your supported controller. If you own multiple different supported controllers then you must repeat step 5
+    for each different supported controller
 
 
 ## Updating
@@ -108,7 +124,8 @@ In order to solve this issue you should reboot after upgrading **XBOFS.win**. If
 Please do one of the following:
 1. [Submit an issue](https://github.com/OOPMan/XBOFS.win/issues) on GitHub
 2. [Message](https://www.reddit.com/message/compose/?to=OOPManZA) me on Reddit
-3. Join the [Nefarius Software Solutions](https://discord.vigem.org/) Discord server and ping **@OOPMan**
+3. Join the XBOFS.win [subreddit](https://www.reddit.com/r/XBOFS/) and post a question
+4. Join the [Nefarius Software Solutions](https://discord.vigem.org/) Discord server and ping **@OOPMan**
 
 
 ## FAQ
@@ -118,7 +135,7 @@ Long story short, I bought a Razer Atrox on special and rather than return it I 
 through a lot of hoops. The problemn ended up being solvable and here we are. More details can be found [here](https://forums.vigem.org/topic/282/xbo-arcade-sticks-vigem-and-a-whole-ton-of-fun/)
 
 ##### Can you support my device?
-It might be possible. Take a look at the [device contributor guide](/device_contributor_guide.md) to see how you can collect the data I need to do so...
+It's very likely. Take a look at the [device contributor guide](/device_contributor_guide.md) to see how you can collect the data I need to do so...
 
 ## Credits
 
@@ -143,3 +160,5 @@ It might be possible. Take a look at the [device contributor guide](/device_cont
   * Multiple Atrox support
     * [Manick74](https://www.reddit.com/user/Manick74)
     * [TheDecn](https://www.reddit.com/user/TheDecn)
+  * Madcatz TE2 XBO data collection
+    * [Fodenn](https://www.reddit.com/user/Fodenn)

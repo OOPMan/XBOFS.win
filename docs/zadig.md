@@ -29,7 +29,7 @@
 09. Click the *Extract Files (Don't Install)* option
 
     ![Device Manager](images/zadig/09.jpg)
-10. ZaDig should now appear as follows. DO NOT click the *Extract Files* button yet!
+10. ZaDig should now appear as follows. **DO NOT** click the *Extract Files* button yet!
 
     ![Device Manager](images/zadig/10.jpg)
 11. Click *Options*. Click *Advanced Mode*
@@ -38,10 +38,10 @@
 12. Click the highlighted icon next to the *Extract Files* button
 
     ![Device Manager](images/zadig/12.jpg)
-13. Navigate to the *zadig_driver* folder and click *Select Folder*
+13. Navigate to the *zadig_driver*, click the folder for your controller and click *Select Folder*
 
     ![Device Manager](images/zadig/13.jpg)
-14. Confirm in the log area that **ZaDig** is going to use the *zadig_driver* folder as the extraction directory
+14. Confirm in the log area that **ZaDig** is going to use the selected folder as the extraction directory
 
     ![Device Manager](images/zadig/14.jpg)
 15. Now, finally, click the *Extract Files* button
@@ -51,7 +51,7 @@
     were successfully extracted. You can now close **ZaDig**
 
     ![Device Manager](images/zadig/16.jpg)
-17. Open the *zadig_driver* folder
+17. Open the correct folder within the *zadig_driver* folder
 
     ![Device Manager](images/zadig/17.jpg)
 18. Right-click on the *Setup information* file (The icon is a white page with a grey gear)
