@@ -21,8 +21,8 @@ drivers and rewire buttons
 2. 1 or more supported controllers
 
 ##### Supported controllers
-1. Razer Atrox XBO
-
+* Razer Atrox XBO
+* Madcatz TE2 XBO
 
 ## Screenshots and Videos
 
