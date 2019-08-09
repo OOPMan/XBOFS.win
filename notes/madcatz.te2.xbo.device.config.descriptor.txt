@@ -1,0 +1,160 @@
+Connection Information
+ Port: 2
+ Speed: Full Speed
+ Device address: 4
+ Open pipes: 2
+ Connection status: Device connected
+
+Device Descriptor
+ USB version: 2.0
+ Device class: 0xff - Vendor Specific Class
+ Device subclass: 0xff - Vendor Specific Subclass
+ Device protocol: 0xff - Vendor Specific Protocol
+ Control pipe max size: 64 bytes
+ Vendor ID: 0x738 (Mad Catz, Inc.)
+ Product ID: 0x4a01 (Unknown)
+ Product version: 0.34
+ Manufacturer: MADCATZ
+ Product: FIGHTSTICK
+ Serial Number: 0000A2C3626A7970
+ Configurations: 1
+ 
+ descriptors[0] = "Configuration Descriptor" 
+bLength = 9 
+bDescriptorType = USB_CONFIGURATION_DESCRIPTOR_TYPE (2) 
+wTotalLength = 32 
+bNumInterfaces = 1 
+bConfigurationValue = 1 
+iConfiguration = 0 
+Reserved = 0 
+SupportsRemoteWakeup = 1 
+SelfPowered = 0 
+PoweredByBus = 1 
+MaxPower = 0x64 -> 200 mA 
+
+descriptors[1] = "Interface Descriptor" 
+bLength = 9 
+bDescriptorType = USB_INTERFACE_DESCRIPTOR_TYPE (4) 
+bInterfaceNumber = 0 
+bAlternateSetting = 0 
+bNumEndpoints = 2 
+bInterfaceClass = UsbVendorSpecific (255) 
+bInterfaceSubClass = 71 
+bInterfaceProtocol = 208 
+iInterface = 0 
+
+descriptors[2] = "Endpoint Descriptor" 
+bLength = 7 
+bDescriptorType = USB_ENDPOINT_DESCRIPTOR_TYPE (5) 
+bEndpointAddress = 1 
+Reserved = 0 
+Direction = Output 
+type = Interrupt (3) 
+reserved = 0 
+wMaxPacketSize = 64 
+bInterval = 4 
+
+descriptors[3] = "Endpoint Descriptor" 
+bLength = 7 
+bDescriptorType = USB_ENDPOINT_DESCRIPTOR_TYPE (5) 
+bEndpointAddress = 1 
+Reserved = 0 
+Direction = Input 
+type = Interrupt (3) 
+reserved = 0 
+wMaxPacketSize = 64 
+bInterval = 4 
+
+000005: Bulk or Interrupt Transfer (DOWN), 2019-08-08 22:29:53,0295570 +27,5657544 (1. Device: FIGHTSTICK)
+Pipe Handle: 0xc49b6a48 (Endpoint Address: 0x1)
+Send 0x5 bytes to the device
+ 05 20 4C 01 05                                    . L..
+ 
+ 000063: Bulk or Interrupt Transfer (UP), 2019-08-08 22:33:04,3499713 +10,6749411. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 2E 1A 40 00 00 00 00 00 00 00 00 00 00 00    ...@...........
+ 00 00 00 00 00 00 01 00 00 00 00 00 00 00         ..............
+ 
+ 000071: Bulk or Interrupt Transfer (UP), 2019-08-08 22:33:44,2376489 +9,9789690. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 30 1A 80 00 00 00 00 00 00 00 00 00 00 00    .0.€...........
+ 00 00 00 00 00 00 02 00 00 00 00 00 00 00         ..............
+
+000083: Bulk or Interrupt Transfer (UP), 2019-08-08 22:34:06,1094718 +6,0509982. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 32 1A 00 10 00 00 00 00 00 00 00 00 00 00    .2.............
+ 00 00 00 00 00 00 04 00 00 00 00 00 00 00         ..............
+ 
+ 000091: Bulk or Interrupt Transfer (UP), 2019-08-08 22:34:16,1093496 +1,4429744. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 34 1A 00 00 00 00 00 00 00 00 00 00 00 00    .4.............
+ 00 00 00 00 00 00 40 00 00 00 00 00 00 00         ......@.......
+ 
+ 000103: Bulk or Interrupt Transfer (UP), 2019-08-08 22:34:35,3052328 +1,7030323. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 36 1A 10 00 00 00 00 00 00 00 00 00 00 00    .6.............
+ 00 00 00 00 00 00 10 00 00 00 00 00 00 00         ..............
+
+ 000111: Bulk or Interrupt Transfer (UP), 2019-08-08 22:34:45,3211528 +1,0590395. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 38 1A 20 00 00 00 00 00 00 00 00 00 00 00    .8. ...........
+ 00 00 00 00 00 00 20 00 00 00 00 00 00 00         ...... .......
+
+ 000123: Bulk or Interrupt Transfer (UP), 2019-08-08 22:34:57,6410545 +0,8030434. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 3A 1A 00 20 00 00 00 00 00 00 00 00 00 00    .:.. ..........
+ 00 00 00 00 00 00 08 00 00 00 00 00 00 00         ..............
+
+000135: Bulk or Interrupt Transfer (UP), 2019-08-08 22:35:09,7209551 +1,4510351. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 3C 1A 00 00 00 00 00 00 00 00 00 00 00 00    .<.............
+ 00 00 00 00 00 00 80 00 00 00 00 00 00 00         ......€.......
+
+000147: Bulk or Interrupt Transfer (UP), 2019-08-08 22:35:28,9687990 +2,2070260. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x6 bytes from the device
+ 07 20 01 02 01 5B                                 . ...[
+
+ 000163: Bulk or Interrupt Transfer (UP), 2019-08-08 22:36:06,7564923 +14,9789207. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 3E 1A 04 00 00 00 00 00 00 00 00 00 00 00    .>.............
+ 00 00 00 00 00 00 00 00 00 00 00 00 00 00         ..............
+
+ 000171: Bulk or Interrupt Transfer (UP), 2019-08-08 22:36:18,2764037 +1,2470341. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 40 1A 08 00 00 00 00 00 00 00 00 00 00 00    .@.............
+ 00 00 00 00 00 00 00 00 00 00 00 00 00 00         ..............
+
+000205: Bulk or Interrupt Transfer (UP), 2019-08-08 22:37:20,4839011 +18,8957931. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 4B 1A 00 01 00 00 00 00 00 00 00 00 00 00    .K.............
+ 00 00 00 00 00 00 00 00 00 00 00 00 00 00         ..............
+
+ 000213: Bulk or Interrupt Transfer (UP), 2019-08-08 22:37:30,9318153 +3,5430236. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 4D 1A 00 04 00 00 00 00 00 00 00 00 00 00    .M.............
+ 00 00 00 00 00 00 00 00 00 00 00 00 00 00         ..............
+
+ 000221: Bulk or Interrupt Transfer (UP), 2019-08-08 22:37:39,6677428 +1,2310383. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 4F 1A 00 02 00 00 00 00 00 00 00 00 00 00    .O.............
+ 00 00 00 00 00 00 00 00 00 00 00 00 00 00         ..............
+
+000233: Bulk or Interrupt Transfer (UP), 2019-08-08 22:37:50,4356585 +1,3270106. (1. Device: FIGHTSTICK) Status: 0x00000000
+Pipe Handle: 0xc49b6a78 (Endpoint Address: 0x81)
+Get 0x1e bytes from the device
+ 20 00 51 1A 00 08 00 00 00 00 00 00 00 00 00 00    .Q.............
+ 00 00 00 00 00 00 00 00 00 00 00 00 00 00         ..............
