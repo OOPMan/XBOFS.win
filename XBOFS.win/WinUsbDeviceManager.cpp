@@ -67,7 +67,7 @@ std::set<tstring> WinUsbDeviceManager::retrieveDevicePaths() {
     this->logger->debug("Retrieving device interface paths");
     do {        
         configurationManagerResult = CM_Get_Device_Interface_List_Size(&deviceInterfaceListSize,
-            (LPGUID)&GUID_DEVINTERFACE_RazorAtroxWinUSBVigEmFeeder,
+            (LPGUID)&GUID_DEVINTERFACE_XBOFS_WIN_CONTROLLER,
             NULL,
             CM_GET_DEVICE_INTERFACE_LIST_PRESENT);              
 
@@ -87,7 +87,7 @@ std::set<tstring> WinUsbDeviceManager::retrieveDevicePaths() {
             break;
         }
 
-        configurationManagerResult = CM_Get_Device_Interface_List((LPGUID)&GUID_DEVINTERFACE_RazorAtroxWinUSBVigEmFeeder,
+        configurationManagerResult = CM_Get_Device_Interface_List((LPGUID)&GUID_DEVINTERFACE_XBOFS_WIN_CONTROLLER,
             NULL,
             deviceInterfaceList,
             deviceInterfaceListSize,
