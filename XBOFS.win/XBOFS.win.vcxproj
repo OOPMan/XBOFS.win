@@ -41,8 +41,6 @@
   <ItemGroup>
     <ClCompile Include="device.cpp" />
     <ClCompile Include="easylogging++.cc" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="PDCursesUIManager.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="WinUsbDevice.cpp" />
@@ -52,7 +50,6 @@
     <ClInclude Include="device.h" />
     <ClInclude Include="easylogging++.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PDCursesUIManager.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="WinUsbDevice.h" />
