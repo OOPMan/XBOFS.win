@@ -1,7 +1,11 @@
 #pragma once
 
+#include <WinUsbDeviceManager.h>
+#include <WinUsbDevice.h>
+
 #include <QtWidgets/QMainWindow>
 #include "ui_XBOFSWinQT5GUI.h"
+
 
 class XBOFSWinQT5GUI : public QMainWindow
 {
