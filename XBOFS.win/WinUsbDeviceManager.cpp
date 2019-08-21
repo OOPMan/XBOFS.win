@@ -1,33 +1,35 @@
 #include "WinUsbDeviceManager.h"
 #include "utils.h";
 
+using namespace XBOFSWin;
 /*
 Constructs the WinUsbDeviceManager and starts its event loop in a separate thread
 */
-WinUsbDeviceManager::WinUsbDeviceManager(DWORD parentThreadId, DWORD uiManagerThreadId)
-: Thread("WinUsbDeviceManager", "WinUsbDeviceManager", parentThreadId, uiManagerThreadId)
+WinUsbDeviceManager::WinUsbDeviceManager(std::shared_ptr<spdlog::logger> logger, DWORD parentThreadId, DWORD uiManagerThreadId)
+: Thread("WinUsbDeviceManager", logger, parentThreadId, uiManagerThreadId)
 {}
 
 DWORD WinUsbDeviceManager::run() {    
     this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_MANAGER_STARTED, NULL);
-    this->logger->info("Started thread for %v", this->identifier);
+    this->logger->info("Started thread for {}", this->identifier);
     MSG threadMessage;
     bool loop = true;
     std::unordered_map<tstring, WinUsbDevice*> devicePathWinUsbDeviceMap;    
-    this->logger->info("Starting scan loop for %v", this->identifier);
+    this->logger->info("Starting scan loop for {}", this->identifier);
     while (loop) {
         this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_MANAGER_SCANNING, NULL);
         auto devicePaths = this->retrieveDevicePaths();        
         // Check the updated set for new devicePaths
         for (auto devicePath : devicePaths) {
             if (devicePathWinUsbDeviceMap.find(devicePath) != devicePathWinUsbDeviceMap.end()) continue;            
-            this->logger->info("Adding WinUsbDevice at %v", devicePath);  
+            this->logger->info("Adding WinUsbDevice at {}", devicePath);  
             #ifdef UNICODE
             auto identifier = utf8_encode(devicePath);
             #else
             auto identifier = devicePath;
             #endif // UNICODE             
-            auto winUsbDevice = new WinUsbDevice(devicePath, identifier, this->threadId, this->uiManagerThreadId);
+            auto logger = setup_logger("WinUsbDevice", "", this->logger->sinks());
+            auto winUsbDevice = new WinUsbDevice(devicePath, identifier, logger, this->threadId, this->uiManagerThreadId);
             devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });                        
         }  
         // Check for WinUsbDevices to remove
@@ -43,7 +45,7 @@ DWORD WinUsbDeviceManager::run() {
             Sleep(1000);
         }
     }
-    this->logger->info("Completed scan loop for %v", this->identifier);    
+    this->logger->info("Completed scan loop for {}", this->identifier);    
     this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_MANAGER_TERMINATING, NULL);
     for (auto tuple : devicePathWinUsbDeviceMap) delete tuple.second;    
     return 0;
@@ -76,7 +78,7 @@ std::set<tstring> WinUsbDeviceManager::retrieveDevicePaths() {
             break;
         }              
 
-        this->logger->debug("Device interface list size in bytes: %v", deviceInterfaceListSize * sizeof(TCHAR));
+        this->logger->debug("Device interface list size in bytes: {}", deviceInterfaceListSize * sizeof(TCHAR));
 
         deviceInterfaceList = (PTSTR)HeapAlloc(GetProcessHeap(),
             HEAP_ZERO_MEMORY,
@@ -113,10 +115,10 @@ std::set<tstring> WinUsbDeviceManager::retrieveDevicePaths() {
             newDevicePaths.insert(devicePath);
             deviceInterfaceListMarker += devicePathSize + 1;
             position += devicePathSize + 1;
-            this->logger->debug("Device interface path detected: %v", devicePath);
+            this->logger->debug("Device interface path detected: {}", devicePath);
         }
         deviceInterfaceListMarker = NULL;
-        this->logger->debug("%v device interfaces detected", newDevicePaths.size());        
+        this->logger->debug("{} device interfaces detected", newDevicePaths.size());        
     }    
     HeapFree(GetProcessHeap(), 0, deviceInterfaceList);
     return newDevicePaths;

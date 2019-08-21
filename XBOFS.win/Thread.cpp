@@ -1,5 +1,7 @@
 #include "Thread.h"
 
+using namespace XBOFSWin;
+
 std::string threadMessageToString(THREAD_MESSAGES threadMessage)
 {
     switch (threadMessage) {
@@ -20,21 +22,21 @@ std::string threadMessageToString(THREAD_MESSAGES threadMessage)
     return "Unknown Thread Message";
 }
 
-Thread::Thread(std::string identifier, std::string loggerName, DWORD parentThreadId, DWORD uiManagerThreadId)
-: identifier(identifier), logger(el::Loggers::getLogger(loggerName)), parentThreadId(parentThreadId), uiManagerThreadId(uiManagerThreadId)
+Thread::Thread(std::string identifier, std::shared_ptr<spdlog::logger> logger, DWORD parentThreadId, DWORD uiManagerThreadId)
+: identifier(identifier), logger(logger), parentThreadId(parentThreadId), uiManagerThreadId(uiManagerThreadId)
 {       
-    this->logger->info("Starting thread for %v", this->identifier);    
+    this->logger->info("Starting thread for {}", this->identifier);    
     this->threadHandle = CreateThread(NULL, 0, startThread, (LPVOID)this, 0, &this->threadId);
 }
 
 Thread::~Thread()
 {    
-    this->logger->info("Stopping thread for %v", this->identifier);
+    this->logger->info("Stopping thread for {}", this->identifier);
     PostThreadMessage(this->threadId, RAWUVEF_STOP, NULL, NULL);
     while (WaitForSingleObject(this->threadHandle, INFINITE) != WAIT_OBJECT_0);
     CloseHandle(this->threadHandle);
     this->notifyUIManager(RAWUVEF_STOPPED, NULL);
-    this->logger->info("Stopped thread for %v", this->identifier);
+    this->logger->info("Stopped thread for {}", this->identifier);
 }
 
 DWORD Thread::getThreadId() {

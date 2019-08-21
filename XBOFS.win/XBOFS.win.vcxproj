@@ -35,12 +35,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="easyloggingpp.conf" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="device.cpp" />
-    <ClCompile Include="easylogging++.cc" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="WinUsbDevice.cpp" />
@@ -48,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="device.h" />
-    <ClInclude Include="easylogging++.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="utils.h" />
@@ -193,7 +190,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LIB|x64'">
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP;WINAPI_PARTITION_DESKTOP=1;WINAPI_PARTITION_SYSTEM=1;WINAPI_PARTITION_APP=1;WINAPI_PARTITION_PC_APP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -207,9 +204,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LIB|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP;WINAPI_PARTITION_DESKTOP=1;WINAPI_PARTITION_SYSTEM=1;WINAPI_PARTITION_APP=1;WINAPI_PARTITION_PC_APP=1;ELPP_UNICODE;ELPP_THREAD_SAFE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP;WINAPI_PARTITION_DESKTOP=1;WINAPI_PARTITION_SYSTEM=1;WINAPI_PARTITION_APP=1;WINAPI_PARTITION_PC_APP=1;BUILD_SHARED_LIBS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>false</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);onecoreuap.lib;winusb.lib</AdditionalDependencies>

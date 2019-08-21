@@ -8,16 +8,19 @@
 /*
 
 */
-class WinUsbDeviceManager : public Thread
-{
-public:    
-    WinUsbDeviceManager(DWORD parentThreadId, DWORD uiManagerThreadId);
-    ~WinUsbDeviceManager() {};
+namespace XBOFSWin {
 
-    DWORD run();
-    
-protected:
-    std::set<tstring> retrieveDevicePaths();
+    class WinUsbDeviceManager : public Thread
+    {
+    public:
+        WinUsbDeviceManager(std::shared_ptr<spdlog::logger> logger, DWORD parentThreadId, DWORD uiManagerThreadId);
+        ~WinUsbDeviceManager() {};
 
-};
+        DWORD run();
+
+    protected:
+        std::set<tstring> retrieveDevicePaths();
+
+    };
+}
 

@@ -28,9 +28,6 @@
     <ClInclude Include="WinUsbDeviceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="easylogging++.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="WinUsbDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -43,9 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinUsbDeviceManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="easylogging++.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinUsbDevice.cpp">
@@ -63,6 +57,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
-    <None Include="easyloggingpp.conf" />
   </ItemGroup>
 </Project>

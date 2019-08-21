@@ -8,9 +8,12 @@
 #include <string>
 #include <set>
 #include <atomic>
+#include <spdlog/logger.h>
+#include <spdlog/sinks/basic_file_sink.h>
 
-#include "easylogging++.h"
 #include "device.h"
+#include "utils.h"
+
 
 typedef std::basic_string<TCHAR> tstring;
 
