@@ -1,4 +1,4 @@
-#include "WinUsbDevice.h"
+#include "XBOFS.win\WinUsbDevice.h"
 
 using namespace XBOFSWin;
 /*

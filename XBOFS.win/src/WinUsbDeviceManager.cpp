@@ -1,5 +1,5 @@
-#include "WinUsbDeviceManager.h"
-#include "utils.h";
+#include "XBOFS.win\WinUsbDeviceManager.h"
+#include "XBOFS.win\utils.h";
 
 using namespace XBOFSWin;
 /*
@@ -22,14 +22,14 @@ DWORD WinUsbDeviceManager::run() {
         // Check the updated set for new devicePaths
         for (auto devicePath : devicePaths) {
             if (devicePathWinUsbDeviceMap.find(devicePath) != devicePathWinUsbDeviceMap.end()) continue;            
-            this->logger->info("Adding WinUsbDevice at {}", devicePath);  
+            this->logger->info("Adding WinUsbDevice at {}", utf8_encode(devicePath));
             #ifdef UNICODE
             auto identifier = utf8_encode(devicePath);
             #else
             auto identifier = devicePath;
-            #endif // UNICODE             
-            auto logger = setup_logger("WinUsbDevice", "", this->logger->sinks());
-            auto winUsbDevice = new WinUsbDevice(devicePath, identifier, logger, this->threadId, this->uiManagerThreadId);
+            #endif // UNICODE                         
+            auto winUsbDeviceLogger = setup_logger("WinUsbDevice", "", this->logger->sinks());
+            auto winUsbDevice = new WinUsbDevice(devicePath, identifier, winUsbDeviceLogger, this->threadId, this->uiManagerThreadId);
             devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });                        
         }  
         // Check for WinUsbDevices to remove
@@ -115,7 +115,7 @@ std::set<tstring> WinUsbDeviceManager::retrieveDevicePaths() {
             newDevicePaths.insert(devicePath);
             deviceInterfaceListMarker += devicePathSize + 1;
             position += devicePathSize + 1;
-            this->logger->debug("Device interface path detected: {}", devicePath);
+            this->logger->debug("Device interface path detected: {}", utf8_encode(devicePath));
         }
         deviceInterfaceListMarker = NULL;
         this->logger->debug("{} device interfaces detected", newDevicePaths.size());        

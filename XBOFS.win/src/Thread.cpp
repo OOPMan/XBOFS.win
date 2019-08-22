@@ -1,4 +1,4 @@
-#include "Thread.h"
+#include "XBOFS.win\Thread.h"
 
 using namespace XBOFSWin;
 

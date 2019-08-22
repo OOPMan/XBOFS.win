@@ -1,8 +1,7 @@
 #pragma once
-#include "pch.h"
-#include "Thread.h"
-#include "WinUsbDevice.h"
-
+#include <XBOFS.win/pch.h>
+#include <XBOFS.win/Thread.h>
+#include <XBOFS.win/WinUsbDevice.h>
 #include <cfgmgr32.h>
 
 /*

@@ -38,24 +38,24 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="device.cpp" />
-    <ClCompile Include="Thread.cpp" />
-    <ClCompile Include="utils.cpp" />
-    <ClCompile Include="WinUsbDevice.cpp" />
-    <ClCompile Include="WinUsbDeviceManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="device.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="Thread.h" />
-    <ClInclude Include="utils.h" />
-    <ClInclude Include="WinUsbDevice.h" />
-    <ClInclude Include="WinUsbDeviceManager.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ViGEmClient\src\ViGEmClient.vcxproj">
       <Project>{7db06674-1f4f-464b-8e1c-172e9587f9dc}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\XBOFS.win\device.h" />
+    <ClInclude Include="include\XBOFS.win\pch.h" />
+    <ClInclude Include="include\XBOFS.win\Thread.h" />
+    <ClInclude Include="include\XBOFS.win\utils.h" />
+    <ClInclude Include="include\XBOFS.win\WinUsbDevice.h" />
+    <ClInclude Include="include\XBOFS.win\WinUsbDeviceManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\device.cpp" />
+    <ClCompile Include="src\Thread.cpp" />
+    <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\WinUsbDevice.cpp" />
+    <ClCompile Include="src\WinUsbDeviceManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F6104731-5815-4BBA-A558-E859DD039413}</ProjectGuid>
@@ -148,13 +148,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LIB|x64'">
     <DebuggerFlavor>DbgengRemoteDebugger</DebuggerFlavor>
-    <IncludePath>$(SolutionDir)ViGEmClient\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ViGEmClient\include;$(SolutionDir)XBOFS.win\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)PDCurses\wincon;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\debug\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LIB|x64'">
     <DebuggerFlavor>DbgengRemoteDebugger</DebuggerFlavor>
-    <IncludePath>$(SolutionDir)ViGEmClient\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ViGEmClient\include;$(SolutionDir)XBOFS.win\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)PDCurses\wincon;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)lib\release\$(PlatformShortName)\</OutDir>
   </PropertyGroup>
