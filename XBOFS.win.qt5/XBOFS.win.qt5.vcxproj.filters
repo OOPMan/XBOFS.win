@@ -46,12 +46,4 @@
       <Filter>Resource Files</Filter>
     </QtRcc>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GeneratedFiles\ui_WinUsbDeviceWidget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_XBOFSWinQT5GUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

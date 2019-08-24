@@ -1,7 +1,8 @@
 #pragma once
 
-#include <WinUsbDeviceManager.h>
-#include <WinUsbDevice.h>
+#include <spdlog/spdlog.h>
+#include <XBOFS.win/WinUsbDeviceManager.h>
+#include <XBOFS.win/WinUsbDevice.h>
 
 #include <QtWidgets/QMainWindow>
 #include "ui_XBOFSWinQT5GUI.h"
@@ -16,4 +17,6 @@ public:
 
 private:
     Ui::XBOFSWinQT5GUIClass ui;
+    XBOFSWin::WinUsbDeviceManager *winUsbDeviceManager;
+    std::shared_ptr<spdlog::logger> logger;
 };
