@@ -3,23 +3,35 @@
 #include <XBOFS.win/Thread.h>
 #include <XBOFS.win/WinUsbDevice.h>
 #include <cfgmgr32.h>
+#include <qobject.h>
+#include <qthread.h>
 
 /*
 
 */
 namespace XBOFSWin {
 
-    class WinUsbDeviceManager : public Thread
+    class WinUsbDeviceManager : public QObject
     {
+        Q_OBJECT
     public:
-        WinUsbDeviceManager(std::shared_ptr<spdlog::logger> logger, DWORD parentThreadId, DWORD uiManagerThreadId);
+        WinUsbDeviceManager(std::string identifier, std::shared_ptr<spdlog::logger> logger);
         ~WinUsbDeviceManager() {};
 
-        DWORD run();
+    public slots:
+        void run();
+
+    signals:
+        void winUsbDeviceManagerScanning();
+        void winUsbDeviceManagerSleeping();
+        void winUsbDeviceManagerTerminating();
 
     protected:
-        std::set<tstring> retrieveDevicePaths();
+        const std::string identifier;
+        const std::shared_ptr<spdlog::logger> logger;
 
+        std::set<tstring> retrieveDevicePaths();
+        std::unordered_map<tstring, std::pair<QThread*, WinUsbDevice*>> devicePathWinUsbDeviceMap;
     };
 }
 

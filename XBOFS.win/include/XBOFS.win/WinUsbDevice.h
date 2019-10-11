@@ -2,19 +2,41 @@
 #include <XBOFS.win/pch.h>
 #include <XBOFS.win/Thread.h>
 #include <ViGEm/Client.h>
+#include <qobject.h>
 
 namespace XBOFSWin {
     /*
     */
-    class WinUsbDevice : public Thread
+    class WinUsbDevice : public QObject
     {
+        Q_OBJECT
+
     public:
-        WinUsbDevice(tstring devicePath, std::string identifier, std::shared_ptr<spdlog::logger> logger, DWORD parentThreadId, DWORD uiManagerThreadId);
+        WinUsbDevice(tstring devicePath, std::string identifier, std::shared_ptr<spdlog::logger> logger);
         ~WinUsbDevice() {};
 
-        DWORD run(void);
+        //DWORD run(void);
+
+    public slots:
+        void run();
+
+    signals:
+        void vigEmConnect();
+        void vigEmConnected();
+        void vigEmTargetAdd();
+        void vigEmTargetAdded();
+        void vigEmError();
+        void winUsbDeviceOpen();
+        void winUsbDeviceOpened();
+        void winUsbDeviceInit();
+        void winUsbDeviceInitComplete();
+        void winUsbDeviceReadingInput();
+        void winUsbDeviceTerminating();
+        void winUsbDeviceError();
 
     protected:
+        const std::string identifier;
+        const std::shared_ptr<spdlog::logger> logger;
         const tstring devicePath;
 
         bool deviceHandlesOpen = false;

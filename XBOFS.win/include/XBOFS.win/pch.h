@@ -13,7 +13,7 @@
 
 #include "device.h"
 #include "utils.h"
-
+#include "stdafx.h"
 
 typedef std::basic_string<TCHAR> tstring;
 

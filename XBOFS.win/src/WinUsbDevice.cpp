@@ -1,62 +1,72 @@
+#include <qthread.h>
+#include <qabstracteventdispatcher.h>
+#include <qeventloop.h>
+
 #include "XBOFS.win\WinUsbDevice.h"
 
 using namespace XBOFSWin;
 /*
 Constructs the WinUsbDevice instance and starts its event loop in a separate thread
 */
-WinUsbDevice::WinUsbDevice(tstring devicePath, std::string identifier, std::shared_ptr<spdlog::logger> logger, DWORD parentThreadId, DWORD uiManagerThreadId)
-: Thread(identifier, logger, parentThreadId, uiManagerThreadId), devicePath(devicePath)
+WinUsbDevice::WinUsbDevice(tstring devicePath, std::string identifier, std::shared_ptr<spdlog::logger> logger)
+: QObject(), devicePath(devicePath), identifier(identifier), logger(logger)
 {
     
 }
 
-DWORD WinUsbDevice::run() {    
+void WinUsbDevice::run() {    
     bool loop = true;
     int failedReads = 0;
     int failedWrites = 0;
-    MSG threadMessage;
-    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_STARTED, NULL);
-    this->logger->info("Started thread for {}", this->identifier);
+    MSG threadMessage; 
+    // Allocate objects for VigEm    
     this->logger->info("Allocating VigEmClient for {}", this->identifier);
     this->vigEmClient = vigem_alloc();
     this->logger->info("Allocating VigEmTarget for {}", this->identifier);
     this->vigEmTarget = vigem_target_x360_alloc();
-    this->logger->info("Connecting VigEmClient for {}", this->identifier);
-    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_VIGEM_CONNECT, NULL);
+    // Connect to VigEm
+    this->logger->info("Connecting VigEmClient for {}", this->identifier);    
+    emit vigEmConnect();
     if (!VIGEM_SUCCESS(vigem_connect(this->vigEmClient))) {
-        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
+        emit vigEmError();
         this->logger->error("Unable to connect VigEmClient for {}", this->identifier);
         loop = false;
-    }
-    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_VIGEM_TARGET_ADD, NULL);
+    }   
+    emit vigEmConnected();
+    // Add VigEm Target
     this->logger->info("Adding VigEmTarget for {}", this->identifier);
+    emit vigEmTargetAdd();
     if (!VIGEM_SUCCESS(vigem_target_add(this->vigEmClient, this->vigEmTarget))) {
-        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
+        emit vigEmError();
         this->logger->error("Unable to add VigEmTarget for {}", this->identifier);
         loop = false;
     }
+    emit vigEmTargetAdded();
     // Loop reading input, processing it and dispatching it
     this->logger->info("Starting Read-Process-Dispatch loop for {}", this->identifier);
-    while (loop) {                        
-        if (PeekMessage(&threadMessage, NULL, WM_USER, WM_APP, PM_REMOVE) == TRUE && threadMessage.message == RAWUVEF_STOP) loop = false;
-        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_OPEN, NULL);
+    while (loop && !QThread::currentThread()->isInterruptionRequested()) {                
+        // Open WinUsbDevice
+        emit winUsbDeviceOpen();
         if (!this->openDevice()) {
-            this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
+            emit winUsbDeviceError();            
             this->logger->error("Unable to open WinUSB device for {}", this->identifier);
             continue;
         }        
-        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_INIT, NULL);
+        emit winUsbDeviceOpened();
+        // Init WinUsbDevice
+        emit winUsbDeviceInit();       
         if (!this->initRazorAtrox()) {
-            this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
+            emit winUsbDeviceError();            
             this->logger->error("Unable to init Razer Atrox for {}", this->identifier);
             continue;
         }
-        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_READ_INPUT, NULL);
+        emit winUsbDeviceInitComplete();
+        // Read input
+        emit winUsbDeviceReadingInput();        
         this->logger->info("Reading input from Razer Atrox for {}", this->identifier);
         int currentFailedReads = 0;
-        while (loop && currentFailedReads < 5) {
-            if (PeekMessage(&threadMessage, NULL, WM_USER, WM_APP, PM_REMOVE) == TRUE && threadMessage.message == RAWUVEF_STOP) loop = false;
-            if (!this->readInputFromRazerAtrox()) {
+        while (loop && currentFailedReads < 5 && !QThread::currentThread()->isInterruptionRequested()) {            
+            if (!this->readInputFromRazerAtrox()) {                
                 this->logger->warn("Failed to read input from Razer Atrox for {}", this->identifier);
                 currentFailedReads += 1;
                 continue;
@@ -65,13 +75,14 @@ DWORD WinUsbDevice::run() {
             if (!this->dispatchInputToVigEmController()) failedWrites += 1;
         }
         if (currentFailedReads >= 5) {
-            this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_ERROR, NULL);
+            emit winUsbDeviceError();            
             this->logger->warn("Failed to read input from Razer Atrox 5 or more times for {}", this->identifier);
         }
         failedReads += currentFailedReads;
         currentFailedReads = 0;
+        QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
     }
-    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_TERMINATING, NULL);
+    emit winUsbDeviceTerminating();    
     this->logger->info("Completed Read-Process-Dispatch loop for {}", this->identifier);
     this->logger->info("There were {} failed reads for {}", failedReads, this->identifier);
     this->logger->info("There were {} failed writes for {}", failedWrites, this->identifier);
@@ -85,8 +96,7 @@ DWORD WinUsbDevice::run() {
     vigem_target_free(this->vigEmTarget);
     this->logger->info("Free VigEmClient for {}", this->identifier);
     vigem_free(this->vigEmClient);
-    this->logger->info("Completed thread for {}", this->identifier);
-    return 0;
+    this->logger->info("Completed thread for {}", this->identifier);    
 }
 
 /*

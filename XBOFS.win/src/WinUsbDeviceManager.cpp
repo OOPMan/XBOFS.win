@@ -1,23 +1,24 @@
 #include "XBOFS.win\WinUsbDeviceManager.h"
 #include "XBOFS.win\utils.h";
+#include <qabstracteventdispatcher.h>
+#include <qeventloop.h>
 
 using namespace XBOFSWin;
 /*
 Constructs the WinUsbDeviceManager and starts its event loop in a separate thread
 */
-WinUsbDeviceManager::WinUsbDeviceManager(std::shared_ptr<spdlog::logger> logger, DWORD parentThreadId, DWORD uiManagerThreadId)
-: Thread("WinUsbDeviceManager", logger, parentThreadId, uiManagerThreadId)
+WinUsbDeviceManager::WinUsbDeviceManager(std::string identifier, std::shared_ptr<spdlog::logger> logger)
+: QObject(), identifier(identifier), logger(logger)
 {}
 
-DWORD WinUsbDeviceManager::run() {    
-    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_MANAGER_STARTED, NULL);
+void WinUsbDeviceManager::run() {        
     this->logger->info("Started thread for {}", this->identifier);
     MSG threadMessage;
     bool loop = true;
-    std::unordered_map<tstring, WinUsbDevice*> devicePathWinUsbDeviceMap;    
+      
     this->logger->info("Starting scan loop for {}", this->identifier);
-    while (loop) {
-        this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_MANAGER_SCANNING, NULL);
+    while (loop && !QThread::currentThread()->isInterruptionRequested()) {
+        emit winUsbDeviceManagerScanning();        
         auto devicePaths = this->retrieveDevicePaths();        
         // Check the updated set for new devicePaths
         for (auto devicePath : devicePaths) {
@@ -27,28 +28,38 @@ DWORD WinUsbDeviceManager::run() {
             auto identifier = utf8_encode(devicePath);
             #else
             auto identifier = devicePath;
-            #endif // UNICODE                         
+            #endif // UNICODE
+            auto winUsbDeviceThread = new QThread();
             auto winUsbDeviceLogger = setup_logger("WinUsbDevice", "", this->logger->sinks());
-            auto winUsbDevice = new WinUsbDevice(devicePath, identifier, winUsbDeviceLogger, this->threadId, this->uiManagerThreadId);
-            devicePathWinUsbDeviceMap.insert({ devicePath, winUsbDevice });                        
+            auto winUsbDevice = new WinUsbDevice(devicePath, identifier, winUsbDeviceLogger);
+            connect(winUsbDeviceThread, &QThread::finished, winUsbDevice, &QObject::deleteLater);
+            connect(winUsbDeviceThread, &QThread::started, winUsbDevice, &WinUsbDevice::run);
+            winUsbDevice->moveToThread(winUsbDeviceThread);
+            devicePathWinUsbDeviceMap.insert({ devicePath, std::make_pair(winUsbDeviceThread, winUsbDevice) });                        
+            winUsbDeviceThread->start();
         }  
         // Check for WinUsbDevices to remove
         for (auto tuple : devicePathWinUsbDeviceMap) {
             if (devicePaths.find(tuple.first) != devicePaths.end()) continue;
-            delete tuple.second;
+            tuple.second.first->requestInterruption();
+            tuple.second.first->terminate();
+            tuple.second.first->wait();            
             devicePathWinUsbDeviceMap.erase(tuple.first);
         }     
-        // TODO: Processes messages in thread message queue
-        if (PeekMessage(&threadMessage, NULL, WM_USER, WM_APP, PM_REMOVE) == TRUE && threadMessage.message == RAWUVEF_STOP) loop = false;
+        // Processes messages in thread message queue
+        QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+        if (QThread::currentThread()->isInterruptionRequested()) loop = false;        
         else {
-            this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_MANAGER_SLEEPING, NULL);
-            Sleep(1000);
+            emit winUsbDeviceManagerSleeping();            
+            QThread::msleep(1000);            
         }
     }
     this->logger->info("Completed scan loop for {}", this->identifier);    
-    this->notifyUIManager(RAWUVEF_WIN_USB_DEVICE_MANAGER_TERMINATING, NULL);
-    for (auto tuple : devicePathWinUsbDeviceMap) delete tuple.second;    
-    return 0;
+    emit winUsbDeviceManagerTerminating();    
+    for (auto tuple : devicePathWinUsbDeviceMap) {
+        delete tuple.second.second;
+        delete tuple.second.first;
+    }
 }
 
 

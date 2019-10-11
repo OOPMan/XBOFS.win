@@ -3,6 +3,7 @@
 // Define below GUIDs
 //
 #include <initguid.h>
+#include "stdafx.h"
 
 //
 // Device Interface GUID.
