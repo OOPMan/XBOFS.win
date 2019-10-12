@@ -1,6 +1,5 @@
 #pragma once
 #include <XBOFS.win/pch.h>
-#include <XBOFS.win/Thread.h>
 #include <ViGEm/Client.h>
 #include <qobject.h>
 

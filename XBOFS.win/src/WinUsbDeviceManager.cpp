@@ -39,6 +39,8 @@ void WinUsbDeviceManager::run() {
             winUsbDeviceThread->start();
         }  
         // Check for WinUsbDevices to remove
+        // TODO: Investigate this code, unplugging a device is crashing the application with a read access violated on tuple.right which would seem to indicate it's getting
+        // de-allocated in an unexpected fashion...
         for (auto tuple : devicePathWinUsbDeviceMap) {
             if (devicePaths.find(tuple.first) != devicePaths.end()) continue;
             tuple.second.first->requestInterruption();

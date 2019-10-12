@@ -1,6 +1,5 @@
 #pragma once
 #include <XBOFS.win/pch.h>
-#include <XBOFS.win/Thread.h>
 #include <XBOFS.win/WinUsbDevice.h>
 #include <cfgmgr32.h>
 #include <qobject.h>
