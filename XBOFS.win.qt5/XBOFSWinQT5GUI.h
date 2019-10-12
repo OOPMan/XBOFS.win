@@ -15,8 +15,7 @@ class XBOFSWinQT5GUI : public QMainWindow
 public:
     XBOFSWinQT5GUI(QWidget *parent = Q_NULLPTR);
 
-private:
-    Ui::XBOFSWinQT5GUIClass ui;
-    XBOFSWin::WinUsbDeviceManager *winUsbDeviceManager;
+protected:
+    Ui::XBOFSWinQT5GUIClass ui;        
     std::shared_ptr<spdlog::logger> logger;
 };
