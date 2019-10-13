@@ -42,11 +42,19 @@ void WinUsbDeviceManager::run() {
         for (auto iterator = devicePathWinUsbDeviceMap.begin(); iterator != devicePathWinUsbDeviceMap.end(); )
         {            
             auto devicePath = iterator->first;
+            #ifdef UNICODE
+            auto identifier = utf8_encode(devicePath);
+            #else
+            auto identifier = devicePath;
+            #endif // UNICODE
             auto winUsbDeviceThread = iterator->second.first;
             if (devicePaths.find(devicePath) == devicePaths.end()) {
+                this->logger->info("Requesting interruption of thread handling {}", identifier);
                 winUsbDeviceThread->requestInterruption();
+                this->logger->info("Signalling thread handling {} to terminate", identifier);
                 winUsbDeviceThread->terminate();
-                winUsbDeviceThread->wait();
+                this->logger->info("Waiting for thread hanlding {} to terminate", identifier);                
+                winUsbDeviceThread->wait();                
                 iterator = devicePathWinUsbDeviceMap.erase(iterator);
             }
             else ++iterator;
@@ -55,6 +63,7 @@ void WinUsbDeviceManager::run() {
         QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
         if (QThread::currentThread()->isInterruptionRequested()) loop = false;        
         else {
+            this->logger->info("Sleeping for 1000 milliseconds");
             emit winUsbDeviceManagerSleeping();            
             QThread::msleep(1000);            
         }
@@ -62,9 +71,21 @@ void WinUsbDeviceManager::run() {
     }
     this->logger->info("Completed scan loop for {}", this->identifier);    
     emit winUsbDeviceManagerTerminating();    
+    // TODO: Duplicate code, we should remove it
     for (auto tuple : devicePathWinUsbDeviceMap) {
-        delete tuple.second.second;
-        delete tuple.second.first;
+        auto devicePath = tuple.first;
+        #ifdef UNICODE
+        auto identifier = utf8_encode(devicePath);
+        #else
+        auto identifier = devicePath;
+        #endif // UNICODE
+        auto winUsbDeviceThread = tuple.second.first;
+        this->logger->info("Requesting interruption of thread handling {}", identifier);
+        winUsbDeviceThread->requestInterruption();
+        this->logger->info("Signalling thread handling {} to terminate", identifier);
+        winUsbDeviceThread->terminate();
+        this->logger->info("Waiting for thread hanlding {} to terminate", identifier);
+        winUsbDeviceThread->wait();        
     }
 }
 
