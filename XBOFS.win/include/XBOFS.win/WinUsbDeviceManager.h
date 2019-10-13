@@ -29,8 +29,7 @@ namespace XBOFSWin {
         const std::string identifier;
         const std::shared_ptr<spdlog::logger> logger;
 
-        std::set<tstring> retrieveDevicePaths();
-        std::unordered_map<tstring, std::pair<QThread*, WinUsbDevice*>> devicePathWinUsbDeviceMap;
+        std::set<tstring> retrieveDevicePaths();        
     };
 }
 

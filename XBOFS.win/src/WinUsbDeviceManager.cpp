@@ -12,10 +12,10 @@ WinUsbDeviceManager::WinUsbDeviceManager(std::string identifier, std::shared_ptr
 {}
 
 void WinUsbDeviceManager::run() {        
-    this->logger->info("Started thread for {}", this->identifier);
-    MSG threadMessage;
+    this->logger->info("Started thread for {}", this->identifier);    
     bool loop = true;
-      
+    std::unordered_map<tstring, std::pair<QThread*, WinUsbDevice*>> devicePathWinUsbDeviceMap;
+    std::set<tstring> previousDevicePaths;
     this->logger->info("Starting scan loop for {}", this->identifier);
     while (loop && !QThread::currentThread()->isInterruptionRequested()) {
         emit winUsbDeviceManagerScanning();        
@@ -39,15 +39,18 @@ void WinUsbDeviceManager::run() {
             winUsbDeviceThread->start();
         }  
         // Check for WinUsbDevices to remove
-        // TODO: Investigate this code, unplugging a device is crashing the application with a read access violated on tuple.right which would seem to indicate it's getting
-        // de-allocated in an unexpected fashion...
-        for (auto tuple : devicePathWinUsbDeviceMap) {
-            if (devicePaths.find(tuple.first) != devicePaths.end()) continue;
-            tuple.second.first->requestInterruption();
-            tuple.second.first->terminate();
-            tuple.second.first->wait();            
-            devicePathWinUsbDeviceMap.erase(tuple.first);
-        }     
+        for (auto iterator = devicePathWinUsbDeviceMap.begin(); iterator != devicePathWinUsbDeviceMap.end(); )
+        {            
+            auto devicePath = iterator->first;
+            auto winUsbDeviceThread = iterator->second.first;
+            if (devicePaths.find(devicePath) == devicePaths.end()) {
+                winUsbDeviceThread->requestInterruption();
+                winUsbDeviceThread->terminate();
+                winUsbDeviceThread->wait();
+                iterator = devicePathWinUsbDeviceMap.erase(iterator);
+            }
+            else ++iterator;
+        }
         // Processes messages in thread message queue
         QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
         if (QThread::currentThread()->isInterruptionRequested()) loop = false;        
@@ -55,6 +58,7 @@ void WinUsbDeviceManager::run() {
             emit winUsbDeviceManagerSleeping();            
             QThread::msleep(1000);            
         }
+        previousDevicePaths = devicePaths;
     }
     this->logger->info("Completed scan loop for {}", this->identifier);    
     emit winUsbDeviceManagerTerminating();    
