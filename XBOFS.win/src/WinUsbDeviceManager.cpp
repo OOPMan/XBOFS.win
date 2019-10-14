@@ -7,8 +7,8 @@ using namespace XBOFSWin;
 /*
 Constructs the WinUsbDeviceManager and starts its event loop in a separate thread
 */
-WinUsbDeviceManager::WinUsbDeviceManager(std::string identifier, std::shared_ptr<spdlog::logger> logger)
-: QObject(), identifier(identifier), logger(logger)
+WinUsbDeviceManager::WinUsbDeviceManager(std::string identifier, std::shared_ptr<spdlog::logger> logger, QObject* parent)
+: QObject(parent), identifier(identifier), logger(logger)
 {}
 
 void WinUsbDeviceManager::run() {        
@@ -37,6 +37,7 @@ void WinUsbDeviceManager::run() {
             winUsbDevice->moveToThread(winUsbDeviceThread);
             devicePathWinUsbDeviceMap.insert({ devicePath, std::make_pair(winUsbDeviceThread, winUsbDevice) });                        
             winUsbDeviceThread->start();
+            emit winUsbDeviceAdded(QString::fromStdString(identifier), *winUsbDevice);
         }  
         // Check for WinUsbDevices to remove
         for (auto iterator = devicePathWinUsbDeviceMap.begin(); iterator != devicePathWinUsbDeviceMap.end(); )
@@ -48,6 +49,7 @@ void WinUsbDeviceManager::run() {
             auto identifier = devicePath;
             #endif // UNICODE
             auto winUsbDeviceThread = iterator->second.first;
+            auto winUsbDevice = iterator->second.second;
             if (devicePaths.find(devicePath) == devicePaths.end()) {
                 this->logger->info("Requesting interruption of thread handling {}", identifier);
                 winUsbDeviceThread->requestInterruption();
@@ -55,6 +57,7 @@ void WinUsbDeviceManager::run() {
                 winUsbDeviceThread->terminate();
                 this->logger->info("Waiting for thread hanlding {} to terminate", identifier);                
                 winUsbDeviceThread->wait();                
+                emit winUsbDeviceRemoved(QString::fromStdString(identifier), *winUsbDevice);
                 iterator = devicePathWinUsbDeviceMap.erase(iterator);
             }
             else ++iterator;
