@@ -8,8 +8,8 @@ using namespace XBOFSWin;
 /*
 Constructs the WinUsbDevice instance and starts its event loop in a separate thread
 */
-WinUsbDevice::WinUsbDevice(tstring devicePath, std::string identifier, std::shared_ptr<spdlog::logger> logger)
-: QObject(), devicePath(devicePath), identifier(identifier), logger(logger)
+WinUsbDevice::WinUsbDevice(tstring devicePath, std::string identifier, std::shared_ptr<spdlog::logger> logger, QObject* parent)
+: QObject(parent), devicePath(devicePath), identifier(identifier), logger(logger)
 {
     
 }

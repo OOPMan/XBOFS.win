@@ -10,11 +10,9 @@ namespace XBOFSWin {
     {
         Q_OBJECT
 
-    public:
-        WinUsbDevice(tstring devicePath, std::string identifier, std::shared_ptr<spdlog::logger> logger);
-        ~WinUsbDevice() {};
-
-        //DWORD run(void);
+    public:        
+        WinUsbDevice(tstring devicePath, std::string identifier, std::shared_ptr<spdlog::logger> logger, QObject* parent=nullptr);
+        ~WinUsbDevice() {};        
 
     public slots:
         void run();
