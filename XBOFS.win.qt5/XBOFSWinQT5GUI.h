@@ -15,7 +15,15 @@ class XBOFSWinQT5GUI : public QMainWindow
 public:
     XBOFSWinQT5GUI(QWidget *parent = Q_NULLPTR);
 
+public slots:
+    void winUsbDeviceAdded(const QString &identifier, const XBOFSWin::WinUsbDevice &winUsbDevice);
+    void winUsbDeviceRemoved(const QString &identifier, const XBOFSWin::WinUsbDevice &winUsbDevice);
+    void winUsbDeviceManagerScanning();
+    void terminateWinUsbDeviceManager();
+
 protected:
     Ui::XBOFSWinQT5GUIClass ui;        
     std::shared_ptr<spdlog::logger> logger;
+    QThread *winUsbDeviceManagerThread;
+    XBOFSWin::WinUsbDeviceManager *winUsbDeviceManager;
 };
