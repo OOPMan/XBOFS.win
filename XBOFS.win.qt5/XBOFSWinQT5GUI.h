@@ -16,8 +16,8 @@ public:
     XBOFSWinQT5GUI(QWidget *parent = Q_NULLPTR);
 
 public slots:
-    void winUsbDeviceAdded(const QString &identifier, const XBOFSWin::WinUsbDevice &winUsbDevice);
-    void winUsbDeviceRemoved(const QString &identifier, const XBOFSWin::WinUsbDevice &winUsbDevice);
+    void winUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice &winUsbDevice);
+    void winUsbDeviceRemoved(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice &winUsbDevice);
     void winUsbDeviceManagerScanning();
     void terminateWinUsbDeviceManager();
 

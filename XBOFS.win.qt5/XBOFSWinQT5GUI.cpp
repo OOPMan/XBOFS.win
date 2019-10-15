@@ -14,12 +14,12 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
     auto sinks = std::vector<spdlog::sink_ptr>();    
     auto rotatingFileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("xbofs.win.qt5.log", 1024 * 1024 * 10, 10);
     sinks.push_back(rotatingFileSink);
-    logger = XBOFSWin::setup_logger("WinUsbDeviceManager", "", sinks);    
+    logger = XBOFSWin::get_logger("XBOFSWin QT5 GUI", sinks);
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%t] [%n] [%l] %v");
     logger->info("Logging initialised");
-    // Start WinUsbDeviceManager
+    // Start WinUsbDeviceManager    
     winUsbDeviceManagerThread = new QThread();
-    winUsbDeviceManager = new XBOFSWin::WinUsbDeviceManager("WinUsbDeviceManager", logger);
+    winUsbDeviceManager = new XBOFSWin::WinUsbDeviceManager(XBOFSWin::get_logger("WinUsbDeviceManager", sinks));
     connect(winUsbDeviceManagerThread, &QThread::finished, winUsbDeviceManager, &QObject::deleteLater);
     connect(winUsbDeviceManagerThread, &QThread::started, winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::run);
     connect(winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::winUsbDeviceManagerScanning, this, &XBOFSWinQT5GUI::winUsbDeviceManagerScanning);
@@ -30,12 +30,12 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
     winUsbDeviceManagerThread->start();      
 }
 
-void XBOFSWinQT5GUI::winUsbDeviceAdded(const QString &identifier, const XBOFSWin::WinUsbDevice &winUsbDevice) {
+void XBOFSWinQT5GUI::winUsbDeviceAdded(const std::wstring &identifier, const XBOFSWin::WinUsbDevice &winUsbDevice) {
     // TODO: Connect signals
     // TODO: Update UI
 }
 
-void XBOFSWinQT5GUI::winUsbDeviceRemoved(const QString &identifierr, const XBOFSWin::WinUsbDevice &winUsbDevice) {
+void XBOFSWinQT5GUI::winUsbDeviceRemoved(const std::wstring &identifierr, const XBOFSWin::WinUsbDevice &winUsbDevice) {
     // TODO: Update UI
 }
 
@@ -43,13 +43,12 @@ void XBOFSWinQT5GUI::winUsbDeviceManagerScanning() {
     ui.winUsbDeviceManagerStatus->setText(QString::fromUtf8("Scanning for supported controllers..."));
 }
 
-void XBOFSWinQT5GUI::terminateWinUsbDeviceManager() {
-    auto identifier = "WinUsbDeviceManager";
-    logger->info("Requesting interruption of thread handling {}", identifier);
+void XBOFSWinQT5GUI::terminateWinUsbDeviceManager() {    
+    logger->info("Requesting interruption of thread handling WinUsbDeviceManager");
     winUsbDeviceManagerThread->requestInterruption();
-    logger->info("Signalling thread handling {} to terminate", identifier);
+    logger->info("Signalling thread handling WinUsbDeviceManager to terminate");
     winUsbDeviceManagerThread->terminate();
-    this->logger->info("Waiting for thread hanlding {} to terminate", identifier);
+    logger->info("Waiting for thread hanlding WinUsbDeviceManager to terminate");
     winUsbDeviceManagerThread->wait();
     logger->flush();
 }
