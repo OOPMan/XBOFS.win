@@ -14,24 +14,23 @@ namespace XBOFSWin {
     {
         Q_OBJECT
     public:        
-        WinUsbDeviceManager(std::string identifier, std::shared_ptr<spdlog::logger> logger, QObject* parent=nullptr);
+        WinUsbDeviceManager(std::shared_ptr<spdlog::logger> logger, QObject* parent=nullptr);
         ~WinUsbDeviceManager() {};
 
     public slots:
         void run();
 
     signals:
-        void winUsbDeviceAdded(const QString &identifier, const XBOFSWin::WinUsbDevice &winUsbDevice);        
-        void winUsbDeviceRemoved(const QString &identifier, const XBOFSWin::WinUsbDevice &winUsbDevice);
+        void winUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice &winUsbDevice);        
+        void winUsbDeviceRemoved(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice &winUsbDevice);
         void winUsbDeviceManagerScanning();
         void winUsbDeviceManagerSleeping();
         void winUsbDeviceManagerTerminating();
 
     protected:
-        const std::string identifier;
         const std::shared_ptr<spdlog::logger> logger;
 
-        std::set<tstring> retrieveDevicePaths();        
+        std::set<std::wstring> retrieveDevicePaths();        
     };
 }
 

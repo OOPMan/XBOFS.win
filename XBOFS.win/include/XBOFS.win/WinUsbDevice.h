@@ -11,35 +11,34 @@ namespace XBOFSWin {
         Q_OBJECT
 
     public:        
-        WinUsbDevice(tstring devicePath, std::string identifier, std::shared_ptr<spdlog::logger> logger, QObject* parent=nullptr);
+        WinUsbDevice(std::wstring devicePath, std::shared_ptr<spdlog::logger> logger, QObject* parent=nullptr);
         ~WinUsbDevice() {};        
 
     public slots:
         void run();
 
     signals:
-        void vigEmConnect();
-        void vigEmConnected();
-        void vigEmTargetAdd();
-        void vigEmTargetAdded();
-        void vigEmError();
-        void winUsbDeviceOpen();
-        void winUsbDeviceOpened();
-        void winUsbDeviceInit();
-        void winUsbDeviceInitComplete();
-        void winUsbDeviceReadingInput();
-        void winUsbDeviceTerminating();
-        void winUsbDeviceError();
+        void vigEmConnect(const std::wstring &devicePath);
+        void vigEmConnected(const std::wstring &devicePath);
+        void vigEmTargetAdd(const std::wstring &devicePath);
+        void vigEmTargetAdded(const std::wstring &devicePath);
+        void vigEmError(const std::wstring &devicePath);
+        void winUsbDeviceOpen(const std::wstring &devicePath);
+        void winUsbDeviceOpened(const std::wstring &devicePath);
+        void winUsbDeviceInit(const std::wstring &devicePath);
+        void winUsbDeviceInitComplete(const std::wstring &devicePath);
+        void winUsbDeviceReadingInput(const std::wstring &devicePath);
+        void winUsbDeviceTerminating(const std::wstring &devicePath);
+        void winUsbDeviceError(const std::wstring &devicePath);
 
-    protected:
-        const std::string identifier;
+    protected:        
         const std::shared_ptr<spdlog::logger> logger;
-        const tstring devicePath;
+        const std::wstring devicePath;
 
         bool deviceHandlesOpen = false;
-        UCHAR RAZER_ATROX_INIT[5] = { 0x05, 0x20, 0x08, 0x01, 0x05 };
-        RAZER_ATROX_DATA_PACKET dataPacket = {};
-        RAZER_ATROX_BUTTON_STATE buttonState = {};
+        UCHAR XBO_ARCADE_STICK_INIT[5] = { 0x05, 0x20, 0x08, 0x01, 0x05 };
+        XBO_ARCADE_STICK_DATA_PACKET dataPacket = {};
+        XBO_ARCADE_STICK_BUTTON_STATE buttonState = {};
         PVIGEM_CLIENT vigEmClient = NULL;
         PVIGEM_TARGET vigEmTarget = NULL;
         WINUSB_INTERFACE_HANDLE winUsbHandle;
@@ -47,9 +46,9 @@ namespace XBOFSWin {
 
         bool openDevice();
         bool closeDevice();
-        bool initRazorAtrox();
-        bool readInputFromRazerAtrox();
-        RAZER_ATROX_PACKET_TYPES processInputFromRazerAtrox();
+        bool initXBOArcadeStick();
+        bool readInputFromXBOArcadeStick();
+        XBO_ARCADE_STICK_PACKET_TYPES processInputFromXBOArcadeStick();
         bool dispatchInputToVigEmController();
     };
 }

@@ -2,112 +2,100 @@
 #include "XBOFS.win\utils.h";
 #include <qabstracteventdispatcher.h>
 #include <qeventloop.h>
+#include <fmt/core.h>
 
 using namespace XBOFSWin;
 /*
 Constructs the WinUsbDeviceManager and starts its event loop in a separate thread
 */
-WinUsbDeviceManager::WinUsbDeviceManager(std::string identifier, std::shared_ptr<spdlog::logger> logger, QObject* parent)
-: QObject(parent), identifier(identifier), logger(logger)
+WinUsbDeviceManager::WinUsbDeviceManager(std::shared_ptr<spdlog::logger> logger, QObject* parent)
+: QObject(parent), logger(logger)
 {}
 
 void WinUsbDeviceManager::run() {        
-    this->logger->info("Started thread for {}", this->identifier);    
-    bool loop = true;
-    std::unordered_map<tstring, std::pair<QThread*, WinUsbDevice*>> devicePathWinUsbDeviceMap;
-    std::set<tstring> previousDevicePaths;
-    this->logger->info("Starting scan loop for {}", this->identifier);
-    while (loop && !QThread::currentThread()->isInterruptionRequested()) {
+    logger->info("Entered run()");        
+    std::unordered_map<std::wstring, std::pair<QThread*, WinUsbDevice*>> devicePathWinUsbDeviceMap;
+    std::set<std::wstring> previousDevicePaths;
+    logger->info("Starting scan loop");
+    while (!QThread::currentThread()->isInterruptionRequested()) {
         emit winUsbDeviceManagerScanning();        
         auto devicePaths = this->retrieveDevicePaths();        
         // Check the updated set for new devicePaths
         for (auto devicePath : devicePaths) {
-            if (devicePathWinUsbDeviceMap.find(devicePath) != devicePathWinUsbDeviceMap.end()) continue;            
-            this->logger->info("Adding WinUsbDevice at {}", utf8_encode(devicePath));
-            #ifdef UNICODE
-            auto identifier = utf8_encode(devicePath);
-            #else
-            auto identifier = devicePath;
-            #endif // UNICODE
-            auto winUsbDeviceThread = new QThread();
-            auto winUsbDeviceLogger = setup_logger("WinUsbDevice", "", this->logger->sinks());
-            auto winUsbDevice = new WinUsbDevice(devicePath, identifier, winUsbDeviceLogger);
+            if (devicePathWinUsbDeviceMap.find(devicePath) != devicePathWinUsbDeviceMap.end()) continue;             
+            this->logger->info(L"Adding WinUsbDevice at {}", devicePath);            
+            auto winUsbDeviceThread = new QThread();            
+            auto winUsbDeviceLoggerName = utf8_encode(fmt::format(L"WinUsbDevice {}", devicePath));
+            auto winUsbDeviceLogger = get_logger(winUsbDeviceLoggerName, logger->sinks());
+            auto winUsbDevice = new WinUsbDevice(devicePath, winUsbDeviceLogger);
             connect(winUsbDeviceThread, &QThread::finished, winUsbDevice, &QObject::deleteLater);
             connect(winUsbDeviceThread, &QThread::started, winUsbDevice, &WinUsbDevice::run);
             winUsbDevice->moveToThread(winUsbDeviceThread);
             devicePathWinUsbDeviceMap.insert({ devicePath, std::make_pair(winUsbDeviceThread, winUsbDevice) });                        
+            emit winUsbDeviceAdded(devicePath, *winUsbDevice);
             winUsbDeviceThread->start();
-            emit winUsbDeviceAdded(QString::fromStdString(identifier), *winUsbDevice);
+            
         }  
         // Check for WinUsbDevices to remove
         for (auto iterator = devicePathWinUsbDeviceMap.begin(); iterator != devicePathWinUsbDeviceMap.end(); )
         {            
-            auto devicePath = iterator->first;
-            #ifdef UNICODE
-            auto identifier = utf8_encode(devicePath);
-            #else
-            auto identifier = devicePath;
-            #endif // UNICODE
+            auto devicePath = iterator->first;            
             auto winUsbDeviceThread = iterator->second.first;
             auto winUsbDevice = iterator->second.second;
             if (devicePaths.find(devicePath) == devicePaths.end()) {
-                this->logger->info("Requesting interruption of thread handling {}", identifier);
+                logger->info(L"Requesting interruption of thread handling {}", devicePath);
                 winUsbDeviceThread->requestInterruption();
-                this->logger->info("Signalling thread handling {} to terminate", identifier);
+                logger->info(L"Signalling thread handling {} to terminate", devicePath);
                 winUsbDeviceThread->terminate();
-                this->logger->info("Waiting for thread hanlding {} to terminate", identifier);                
+                logger->info(L"Waiting for thread hanlding {} to terminate", devicePath);                
                 winUsbDeviceThread->wait();                
-                emit winUsbDeviceRemoved(QString::fromStdString(identifier), *winUsbDevice);
+                emit winUsbDeviceRemoved(devicePath, *winUsbDevice);
                 iterator = devicePathWinUsbDeviceMap.erase(iterator);
             }
             else ++iterator;
         }
         // Processes messages in thread message queue
         QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
-        if (QThread::currentThread()->isInterruptionRequested()) loop = false;        
-        else {
-            this->logger->info("Sleeping for 1000 milliseconds");
+        if (!QThread::currentThread()->isInterruptionRequested())
+        {
+            logger->info("Sleeping for 1000 milliseconds");
             emit winUsbDeviceManagerSleeping();            
             QThread::msleep(1000);            
         }
         previousDevicePaths = devicePaths;
     }
-    this->logger->info("Completed scan loop for {}", this->identifier);    
+    logger->info("Completed scan loop");    
     emit winUsbDeviceManagerTerminating();    
     // TODO: Duplicate code, we should remove it
     for (auto tuple : devicePathWinUsbDeviceMap) {
-        auto devicePath = tuple.first;
-        #ifdef UNICODE
-        auto identifier = utf8_encode(devicePath);
-        #else
-        auto identifier = devicePath;
-        #endif // UNICODE
+        auto devicePath = tuple.first;        
         auto winUsbDeviceThread = tuple.second.first;
-        this->logger->info("Requesting interruption of thread handling {}", identifier);
+        logger->info(L"Requesting interruption of thread handling {}", devicePath);
         winUsbDeviceThread->requestInterruption();
-        this->logger->info("Signalling thread handling {} to terminate", identifier);
+        logger->info(L"Signalling thread handling {} to terminate", devicePath);
         winUsbDeviceThread->terminate();
-        this->logger->info("Waiting for thread hanlding {} to terminate", identifier);
+        logger->info(L"Waiting for thread hanlding {} to terminate", devicePath);
         winUsbDeviceThread->wait();        
     }
+    logger->info("Completed run()");
 }
 
 
 /*
 Retrieve a vector of TCHAR* representing device paths that the device manager will work with
 */
-std::set<tstring> WinUsbDeviceManager::retrieveDevicePaths() {
+std::set<std::wstring> WinUsbDeviceManager::retrieveDevicePaths() {
     CONFIGRET           configurationManagerResult  = CR_SUCCESS;
     HRESULT             resultHandle                = S_OK;
     PTSTR               deviceInterfaceList         = NULL;
     ULONG               deviceInterfaceListSize     = 0;    
-    std::set<tstring>   newDevicePaths;
+    std::set<std::wstring>   newDevicePaths;
     //
     // Enumerate all devices exposing the interface. Do this in a loop
     // in case a new interface is discovered while this code is executing,
     // causing CM_Get_Device_Interface_List to return CR_BUFFER_SMALL.
     //
-    this->logger->debug("Retrieving device interface paths");
+    logger->debug("Retrieving device interface paths");
     do {        
         configurationManagerResult = CM_Get_Device_Interface_List_Size(&deviceInterfaceListSize,
             (LPGUID)&GUID_DEVINTERFACE_XBOFS_WIN_CONTROLLER,
@@ -119,7 +107,7 @@ std::set<tstring> WinUsbDeviceManager::retrieveDevicePaths() {
             break;
         }              
 
-        this->logger->debug("Device interface list size in bytes: {}", deviceInterfaceListSize * sizeof(TCHAR));
+        logger->debug("Device interface list size in bytes: {}", deviceInterfaceListSize * sizeof(TCHAR));
 
         deviceInterfaceList = (PTSTR)HeapAlloc(GetProcessHeap(),
             HEAP_ZERO_MEMORY,
@@ -144,22 +132,22 @@ std::set<tstring> WinUsbDeviceManager::retrieveDevicePaths() {
     } while (configurationManagerResult == CR_BUFFER_SMALL);
     // Handle errors
     if (resultHandle != S_OK || deviceInterfaceList == TEXT('\0')) {
-        // TODO: Log error        
+        // TODO: Log error?        
     }
     else {        
         auto deviceInterfaceListMarker = deviceInterfaceList;
         auto position = 0;
         while (position < deviceInterfaceListSize) {
-            auto devicePath = tstring(deviceInterfaceListMarker);
+            auto devicePath = std::wstring(deviceInterfaceListMarker);
             auto devicePathSize = devicePath.size();
             if (!devicePathSize) break;            
             newDevicePaths.insert(devicePath);
             deviceInterfaceListMarker += devicePathSize + 1;
             position += devicePathSize + 1;
-            this->logger->debug("Device interface path detected: {}", utf8_encode(devicePath));
+            logger->debug(L"Device interface path detected: {}", devicePath);
         }
         deviceInterfaceListMarker = NULL;
-        this->logger->debug("{} device interfaces detected", newDevicePaths.size());        
+        logger->debug("{} device interfaces detected", newDevicePaths.size());        
     }    
     HeapFree(GetProcessHeap(), 0, deviceInterfaceList);
     return newDevicePaths;
