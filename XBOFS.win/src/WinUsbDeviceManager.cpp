@@ -32,7 +32,7 @@ void WinUsbDeviceManager::run() {
             connect(winUsbDeviceThread, &QThread::started, winUsbDevice, &WinUsbDevice::run);
             winUsbDevice->moveToThread(winUsbDeviceThread);
             devicePathWinUsbDeviceMap.insert({ devicePath, std::make_pair(winUsbDeviceThread, winUsbDevice) });                        
-            emit winUsbDeviceAdded(devicePath, *winUsbDevice);
+            emit winUsbDeviceAdded(QString::fromStdWString(devicePath), winUsbDevice);
             winUsbDeviceThread->start();
             
         }  
@@ -49,7 +49,7 @@ void WinUsbDeviceManager::run() {
                 winUsbDeviceThread->terminate();
                 logger->info(L"Waiting for thread hanlding {} to terminate", devicePath);                
                 winUsbDeviceThread->wait();                
-                emit winUsbDeviceRemoved(devicePath, *winUsbDevice);
+                emit winUsbDeviceRemoved(QString::fromStdWString(devicePath), winUsbDevice);
                 iterator = devicePathWinUsbDeviceMap.erase(iterator);
             }
             else ++iterator;

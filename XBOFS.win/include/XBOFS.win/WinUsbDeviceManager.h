@@ -21,8 +21,8 @@ namespace XBOFSWin {
         void run();
 
     signals:
-        void winUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice &winUsbDevice);        
-        void winUsbDeviceRemoved(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice &winUsbDevice);
+        void winUsbDeviceAdded(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
+        void winUsbDeviceRemoved(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
         void winUsbDeviceManagerScanning();
         void winUsbDeviceManagerSleeping();
         void winUsbDeviceManagerTerminating();
@@ -30,7 +30,7 @@ namespace XBOFSWin {
     protected:
         const std::shared_ptr<spdlog::logger> logger;
 
-        std::set<std::wstring> retrieveDevicePaths();        
+        std::set<std::wstring> retrieveDevicePaths();              
     };
 }
 
