@@ -3,6 +3,7 @@
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <qthread.h>
+#include <fmt/core.h>
 #include <XBOFS.win/utils.h>
 #include <XBOFS.win/WinUsbDeviceManager.h>
 
@@ -30,13 +31,23 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
     winUsbDeviceManagerThread->start();      
 }
 
-void XBOFSWinQT5GUI::winUsbDeviceAdded(const std::wstring &identifier, const XBOFSWin::WinUsbDevice &winUsbDevice) {
+void XBOFSWinQT5GUI::winUsbDeviceAdded(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice) {        
     // TODO: Connect signals
-    // TODO: Update UI
+    // TODO: Update UI    
+    auto tabWidget = new QWidget();
+    auto tabWidgetUi = new Ui::WinUsbDeviceWidget();
+    tabWidget->setObjectName(devicePath);
+    tabWidgetUi->setupUi(tabWidget);    
+    auto tabIndex = ui.tabWidget->addTab(tabWidget, QString());    
+    ui.tabWidget->setTabText(tabIndex, QString::fromStdWString(fmt::format(L"Stick {}", tabIndex)));
+    devicePathTabMap.insert({ devicePath, std::make_tuple(tabIndex, tabWidget, tabWidgetUi) });
 }
 
-void XBOFSWinQT5GUI::winUsbDeviceRemoved(const std::wstring &identifierr, const XBOFSWin::WinUsbDevice &winUsbDevice) {
+void XBOFSWinQT5GUI::winUsbDeviceRemoved(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice) {
     // TODO: Update UI
+    auto tuple = devicePathTabMap.at(devicePath);
+    ui.tabWidget->removeTab(std::get<0>(tuple));
+    devicePathTabMap.erase(devicePath);
 }
 
 void XBOFSWinQT5GUI::winUsbDeviceManagerScanning() {
