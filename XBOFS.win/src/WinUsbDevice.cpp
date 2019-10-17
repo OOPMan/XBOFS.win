@@ -42,7 +42,8 @@ void WinUsbDevice::run() {
     emit vigEmTargetAdded(devicePath);
     // Loop reading input, processing it and dispatching it
     logger->info("Starting Read-Process-Dispatch loop");
-    while (loop && !QThread::currentThread()->isInterruptionRequested()) {                
+    while (loop && !QThread::currentThread()->isInterruptionRequested()) {      
+        QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
         // Open WinUsbDevice
         emit winUsbDeviceOpen(devicePath);
         if (!openDevice()) {
@@ -77,8 +78,7 @@ void WinUsbDevice::run() {
             logger->warn("Failed to read input from XBO Arcade Stick 5 or more times for {}");
         }
         failedReads += currentFailedReads;
-        currentFailedReads = 0;
-        QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+        currentFailedReads = 0;        
     }
     emit winUsbDeviceTerminating(devicePath);    
     logger->info("Completed Read-Process-Dispatch loop");

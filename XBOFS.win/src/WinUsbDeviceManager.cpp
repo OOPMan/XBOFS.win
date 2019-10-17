@@ -69,7 +69,7 @@ void WinUsbDeviceManager::run() {
     // TODO: Duplicate code, we should remove it
     for (auto tuple : devicePathWinUsbDeviceMap) {
         auto devicePath = tuple.first;        
-        auto winUsbDeviceThread = tuple.second.first;
+        auto winUsbDeviceThread = tuple.second.first;        
         logger->info(L"Requesting interruption of thread handling {}", devicePath);
         winUsbDeviceThread->requestInterruption();
         logger->info(L"Signalling thread handling {} to terminate", devicePath);
@@ -85,11 +85,11 @@ void WinUsbDeviceManager::run() {
 Retrieve a vector of TCHAR* representing device paths that the device manager will work with
 */
 std::set<std::wstring> WinUsbDeviceManager::retrieveDevicePaths() {
-    CONFIGRET           configurationManagerResult  = CR_SUCCESS;
-    HRESULT             resultHandle                = S_OK;
-    PTSTR               deviceInterfaceList         = NULL;
-    ULONG               deviceInterfaceListSize     = 0;    
-    std::set<std::wstring>   newDevicePaths;
+    CONFIGRET               configurationManagerResult  = CR_SUCCESS;
+    HRESULT                 resultHandle                = S_OK;
+    PTSTR                   deviceInterfaceList         = NULL;
+    ULONG                   deviceInterfaceListSize     = 0;    
+    std::set<std::wstring>  newDevicePaths;
     //
     // Enumerate all devices exposing the interface. Do this in a loop
     // in case a new interface is discovered while this code is executing,
