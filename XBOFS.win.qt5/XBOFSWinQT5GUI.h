@@ -24,8 +24,8 @@ public:
     XBOFSWinQT5GUI(QWidget *parent = Q_NULLPTR);
 
 public slots:
-    void winUsbDeviceAdded(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
-    void winUsbDeviceRemoved(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
+    void winUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
+    void winUsbDeviceRemoved(const std::wstring &devicePath);
     void winUsbDeviceManagerScanning();
     void terminateWinUsbDeviceManager();
 
@@ -35,5 +35,5 @@ protected:
     QThread *winUsbDeviceManagerThread;
     XBOFSWin::WinUsbDeviceManager *winUsbDeviceManager;
 
-    std::unordered_map<QString, std::tuple<int, QWidget*, Ui::WinUsbDeviceWidget*>> devicePathTabMap;
+    std::vector<std::tuple<std::wstring, QWidget*, Ui::WinUsbDeviceWidget*>> tabs;    
 };

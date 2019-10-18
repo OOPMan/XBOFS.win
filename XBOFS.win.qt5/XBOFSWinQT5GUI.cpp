@@ -31,23 +31,37 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
     winUsbDeviceManagerThread->start();      
 }
 
-void XBOFSWinQT5GUI::winUsbDeviceAdded(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice) {        
+void XBOFSWinQT5GUI::winUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice) {        
     // TODO: Connect signals
     // TODO: Update UI    
+    auto devicePathQString = QString::fromStdWString(devicePath);
     auto tabWidget = new QWidget();
     auto tabWidgetUi = new Ui::WinUsbDeviceWidget();
-    tabWidget->setObjectName(devicePath);
+    tabWidget->setObjectName(devicePathQString);
     tabWidgetUi->setupUi(tabWidget);    
     auto tabIndex = ui.tabWidget->addTab(tabWidget, QString());    
     ui.tabWidget->setTabText(tabIndex, QString::fromStdWString(fmt::format(L"Stick {}", tabIndex)));
-    devicePathTabMap.insert({ devicePath, std::make_tuple(tabIndex, tabWidget, tabWidgetUi) });
+    tabs.push_back(std::make_tuple(devicePath, tabWidget, tabWidgetUi));
 }
 
-void XBOFSWinQT5GUI::winUsbDeviceRemoved(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice) {
-    // TODO: Update UI
-    auto tuple = devicePathTabMap.at(devicePath);
-    ui.tabWidget->removeTab(std::get<0>(tuple));
-    devicePathTabMap.erase(devicePath);
+void XBOFSWinQT5GUI::winUsbDeviceRemoved(const std::wstring &devicePath) {    
+    auto iterator = tabs.begin();
+    int index;
+    for (index = 1; iterator != tabs.end(); index++) {
+        auto currentDevicePath = std::get<0>(*iterator);
+        if (currentDevicePath == devicePath) break;
+        ++iterator;
+    }
+    if (iterator == tabs.end()) return;
+    auto tabWidget = std::get<1>(*iterator);
+    auto tabWidgetUi = std::get<2>(*iterator);
+    tabs.erase(iterator);
+    ui.tabWidget->removeTab(index);
+    delete tabWidget;
+    delete tabWidgetUi;
+    for (auto idx = 1; idx < ui.tabWidget->count(); idx++) {
+        ui.tabWidget->setTabText(idx, QString::fromStdWString(fmt::format(L"Stick {}", idx)));
+    }
 }
 
 void XBOFSWinQT5GUI::winUsbDeviceManagerScanning() {
