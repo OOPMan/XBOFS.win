@@ -24,11 +24,16 @@ std::wstring XBOFSWin::utf8_decode(const std::string &str)
     return wstrTo;
 }
 
+std::shared_ptr<spdlog::logger> XBOFSWin::get_logger(std::wstring loggerName, std::vector<spdlog::sink_ptr> sinks)
+{
+    return get_logger(utf8_encode(loggerName), sinks);
+}
+
 std::shared_ptr<spdlog::logger> XBOFSWin::get_logger(std::string loggerName, std::vector<spdlog::sink_ptr> sinks)
 {
     auto logger = spdlog::get(loggerName);
     if (!logger)
-    {
+    {        
         logger = std::make_shared<spdlog::logger>(loggerName, std::begin(sinks), std::end(sinks));
         spdlog::register_logger(logger);        
     }

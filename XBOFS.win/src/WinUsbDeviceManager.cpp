@@ -25,16 +25,15 @@ void WinUsbDeviceManager::run() {
             if (devicePathWinUsbDeviceMap.find(devicePath) != devicePathWinUsbDeviceMap.end()) continue;             
             this->logger->info(L"Adding WinUsbDevice at {}", devicePath);            
             auto winUsbDeviceThread = new QThread();            
-            auto winUsbDeviceLoggerName = utf8_encode(fmt::format(L"WinUsbDevice {}", devicePath));
+            auto winUsbDeviceLoggerName = fmt::format(L"WinUsbDevice {}", devicePath);
             auto winUsbDeviceLogger = get_logger(winUsbDeviceLoggerName, logger->sinks());
             auto winUsbDevice = new WinUsbDevice(devicePath, winUsbDeviceLogger);
             connect(winUsbDeviceThread, &QThread::finished, winUsbDevice, &QObject::deleteLater);
             connect(winUsbDeviceThread, &QThread::started, winUsbDevice, &WinUsbDevice::run);
             winUsbDevice->moveToThread(winUsbDeviceThread);
             devicePathWinUsbDeviceMap.insert({ devicePath, std::make_pair(winUsbDeviceThread, winUsbDevice) });                        
-            emit winUsbDeviceAdded(QString::fromStdWString(devicePath), winUsbDevice);
-            winUsbDeviceThread->start();
-            
+            emit winUsbDeviceAdded(devicePath, winUsbDevice);
+            winUsbDeviceThread->start();            
         }  
         // Check for WinUsbDevices to remove
         for (auto iterator = devicePathWinUsbDeviceMap.begin(); iterator != devicePathWinUsbDeviceMap.end(); )
@@ -49,7 +48,8 @@ void WinUsbDeviceManager::run() {
                 winUsbDeviceThread->terminate();
                 logger->info(L"Waiting for thread hanlding {} to terminate", devicePath);                
                 winUsbDeviceThread->wait();                
-                emit winUsbDeviceRemoved(QString::fromStdWString(devicePath), winUsbDevice);
+                emit winUsbDeviceRemoved(devicePath);
+                delete winUsbDeviceThread;
                 iterator = devicePathWinUsbDeviceMap.erase(iterator);
             }
             else ++iterator;
@@ -76,6 +76,7 @@ void WinUsbDeviceManager::run() {
         winUsbDeviceThread->terminate();
         logger->info(L"Waiting for thread hanlding {} to terminate", devicePath);
         winUsbDeviceThread->wait();        
+        delete winUsbDeviceThread;
     }
     logger->info("Completed run()");
 }

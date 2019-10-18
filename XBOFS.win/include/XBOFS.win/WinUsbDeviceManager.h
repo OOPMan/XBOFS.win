@@ -21,8 +21,8 @@ namespace XBOFSWin {
         void run();
 
     signals:
-        void winUsbDeviceAdded(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
-        void winUsbDeviceRemoved(const QString &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
+        void winUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
+        void winUsbDeviceRemoved(const std::wstring &devicePath);
         void winUsbDeviceManagerScanning();
         void winUsbDeviceManagerSleeping();
         void winUsbDeviceManagerTerminating();
