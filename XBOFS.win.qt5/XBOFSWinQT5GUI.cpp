@@ -115,7 +115,7 @@ void XBOFSWinQT5GUI::handleVigEmConnect(const std::wstring &devicePath) {
     if (!optionalIterator) return;
     auto iterator = (*optionalIterator).second;
     auto tabWidgetUi = std::get<2>(*iterator);
-    tabWidgetUi->vigEmClientStatus->setText(QString::fromUtf8("Connecting to VigEmBus..."));
+    tabWidgetUi->vigEmClientStatus->setText(QString::fromUtf8("Connecting..."));
 }
 
 void XBOFSWinQT5GUI::handleVigEmConnected(const std::wstring &devicePath) {
@@ -123,16 +123,27 @@ void XBOFSWinQT5GUI::handleVigEmConnected(const std::wstring &devicePath) {
     if (!optionalIterator) return;
     auto iterator = (*optionalIterator).second;
     auto tabWidgetUi = std::get<2>(*iterator);
-    tabWidgetUi->vigEmClientStatus->setText(QString::fromUtf8("Connected to VigEmBus"));
+    tabWidgetUi->vigEmClientStatus->setText(QString::fromUtf8("Connected"));
 }
 
 void XBOFSWinQT5GUI::handleVigEmTargetAdd(const std::wstring &devicePath) {    
+    auto optionalIterator = getIteratorForDevicePath(devicePath);
+    if (!optionalIterator) return;
+    auto iterator = (*optionalIterator).second;
+    auto tabWidgetUi = std::get<2>(*iterator);
+    tabWidgetUi->vigEmTargetStatus->setText(QString::fromUtf8("Adding..."));
 }
 
 void XBOFSWinQT5GUI::handleVigEmTargetAdded(const std::wstring &devicePath) {
+    auto optionalIterator = getIteratorForDevicePath(devicePath);
+    if (!optionalIterator) return;
+    auto iterator = (*optionalIterator).second;
+    auto tabWidgetUi = std::get<2>(*iterator);
+    tabWidgetUi->vigEmTargetStatus->setText(QString::fromUtf8("Added")); // TODO: Display more details on target
 }
 
 void XBOFSWinQT5GUI::handleVigEmError(const std::wstring &devicePath) {
+    // TODO: Note error output in text area
 }
 
 void XBOFSWinQT5GUI::handleWinUsbDeviceOpen(const std::wstring &devicePath) {
@@ -159,6 +170,7 @@ void XBOFSWinQT5GUI::handleWinUsbDeviceTerminating(const std::wstring &devicePat
 }
 
 void XBOFSWinQT5GUI::handleWinUsbDeviceError(const std::wstring &devicePath) { 
+    // TODO: Note error output in text area
 }
 
 void XBOFSWinQT5GUI::handleWinUsbDeviceManagerScanning() {

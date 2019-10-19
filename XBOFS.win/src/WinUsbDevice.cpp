@@ -137,7 +137,7 @@ bool WinUsbDevice::openDevice() {
         closeDevice();
         return false;
     } 
-    // TODO: Emit USB descriptor result
+    // TODO: Emit USB descriptor result    
     logger->info("Opened WinUSB device");
     return true;
 }
