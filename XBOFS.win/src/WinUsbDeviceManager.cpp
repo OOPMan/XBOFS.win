@@ -46,7 +46,7 @@ void WinUsbDeviceManager::run() {
                 winUsbDeviceThread->requestInterruption();
                 logger->info(L"Signalling thread handling {} to terminate", devicePath);
                 winUsbDeviceThread->terminate();
-                logger->info(L"Waiting for thread hanlding {} to terminate", devicePath);                
+                logger->info(L"Waiting for thread handling {} to terminate", devicePath);                
                 winUsbDeviceThread->wait();                
                 emit winUsbDeviceRemoved(devicePath);
                 delete winUsbDeviceThread;
