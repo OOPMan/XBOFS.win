@@ -136,8 +136,33 @@ bool WinUsbDevice::openDevice() {
         logger->error("Failed to read USB descriptor");
         closeDevice();
         return false;
-    } 
+    }
+    // Get Manufacturer string
+    USB_STRING_DESCRIPTOR manufacturerDescriptor;
+    winUsbGetDescriptorResult = WinUsb_GetDescriptor(
+        winUsbHandle, USB_STRING_DESCRIPTOR_TYPE, winUsbDeviceDescriptor.iManufacturer, 0x0409, (PBYTE)&manufacturerDescriptor, sizeof(manufacturerDescriptor), &bytesReceived
+    );
+    if (winUsbGetDescriptorResult == TRUE) {        
+        manufacturer = std::wstring(manufacturerDescriptor.bString);
+    }
+    // Get Product string
+    USB_STRING_DESCRIPTOR productDescriptor;
+    winUsbGetDescriptorResult = WinUsb_GetDescriptor(
+        winUsbHandle, USB_STRING_DESCRIPTOR_TYPE, winUsbDeviceDescriptor.iProduct, 0x0409, (PBYTE)&productDescriptor, sizeof(productDescriptor), &bytesReceived
+    );
+    if (winUsbGetDescriptorResult == TRUE) {
+        product = std::wstring(productDescriptor.bString);
+    }
+    // Get Serial number string
+    USB_STRING_DESCRIPTOR serialNumberDescriptor;
+    winUsbGetDescriptorResult = WinUsb_GetDescriptor(
+        winUsbHandle, USB_STRING_DESCRIPTOR_TYPE, winUsbDeviceDescriptor.iSerialNumber, 0x0409, (PBYTE)&serialNumberDescriptor, sizeof(serialNumberDescriptor), &bytesReceived
+    );
+    if (winUsbGetDescriptorResult == TRUE) {
+        serialNumber = std::wstring(serialNumberDescriptor.bString);
+    }
     // TODO: Emit USB descriptor result    
+    emit winUsbDeviceInfo(devicePath, (quint16)winUsbDeviceDescriptor.idVendor, (quint16)winUsbDeviceDescriptor.idProduct, manufacturer, product, serialNumber);
     logger->info("Opened WinUSB device");
     return true;
 }
