@@ -36,6 +36,8 @@ public slots:
     void handleVigEmTargetAdded(const std::wstring &devicePath);
     void handleVigEmError(const std::wstring &devicePath);
     void handleWinUsbDeviceOpen(const std::wstring &devicePath);
+    void handleWinUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,
+                                const std::wstring &manufacturer, const std::wstring &product, const std::wstring &serialNumber);
     void handleWinUsbDeviceOpened(const std::wstring &devicePath);
     void handleWinUsbDeviceInit(const std::wstring &devicePath);
     void handleWinUsbDeviceInitComplete(const std::wstring &devicePath);

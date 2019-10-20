@@ -69,6 +69,7 @@ void XBOFSWinQT5GUI::handleWinUsbDeviceAdded(const std::wstring &devicePath, con
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmError, this, &XBOFSWinQT5GUI::handleVigEmError);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceOpen, this, &XBOFSWinQT5GUI::handleWinUsbDeviceOpen);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceOpened, this, &XBOFSWinQT5GUI::handleWinUsbDeviceOpened);
+    connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceInfo, this, &XBOFSWinQT5GUI::handleWinUsbDeviceInfo);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceInit, this, &XBOFSWinQT5GUI::handleWinUsbDeviceInit);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceInitComplete, this, &XBOFSWinQT5GUI::handleWinUsbDeviceInitComplete);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceReadingInput, this, &XBOFSWinQT5GUI::handleWinUsbDeviceReadingInput);
@@ -147,6 +148,19 @@ void XBOFSWinQT5GUI::handleVigEmError(const std::wstring &devicePath) {
 }
 
 void XBOFSWinQT5GUI::handleWinUsbDeviceOpen(const std::wstring &devicePath) {
+}
+
+void XBOFSWinQT5GUI::handleWinUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,
+                                            const std::wstring &manufacturer, const std::wstring &product, const std::wstring &serialNumber) {
+    auto optionalIterator = getIteratorForDevicePath(devicePath);
+    if (!optionalIterator) return;
+    auto iterator = (*optionalIterator).second;
+    auto tabWidgetUi = std::get<2>(*iterator);
+    tabWidgetUi->vendorIdLabel->setText(QString::fromStdString(fmt::format("0x{:04X}", vendorId)));
+    tabWidgetUi->productIdLabel->setText(QString::fromStdString(fmt::format("0x{:04X}", productId)));
+    tabWidgetUi->manufacturerLabel->setText(QString::fromStdWString(manufacturer));
+    tabWidgetUi->productLabel->setText(QString::fromStdWString(product));
+    tabWidgetUi->serialNumberLabel->setText(QString::fromStdWString(serialNumber));    
 }
 
 void XBOFSWinQT5GUI::handleWinUsbDeviceOpened(const std::wstring &devicePath) {
