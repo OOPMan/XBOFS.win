@@ -2,16 +2,17 @@
 #include <XBOFS.win/pch.h>
 #include <ViGEm/Client.h>
 #include <qobject.h>
+#include <optional>
 
 namespace XBOFSWin {
-    struct USB_STRING_DESCRIPTOR {
+    struct STATIC_USB_STRING_DESCRIPTOR {
         UCHAR   bLength;
         UCHAR   bDescriptorType;
-        WCHAR   bString[255];
+        WCHAR   bString[126];
     };
 
-    /*
-    */
+    std::optional<std::wstring> getWinUsbStringDescriptor(const WINUSB_INTERFACE_HANDLE &winUsbHandle, UCHAR index, USHORT languageId);
+
     class WinUsbDevice : public QObject
     {
         Q_OBJECT

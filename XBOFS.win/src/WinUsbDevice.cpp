@@ -5,6 +5,24 @@
 #include "XBOFS.win\WinUsbDevice.h"
 
 using namespace XBOFSWin;
+
+/*
+Retrives a USB String Descriptor value
+*/
+std::optional<std::wstring> XBOFSWin::getWinUsbStringDescriptor(const WINUSB_INTERFACE_HANDLE &winUsbHandle, UCHAR index, USHORT languageId) {
+    STATIC_USB_STRING_DESCRIPTOR stringDescriptor;
+    stringDescriptor.bLength = 255;
+    ULONG bytesReceived;
+    BOOL winUsbGetDescriptorResult = WinUsb_GetDescriptor(
+        winUsbHandle, USB_STRING_DESCRIPTOR_TYPE, index, languageId, (PBYTE)&stringDescriptor, stringDescriptor.bLength, &bytesReceived
+    );
+    if (winUsbGetDescriptorResult == FALSE) return std::nullopt;    
+    UCHAR bStringBufferContentSize = stringDescriptor.bLength - sizeof(USB_STRING_DESCRIPTOR);
+    WCHAR dest[126];
+    wcsncpy_s(dest, 126, stringDescriptor.bString, bStringBufferContentSize);
+    return std::optional<std::wstring>{std::wstring(dest)};
+}
+
 /*
 Constructs the WinUsbDevice instance and starts its event loop in a separate thread
 */
@@ -138,30 +156,15 @@ bool WinUsbDevice::openDevice() {
         return false;
     }
     // Get Manufacturer string
-    USB_STRING_DESCRIPTOR manufacturerDescriptor;
-    winUsbGetDescriptorResult = WinUsb_GetDescriptor(
-        winUsbHandle, USB_STRING_DESCRIPTOR_TYPE, winUsbDeviceDescriptor.iManufacturer, 0x0409, (PBYTE)&manufacturerDescriptor, sizeof(manufacturerDescriptor), &bytesReceived
-    );
-    if (winUsbGetDescriptorResult == TRUE) {        
-        manufacturer = std::wstring(manufacturerDescriptor.bString);
-    }
+    auto optionalManufacturer = getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iManufacturer, 0x0409);
+    if (optionalManufacturer) manufacturer = *optionalManufacturer;
     // Get Product string
-    USB_STRING_DESCRIPTOR productDescriptor;
-    winUsbGetDescriptorResult = WinUsb_GetDescriptor(
-        winUsbHandle, USB_STRING_DESCRIPTOR_TYPE, winUsbDeviceDescriptor.iProduct, 0x0409, (PBYTE)&productDescriptor, sizeof(productDescriptor), &bytesReceived
-    );
-    if (winUsbGetDescriptorResult == TRUE) {
-        product = std::wstring(productDescriptor.bString);
-    }
+    auto optionalProduct = getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iProduct, 0x0409);
+    if (optionalProduct) product = *optionalProduct;    
     // Get Serial number string
-    USB_STRING_DESCRIPTOR serialNumberDescriptor;
-    winUsbGetDescriptorResult = WinUsb_GetDescriptor(
-        winUsbHandle, USB_STRING_DESCRIPTOR_TYPE, winUsbDeviceDescriptor.iSerialNumber, 0x0409, (PBYTE)&serialNumberDescriptor, sizeof(serialNumberDescriptor), &bytesReceived
-    );
-    if (winUsbGetDescriptorResult == TRUE) {
-        serialNumber = std::wstring(serialNumberDescriptor.bString);
-    }
-    // TODO: Emit USB descriptor result    
+    auto optionalSerialNumber = getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iSerialNumber, 0x0409);
+    if (optionalSerialNumber) serialNumber = *optionalSerialNumber;    
+    // Emit USB descriptor result    
     emit winUsbDeviceInfo(devicePath, (quint16)winUsbDeviceDescriptor.idVendor, (quint16)winUsbDeviceDescriptor.idProduct, manufacturer, product, serialNumber);
     logger->info("Opened WinUSB device");
     return true;
