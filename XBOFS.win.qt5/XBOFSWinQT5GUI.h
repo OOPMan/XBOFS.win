@@ -45,7 +45,7 @@ public slots:
     void handleWinUsbDeviceTerminating(const std::wstring &devicePath);
     void handleWinUsbDeviceError(const std::wstring &devicePath);
 
-protected:
+protected:    
     Ui::XBOFSWinQT5GUIClass ui;        
     std::shared_ptr<spdlog::logger> logger;
     QThread *winUsbDeviceManagerThread;

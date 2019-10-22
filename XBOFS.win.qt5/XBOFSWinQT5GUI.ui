@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>XBOFS.win</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>Resources/XBOFS.win.svg</normaloff>Resources/XBOFS.win.svg</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="leftMargin">

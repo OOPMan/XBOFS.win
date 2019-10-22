@@ -9,7 +9,7 @@
 
 XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
 : QMainWindow(parent)
-{
+{    
     ui.setupUi(this);      
     // Configure logging
     auto sinks = std::vector<spdlog::sink_ptr>();    
@@ -30,23 +30,6 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
     winUsbDeviceManager->moveToThread(winUsbDeviceManagerThread);
     winUsbDeviceManagerThread->start();      
 }
-
-//XBOFSWinQT5GUI::~XBOFSWinQT5GUI() {
-//    logger->info(L"Requesting interruption of thread handling WinUsbDeviceManager");
-//    winUsbDeviceManagerThread->requestInterruption(); 
-//    logger->info(L"Signalling thread handling WinUsbDeviceManager to terminate");
-//    winUsbDeviceManagerThread->terminate();
-//    logger->info(L"Waiting for thread handling WinUsbDeviceManager to terminate");
-//    winUsbDeviceManagerThread->wait();
-//    delete winUsbDeviceManagerThread;
-//    for (auto iterator = tabs.begin(); iterator != tabs.end(); ) {
-//        auto tabWidget = std::get<1>(*iterator);
-//        auto tabWidgetUi = std::get<2>(*iterator);
-//        delete tabWidget;
-//        delete tabWidgetUi;
-//        iterator = tabs.erase(iterator);
-//    }
-//}
 
 std::optional<std::pair<int, std::vector<std::tuple<std::wstring, QWidget*, Ui::WinUsbDeviceWidget*>>::iterator>> XBOFSWinQT5GUI::getIteratorForDevicePath(const std::wstring &devicePath) {
     auto iterator = tabs.begin();
@@ -86,15 +69,7 @@ void XBOFSWinQT5GUI::handleWinUsbDeviceAdded(const std::wstring &devicePath, con
     tabs.push_back(std::make_tuple(devicePath, tabWidget, tabWidgetUi));
 }
 
-void XBOFSWinQT5GUI::handleWinUsbDeviceRemoved(const std::wstring &devicePath) {
-    /*auto iterator = tabs.begin();
-    int index;
-    for (index = 1; iterator != tabs.end(); index++) {
-        auto currentDevicePath = std::get<0>(*iterator);
-        if (currentDevicePath == devicePath) break;
-        ++iterator;
-    }
-    if (iterator == tabs.end()) return;*/    
+void XBOFSWinQT5GUI::handleWinUsbDeviceRemoved(const std::wstring &devicePath) {    
     auto optionalIterator = getIteratorForDevicePath(devicePath);
     if (!optionalIterator) return;
     auto tuple = *optionalIterator;
@@ -189,12 +164,6 @@ void XBOFSWinQT5GUI::handleWinUsbDeviceError(const std::wstring &devicePath) {
 
 void XBOFSWinQT5GUI::handleWinUsbDeviceManagerScanning() {
     ui.winUsbDeviceManagerStatus->setText(QString::fromUtf8("Scanning for supported controllers..."));
-    /*ui.winUsbDeviceManagerStatus->setText(QString::fromUtf8(R"""(
-        <html><head/><body><p><span style="color:#00ff00; ">
-        Scanning for supported controllers...
-        </span></p></body></html>
-    )"""));    
-    */
 }
 
 void XBOFSWinQT5GUI::handleTerminateWinUsbDeviceManager() {    
