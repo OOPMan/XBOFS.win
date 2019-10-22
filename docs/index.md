@@ -156,9 +156,12 @@ It's very likely. Take a look at the [device contributor guide](/device_contribu
   * [Device Monitoring Studio](https://www.hhdsoftware.com/device-monitoring-studio)
   * [Microsoft Visual Studio Community 2017](https://visualstudio.microsoft.com)
   * [ZaDig](https://zadig.akeo.ie)
+  * [InkScape](https://inkscape.org)
 * **Testing**
   * Multiple Atrox support
     * [Manick74](https://www.reddit.com/user/Manick74)
     * [TheDecn](https://www.reddit.com/user/TheDecn)
   * Madcatz TE2 XBO data collection
     * [Fodenn](https://www.reddit.com/user/Fodenn)
+* **Graphics**
+  * Icon made by Freepik from [www.flaticon.com](https://www.flaticon.com) and modified by [OOPMan](https://github.com/OOPMan)
