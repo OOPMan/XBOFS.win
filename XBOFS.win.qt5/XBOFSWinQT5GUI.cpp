@@ -3,6 +3,8 @@
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <qthread.h>
+#include <qmessagebox.h>
+#include <qevent.h>
 #include <fmt/core.h>
 #include <XBOFS.win/utils.h>
 #include <XBOFS.win/WinUsbDeviceManager.h>
@@ -11,6 +13,7 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
 : QMainWindow(parent)
 {    
     ui.setupUi(this);      
+    connect(ui.actionExit, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuExit);
     // Configure logging
     auto sinks = std::vector<spdlog::sink_ptr>();    
     auto rotatingFileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("xbofs.win.qt5.log", 1024 * 1024 * 10, 10);
@@ -29,6 +32,16 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
     connect(this, &XBOFSWinQT5GUI::destroyed, this, &XBOFSWinQT5GUI::handleTerminateWinUsbDeviceManager);
     winUsbDeviceManager->moveToThread(winUsbDeviceManagerThread);
     winUsbDeviceManagerThread->start();      
+    // System tray icon
+    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+        systemTrayIcon = new QSystemTrayIcon(windowIcon(), this);
+        auto systemTrayIconMenu = new QMenu(this);
+        auto restoreAction = systemTrayIconMenu->addAction("Restore");
+        connect(restoreAction, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuRestore);
+        auto exitAction = systemTrayIconMenu->addAction("Exit");
+        connect(exitAction, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuExit);
+        systemTrayIcon->setContextMenu(systemTrayIconMenu);        
+    }
 }
 
 std::optional<std::pair<int, std::vector<std::tuple<std::wstring, QWidget*, Ui::WinUsbDeviceWidget*>>::iterator>> XBOFSWinQT5GUI::getIteratorForDevicePath(const std::wstring &devicePath) {
@@ -174,4 +187,39 @@ void XBOFSWinQT5GUI::handleTerminateWinUsbDeviceManager() {
     logger->info("Waiting for thread hanlding WinUsbDeviceManager to terminate");
     winUsbDeviceManagerThread->wait();
     logger->flush();
+}
+
+void XBOFSWinQT5GUI::handleSystemTrayMenuRestore(const bool &checked) {
+    setWindowFlags(previousFlags);
+    showNormal();
+}
+
+
+void XBOFSWinQT5GUI::handleSystemTrayMenuExit(const bool &checked) {        
+    QApplication::quit();
+    handleTerminateWinUsbDeviceManager();
+}
+
+void XBOFSWinQT5GUI::closeEvent(QCloseEvent *event) {
+    QMessageBox::information(this, tr("Systray"),
+        tr("The program will keep running in the "
+            "system tray. To terminate the program, "
+            "choose <b>Quit</b> in the context menu "
+            "of the system tray entry."));
+    hide();    
+    event->ignore();
+}
+
+void XBOFSWinQT5GUI::hideEvent(QHideEvent *event) {
+    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+        systemTrayIcon->show();
+        previousFlags = windowFlags();
+        setWindowFlags(Qt::ToolTip);
+    }
+}
+
+void XBOFSWinQT5GUI::showEvent(QShowEvent *event) {
+    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+        systemTrayIcon->hide();        
+    }
 }

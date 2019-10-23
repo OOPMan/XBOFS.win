@@ -6,6 +6,7 @@
 #include <XBOFS.win/WinUsbDevice.h>
 
 #include <QtWidgets/QMainWindow>
+#include <qsystemtrayicon.h>
 #include "ui_XBOFSWinQT5GUI.h"
 #include "ui_WinUsbDeviceWidget.h"
 
@@ -45,8 +46,13 @@ public slots:
     void handleWinUsbDeviceTerminating(const std::wstring &devicePath);
     void handleWinUsbDeviceError(const std::wstring &devicePath);
 
+    void handleSystemTrayMenuRestore(const bool &checked);
+    void handleSystemTrayMenuExit(const bool &checked);
+
 protected:    
-    Ui::XBOFSWinQT5GUIClass ui;        
+    Ui::XBOFSWinQT5GUIClass ui;     
+    QSystemTrayIcon *systemTrayIcon;
+    Qt::WindowFlags previousFlags;
     std::shared_ptr<spdlog::logger> logger;
     QThread *winUsbDeviceManagerThread;
     XBOFSWin::WinUsbDeviceManager *winUsbDeviceManager;
@@ -54,4 +60,8 @@ protected:
     std::vector<std::tuple<std::wstring, QWidget*, Ui::WinUsbDeviceWidget*>> tabs;    
 
     std::optional<std::pair<int, std::vector<std::tuple<std::wstring, QWidget*, Ui::WinUsbDeviceWidget*>>::iterator>> getIteratorForDevicePath(const std::wstring &devicePath);    
+
+    void closeEvent(QCloseEvent *event);
+    void hideEvent(QHideEvent *event);
+    void showEvent(QShowEvent *event);
 };
