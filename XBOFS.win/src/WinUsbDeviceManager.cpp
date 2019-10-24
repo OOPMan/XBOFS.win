@@ -44,9 +44,9 @@ void WinUsbDeviceManager::run() {
             if (devicePaths.find(devicePath) == devicePaths.end()) {
                 logger->info(L"Requesting interruption of thread handling {}", devicePath);
                 winUsbDeviceThread->requestInterruption();
-                logger->info(L"Signalling thread handling {} to terminate", devicePath);
-                winUsbDeviceThread->terminate();
-                logger->info(L"Waiting for thread handling {} to terminate", devicePath);                
+                logger->info(L"Signalling thread handling {} to quit", devicePath);
+                winUsbDeviceThread->quit();
+                logger->info(L"Waiting for thread handling {} to quit", devicePath);                
                 winUsbDeviceThread->wait();                
                 emit winUsbDeviceRemoved(devicePath);
                 delete winUsbDeviceThread;
@@ -72,9 +72,9 @@ void WinUsbDeviceManager::run() {
         auto winUsbDeviceThread = tuple.second.first;        
         logger->info(L"Requesting interruption of thread handling {}", devicePath);
         winUsbDeviceThread->requestInterruption();
-        logger->info(L"Signalling thread handling {} to terminate", devicePath);
-        winUsbDeviceThread->terminate();
-        logger->info(L"Waiting for thread hanlding {} to terminate", devicePath);
+        logger->info(L"Signalling thread handling {} to quit", devicePath);
+        winUsbDeviceThread->quit();
+        logger->info(L"Waiting for thread hanlding {} to quit", devicePath);
         winUsbDeviceThread->wait();        
         delete winUsbDeviceThread;
     }
