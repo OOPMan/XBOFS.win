@@ -7,6 +7,8 @@
 
 #include <QtWidgets/QMainWindow>
 #include <qsystemtrayicon.h>
+#include <qsettings.h>
+#include <qstring.h>
 #include "ui_XBOFSWinQT5GUI.h"
 #include "ui_WinUsbDeviceWidget.h"
 
@@ -18,13 +20,18 @@ namespace std {
     };
 }
 
+
+const QString SETTINGS_AUTOSTART("autostart");
+const QString SETTINGS_START_MINIMIZED("startMinimized");
+const QString SETTINGS_MINIMIZE_TO_TRAY("minimizeToTray");
+const QString SETTINGS_MINIMIZE_ON_CLOSE("minimizeOnClose");
+
 class XBOFSWinQT5GUI : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    XBOFSWinQT5GUI(QWidget *parent = Q_NULLPTR);
-    //~XBOFSWinQT5GUI();
+    XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *parent = Q_NULLPTR);
 
 public slots:
     void handleWinUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
@@ -49,11 +56,24 @@ public slots:
     void handleSystemTrayMenuRestore(const bool &checked);
     void handleSystemTrayMenuExit(const bool &checked);
 
-protected:    
+    void handleAutostartCheckboxStateChanged(const quint16 state);
+    void handleStartMinimizedCheckboxStateChanged(const quint16 state);
+    void handleMinimizeToTrayCheckboStateChanged(const quint16 state);
+    void handleMinimizeOnCloseCheckboxStateChanged(const quint16 state);
+
+protected:        
     Ui::XBOFSWinQT5GUIClass ui;     
+    QSettings* settings;    
+    bool autostart = false;
+    bool startMinimized = false;    
+    bool minimizeToTray = false;
+    bool minimizeOnClose = false;
+
     QSystemTrayIcon *systemTrayIcon;
+    bool systemTrayIconEnabled = false;
     Qt::WindowFlags previousFlags;
-    std::shared_ptr<spdlog::logger> logger;
+
+    const std::shared_ptr<spdlog::logger> logger;
     QThread *winUsbDeviceManagerThread;
     XBOFSWin::WinUsbDeviceManager *winUsbDeviceManager;
 

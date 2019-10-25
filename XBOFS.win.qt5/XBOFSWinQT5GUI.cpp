@@ -5,25 +5,34 @@
 #include <qthread.h>
 #include <qmessagebox.h>
 #include <qevent.h>
+#include <QtWidgets/QCheckBox>
 #include <fmt/core.h>
 #include <XBOFS.win/utils.h>
 #include <XBOFS.win/WinUsbDeviceManager.h>
 
-XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
-: QMainWindow(parent)
+XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *parent)
+: QMainWindow(parent), logger(logger)
 {    
+    // Settings
+    settings = new QSettings("OOPMan", "XBOFS.win", this);
+    autostart = settings->value(SETTINGS_AUTOSTART, false).toBool();
+    startMinimized = settings->value(SETTINGS_START_MINIMIZED, false).toBool();
+    minimizeOnClose = settings->value(SETTINGS_MINIMIZE_ON_CLOSE, false).toBool();
+    minimizeToTray = settings->value(SETTINGS_MINIMIZE_TO_TRAY, true).toBool();
+    // UI
     ui.setupUi(this);      
+    ui.autostartCheckBox->setChecked(autostart);
+    ui.startMinimizedCheckbox->setChecked(startMinimized);
+    ui.minimizeOnCloseCheckBox->setChecked(minimizeOnClose);
+    ui.minimizeToTrayCheckbox->setChecked(minimizeToTray);
     connect(ui.actionExit, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuExit);
-    // Configure logging
-    auto sinks = std::vector<spdlog::sink_ptr>();    
-    auto rotatingFileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("xbofs.win.qt5.log", 1024 * 1024 * 10, 10);
-    sinks.push_back(rotatingFileSink);
-    logger = XBOFSWin::get_logger("XBOFSWin QT5 GUI", sinks);
-    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%t] [%n] [%l] %v");
-    logger->info("Logging initialised");
+    connect(ui.autostartCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleAutostartCheckboxStateChanged);
+    connect(ui.startMinimizedCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleStartMinimizedCheckboxStateChanged);
+    connect(ui.minimizeOnCloseCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleMinimizeOnCloseCheckboxStateChanged);
+    connect(ui.minimizeToTrayCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleMinimizeToTrayCheckboStateChanged);
     // Start WinUsbDeviceManager    
     winUsbDeviceManagerThread = new QThread();
-    winUsbDeviceManager = new XBOFSWin::WinUsbDeviceManager(XBOFSWin::get_logger("WinUsbDeviceManager", sinks));
+    winUsbDeviceManager = new XBOFSWin::WinUsbDeviceManager(XBOFSWin::get_logger("WinUsbDeviceManager", logger->sinks()));
     connect(winUsbDeviceManagerThread, &QThread::finished, winUsbDeviceManager, &QObject::deleteLater);
     connect(winUsbDeviceManagerThread, &QThread::started, winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::run);
     connect(winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::winUsbDeviceManagerScanning, this, &XBOFSWinQT5GUI::handleWinUsbDeviceManagerScanning);
@@ -41,7 +50,11 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(QWidget *parent)
         auto exitAction = systemTrayIconMenu->addAction("Exit");
         connect(exitAction, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuExit);
         systemTrayIcon->setContextMenu(systemTrayIconMenu);        
+        systemTrayIconEnabled = true;
     }
+    // Show or hide
+    show();
+    if (startMinimized) hide();    
 }
 
 std::optional<std::pair<int, std::vector<std::tuple<std::wstring, QWidget*, Ui::WinUsbDeviceWidget*>>::iterator>> XBOFSWinQT5GUI::getIteratorForDevicePath(const std::wstring &devicePath) {
@@ -182,10 +195,11 @@ void XBOFSWinQT5GUI::handleWinUsbDeviceManagerScanning() {
 void XBOFSWinQT5GUI::handleTerminateWinUsbDeviceManager() {    
     logger->info("Requesting interruption of thread handling WinUsbDeviceManager");
     winUsbDeviceManagerThread->requestInterruption();
-    logger->info("Signalling thread handling WinUsbDeviceManager to terminate");
-    winUsbDeviceManagerThread->terminate();
-    logger->info("Waiting for thread hanlding WinUsbDeviceManager to terminate");
+    logger->info("Signalling thread handling WinUsbDeviceManager to quit");
+    winUsbDeviceManagerThread->quit();
+    logger->info("Waiting for thread hanlding WinUsbDeviceManager to quit");
     winUsbDeviceManagerThread->wait();
+    delete winUsbDeviceManagerThread;
     logger->flush();
 }
 
@@ -195,23 +209,21 @@ void XBOFSWinQT5GUI::handleSystemTrayMenuRestore(const bool &checked) {
 }
 
 
-void XBOFSWinQT5GUI::handleSystemTrayMenuExit(const bool &checked) {        
+void XBOFSWinQT5GUI::handleSystemTrayMenuExit(const bool &checked) {                
+    systemTrayIconEnabled = false;              
     QApplication::quit();
-    handleTerminateWinUsbDeviceManager();
 }
 
 void XBOFSWinQT5GUI::closeEvent(QCloseEvent *event) {
-    QMessageBox::information(this, tr("Systray"),
-        tr("The program will keep running in the "
-            "system tray. To terminate the program, "
-            "choose <b>Quit</b> in the context menu "
-            "of the system tray entry."));
-    hide();    
-    event->ignore();
+    if (systemTrayIconEnabled && minimizeOnClose) {        
+        hide();
+        event->ignore();
+    }
+    else handleSystemTrayMenuExit(true);
 }
 
-void XBOFSWinQT5GUI::hideEvent(QHideEvent *event) {
-    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+void XBOFSWinQT5GUI::hideEvent(QHideEvent *event) {    
+    if (systemTrayIconEnabled && minimizeToTray) {
         systemTrayIcon->show();
         previousFlags = windowFlags();
         setWindowFlags(Qt::ToolTip);
@@ -219,7 +231,30 @@ void XBOFSWinQT5GUI::hideEvent(QHideEvent *event) {
 }
 
 void XBOFSWinQT5GUI::showEvent(QShowEvent *event) {
-    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+    if (systemTrayIconEnabled) {
         systemTrayIcon->hide();        
     }
+}
+
+void XBOFSWinQT5GUI::handleAutostartCheckboxStateChanged(const quint16 state) {
+    autostart = state == Qt::Checked;
+    settings->setValue(SETTINGS_AUTOSTART, autostart);    
+    auto autostartSettings = QSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    if (autostart) autostartSettings.setValue("XBOFS.win", "\"" + QApplication::applicationFilePath().replace("/", "\\") + "\"");
+    else autostartSettings.remove("XBOFS.win");
+}
+
+void XBOFSWinQT5GUI::handleStartMinimizedCheckboxStateChanged(const quint16 state) {
+    startMinimized = state == Qt::Checked;
+    settings->setValue(SETTINGS_START_MINIMIZED, startMinimized);
+}
+
+void XBOFSWinQT5GUI::handleMinimizeOnCloseCheckboxStateChanged(const quint16 state) {
+    minimizeOnClose = state == Qt::Checked;
+    settings->setValue(SETTINGS_MINIMIZE_ON_CLOSE, minimizeOnClose);
+}
+
+void XBOFSWinQT5GUI::handleMinimizeToTrayCheckboStateChanged(const quint16 state) {
+    minimizeToTray = state == Qt::Checked;
+    settings->setValue(SETTINGS_MINIMIZE_TO_TRAY, minimizeToTray);
 }
