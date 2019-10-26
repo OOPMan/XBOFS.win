@@ -42,6 +42,7 @@ public slots:
     void handleVigEmConnected(const std::wstring &devicePath);
     void handleVigEmTargetAdd(const std::wstring &devicePath);
     void handleVigEmTargetAdded(const std::wstring &devicePath);
+    void handleVigEmTargetInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId, const ulong index);
     void handleVigEmError(const std::wstring &devicePath);
     void handleWinUsbDeviceOpen(const std::wstring &devicePath);
     void handleWinUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,

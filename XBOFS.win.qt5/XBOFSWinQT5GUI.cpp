@@ -75,6 +75,7 @@ void XBOFSWinQT5GUI::handleWinUsbDeviceAdded(const std::wstring &devicePath, con
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmConnected, this, &XBOFSWinQT5GUI::handleVigEmConnected);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmTargetAdd, this, &XBOFSWinQT5GUI::handleVigEmTargetAdd);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmTargetAdded, this, &XBOFSWinQT5GUI::handleVigEmTargetAdded);
+    connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmTargetInfo, this, &XBOFSWinQT5GUI::handleVigEmTargetInfo);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmError, this, &XBOFSWinQT5GUI::handleVigEmError);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceOpen, this, &XBOFSWinQT5GUI::handleWinUsbDeviceOpen);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceOpened, this, &XBOFSWinQT5GUI::handleWinUsbDeviceOpened);
@@ -142,6 +143,16 @@ void XBOFSWinQT5GUI::handleVigEmTargetAdded(const std::wstring &devicePath) {
     auto iterator = (*optionalIterator).second;
     auto tabWidgetUi = std::get<2>(*iterator);
     tabWidgetUi->vigEmTargetStatus->setText(QString::fromUtf8("Added")); // TODO: Display more details on target
+}
+
+void XBOFSWinQT5GUI::handleVigEmTargetInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId, const ulong index) {
+    auto optionalIterator = getIteratorForDevicePath(devicePath);
+    if (!optionalIterator) return;
+    auto iterator = (*optionalIterator).second;
+    auto tabWidgetUi = std::get<2>(*iterator);
+    tabWidgetUi->virtualDeviceVendorID->setText(QString::fromStdString(fmt::format("0x{:04X}", vendorId)));
+    tabWidgetUi->virtualDeviceProductID->setText(QString::fromStdString(fmt::format("0x{:04X}", productId)));
+    tabWidgetUi->virtualDeviceUserIndex->setText(QString::fromStdString(fmt::format("{}", index)));
 }
 
 void XBOFSWinQT5GUI::handleVigEmError(const std::wstring &devicePath) {
