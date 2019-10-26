@@ -28,10 +28,11 @@ namespace XBOFSWin {
         void vigEmConnect(const std::wstring &devicePath);
         void vigEmConnected(const std::wstring &devicePath);
         void vigEmTargetAdd(const std::wstring &devicePath);
-        void vigEmTargetAdded(const std::wstring &devicePath);
+        void vigEmTargetAdded(const std::wstring &devicePath);        
+        void vigEmTargetInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId, const ulong index);
         void vigEmError(const std::wstring &devicePath);
         void winUsbDeviceOpen(const std::wstring &devicePath);
-        void winUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,
+        void winUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId, 
                               const std::wstring &manufacturer, const std::wstring &product, const std::wstring &serialNumber);
         void winUsbDeviceOpened(const std::wstring &devicePath);
         void winUsbDeviceInit(const std::wstring &devicePath);

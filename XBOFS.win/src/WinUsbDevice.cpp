@@ -35,6 +35,7 @@ WinUsbDevice::WinUsbDevice(std::wstring devicePath, std::shared_ptr<spdlog::logg
 void WinUsbDevice::run() {    
     logger->info("Entered run()");
     bool loop = true;
+    int failedOpens = 0;
     int failedReads = 0;
     int failedWrites = 0;    
     // Allocate objects for VigEm        
@@ -57,7 +58,17 @@ void WinUsbDevice::run() {
         logger->error("Unable to add VigEmTarget");
         loop = false;
     }
-    emit vigEmTargetAdded(devicePath);
+    emit vigEmTargetAdded(devicePath);    
+    // Get extra info from VigEmTarget
+    ULONG vigEmTargetIndex;
+    if (VIGEM_SUCCESS(vigem_target_x360_get_user_index(vigEmClient, vigEmTarget, &vigEmTargetIndex))) {
+        emit vigEmTargetInfo(
+            devicePath,
+            vigem_target_get_vid(vigEmTarget),
+            vigem_target_get_pid(vigEmTarget),
+            vigEmTargetIndex
+        );
+    }
     // Loop reading input, processing it and dispatching it
     logger->info("Starting Read-Process-Dispatch loop");
     while (loop && !QThread::currentThread()->isInterruptionRequested()) {      
@@ -66,9 +77,13 @@ void WinUsbDevice::run() {
         emit winUsbDeviceOpen(devicePath);
         if (!openDevice()) {
             emit winUsbDeviceError(devicePath);            
-            logger->error("Unable to open WinUSB device");
+            if (failedOpens == 1000) {
+                logger->error("Unable to open WinUSB device");
+                failedOpens = 0;
+            }
+            else failedOpens++;
             continue;
-        }        
+        }
         emit winUsbDeviceOpened(devicePath);
         // Init WinUsbDevice
         emit winUsbDeviceInit(devicePath);       
