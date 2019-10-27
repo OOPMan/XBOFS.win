@@ -1,4 +1,6 @@
 #include "XBOFS.win\utils.h"
+#include <cfgmgr32.h>
+#include <ViGEm/km/BusShared.h>
 
 /*
 See https://stackoverflow.com/a/3999597/106057
@@ -38,4 +40,30 @@ std::shared_ptr<spdlog::logger> XBOFSWin::get_logger(std::string loggerName, std
         spdlog::register_logger(logger);        
     }
     return logger;
+}
+
+bool XBOFSWin::deviceInterfaceAvailable(LPGUID deviceInterfaceGUID, bool present)
+{
+    CONFIGRET               configurationManagerResult = CR_SUCCESS;
+    ULONG                   deviceInterfaceListSize = 0;
+    HRESULT                 resultHandle = S_OK;
+    configurationManagerResult = CM_Get_Device_Interface_List_Size(
+        &deviceInterfaceListSize,
+        deviceInterfaceGUID,
+        NULL,
+        present ? CM_GET_DEVICE_INTERFACE_LIST_PRESENT : CM_GET_DEVICE_INTERFACE_LIST_ALL_DEVICES
+    );
+
+    if (configurationManagerResult != CR_SUCCESS) return false;    
+    return deviceInterfaceListSize > 0;
+}
+
+bool XBOFSWin::vigEmBusAvailable()
+{
+    return deviceInterfaceAvailable((LPGUID)&GUID_DEVINTERFACE_BUSENUM_VIGEM);
+}
+
+bool XBOFSWin::XBOFSWinDeviceInstalled()
+{
+    return deviceInterfaceAvailable((LPGUID)&GUID_DEVINTERFACE_XBOFS_WIN_CONTROLLER, false);
 }
