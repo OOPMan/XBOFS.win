@@ -6,9 +6,26 @@
 #include <qmessagebox.h>
 #include <qevent.h>
 #include <QtWidgets/QCheckBox>
+#include <qdesktopservices.h>
 #include <fmt/core.h>
 #include <XBOFS.win/utils.h>
 #include <XBOFS.win/WinUsbDeviceManager.h>
+
+const auto installedMessage = QString::fromWCharArray(LR"""(
+<span style="color:#2ECC40">Installed</span>
+)""");
+
+const auto vigEmBusNotInstalledMessage = QString::fromWCharArray(LR"""(
+<span style="color:#ff0000">Not Installed!</span> Click <a href="https://github.com/ViGEm/ViGEmBus/releases/"><span style=" text-decoration: underline; color:#0000ff;">here</a> to visit the <span style=" font-size:8.25pt; font-weight:600;">VigEmBus</span> release page and download the latest installer
+)""");
+
+const auto xbofsWinDriverNotInstalledMessage = QString::fromWCharArray(LR"""(
+<span style="color:#ff0000">Not Installed!</span> Click <a href="https://xbofs.win/zadig.html"><span style=" text-decoration: underline; color:#0000ff;">here</a> to visit the <span style=" font-size:8.25pt; font-weight:600;">XBOFS.win</span> ZaDig WinUSB driver installation guide
+)""");
+
+void qtDesktopServicesOpenLink(const QString & link) {
+    QDesktopServices::openUrl(link);
+}
 
 XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *parent)
 : QMainWindow(parent), logger(logger)
@@ -51,6 +68,18 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
         connect(exitAction, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuExit);
         systemTrayIcon->setContextMenu(systemTrayIconMenu);        
         systemTrayIconEnabled = true;
+    }
+    // Check for VigEmBus driver
+    if (XBOFSWin::vigEmBusAvailable()) ui.vigEmBusStatus->setText(installedMessage);
+    else {        
+        ui.vigEmBusStatus->setText(vigEmBusNotInstalledMessage);
+        connect(ui.vigEmBusStatus, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
+    }
+    // Check for XBOFS.win driver
+    if (XBOFSWin::XBOFSWinDeviceInstalled()) ui.xbofsWinDriverStatus->setText(installedMessage);
+    else {        
+        ui.xbofsWinDriverStatus->setText(xbofsWinDriverNotInstalledMessage);
+        connect(ui.xbofsWinDriverStatus, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
     }
     // Show or hide
     show();
@@ -200,7 +229,7 @@ void XBOFSWinQT5GUI::handleWinUsbDeviceError(const std::wstring &devicePath) {
 }
 
 void XBOFSWinQT5GUI::handleWinUsbDeviceManagerScanning() {
-    ui.winUsbDeviceManagerStatus->setText(QString::fromUtf8("Scanning for supported controllers..."));
+    ui.xbofsWinDeviceManagerStatus->setText(QString::fromWCharArray(LR"""(<span style="color:#2ECC40">Scanning for supported controllers...</span>)"""));
 }
 
 void XBOFSWinQT5GUI::handleTerminateWinUsbDeviceManager() {    
