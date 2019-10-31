@@ -7,6 +7,9 @@
 #include <qevent.h>
 #include <QtWidgets/QCheckBox>
 #include <qdesktopservices.h>
+#include <qstandardpaths.h>
+#include <qdir.h>
+#include <qfile.h>
 #include <qnetworkconfiguration.h>
 #include <qsslsocket.h>
 #include <fmt/core.h>
@@ -311,9 +314,11 @@ void XBOFSWinQT5GUI::showEvent(QShowEvent *event) {
 void XBOFSWinQT5GUI::handleAutostartCheckboxStateChanged(const quint16 state) {
     autostart = state == Qt::Checked;
     settings->setValue(SETTINGS_AUTOSTART, autostart);    
-    auto autostartSettings = QSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-    if (autostart) autostartSettings.setValue("XBOFS.win", "\"" + QApplication::applicationFilePath().replace("/", "\\") + "\"");
-    else autostartSettings.remove("XBOFS.win");
+    auto applicationFilePath = QApplication::applicationFilePath();
+    auto applicationsLocation = QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation);
+    auto linkPath = applicationsLocation + QDir::separator() + "Startup" + QDir::separator() + "XBOFS.win.qt5.lnk";
+    if (autostart) QFile::link(applicationFilePath, linkPath);
+    else QFile::remove(linkPath);
 }
 
 void XBOFSWinQT5GUI::handleStartMinimizedCheckboxStateChanged(const quint16 state) {
