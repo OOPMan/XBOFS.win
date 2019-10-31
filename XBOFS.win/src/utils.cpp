@@ -55,7 +55,7 @@ bool XBOFSWin::deviceInterfaceAvailable(LPGUID deviceInterfaceGUID, bool present
     );
 
     if (configurationManagerResult != CR_SUCCESS) return false;    
-    return deviceInterfaceListSize > 0;
+    return deviceInterfaceListSize > 1;
 }
 
 bool XBOFSWin::vigEmBusAvailable()
