@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "XBOFS.win\pch.h"
 
 #include <cfgmgr32.h>
 

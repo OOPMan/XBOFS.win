@@ -8,9 +8,13 @@
 #include <string>
 #include <set>
 #include <atomic>
+#include <spdlog/logger.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <qmetatype.h>
 
-#include "easylogging++.h"
 #include "device.h"
+#include "utils.h"
+#include "stdafx.h"
 
-typedef std::basic_string<TCHAR> tstring;
 
+Q_DECLARE_METATYPE(std::wstring)

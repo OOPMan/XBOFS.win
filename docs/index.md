@@ -6,6 +6,7 @@ drivers and rewire buttons
 * All buttons on supported controllers work, no rewiring or fiddling required
 * Multiple supported controllers can be connected
 * Supported controllers work in Steam, Windows Store games, etc
+* QT5 GUI
 
 
 # Supported controllers
@@ -55,6 +56,10 @@ Steam only sees the virtual XB360 controller
     a **WinUSB** driver for your supported controller. If you own multiple different supported controllers then you must repeat step 5
     for each different supported controller
 
+### Optional
+01. Install OpenSSL from [http://slproweb.com/products/Win32OpenSSL.html](http://slproweb.com/products/Win32OpenSSL.html) in order to
+    enable the update check functionality. Without this installed the application is unable to check for updates  
+
 
 ## Updating
 
@@ -66,17 +71,18 @@ Steam only sees the virtual XB360 controller
 ## Usage
 
 01. Open the folder that you extracted the **XBOFS.win.zip** bundle into
-02. Run **XBOFS.win.exe** 
+02. Run **XBOFS.win.qt5.exe** 
 03. Connect your supported controller(s)
 04. Wait for the interface to indicate your device(s) is **Reading input...**. You may 
     see a pop-up notification about a new XB360 controller(s) being detected, this is normal
-05. You can now minimize the **XBOFS.win.exe** window if you so choose
+05. You can now minimize the **XBOFS.win.qt5.exe** window if you so choose. The application will minimise to the system tray 
+    by default
 06. You should now be able to play games using your supported controller(s). Any game that supports a standard XB360 
     controller should work, regardless of whether it is a Steam game, Windows store game or any other platform that 
     supports the XB360 controller. Note that the input from the stick is mapped to the D-Pad on the virtual XB360 
     controller not the analog stick
-07. When you are done playing, activate the **XBOXFS.win.exe** window and hit *Q*. The application will exit (it can
-    take up to 20 seconds to do so) and the virtual XB360 controller(s) will disappear
+07. When you are done playing simply unplug your device(s) and pack them away. You can leave the application running minimized
+    as it does not consume a large amount of memory or CPU time. You can exit the application using the *File* menu or the tray icon
 
 
 ## Uninstallation
@@ -89,6 +95,7 @@ Steam only sees the virtual XB360 controller
 06. In the dialog box, mark the checkbox labelled *Delete the driver software for this device*
 07. Click *Uninstall*
 08. Replug your supported controller. It will now use whichever driver was previously configured for it
+09. Delete the folder you extracted the **XBOFS.win.zip** bundle into  
 
 
 ## Support
@@ -156,9 +163,12 @@ It's very likely. Take a look at the [device contributor guide](/device_contribu
   * [Device Monitoring Studio](https://www.hhdsoftware.com/device-monitoring-studio)
   * [Microsoft Visual Studio Community 2017](https://visualstudio.microsoft.com)
   * [ZaDig](https://zadig.akeo.ie)
+  * [InkScape](https://inkscape.org)
 * **Testing**
   * Multiple Atrox support
     * [Manick74](https://www.reddit.com/user/Manick74)
     * [TheDecn](https://www.reddit.com/user/TheDecn)
   * Madcatz TE2 XBO data collection
     * [Fodenn](https://www.reddit.com/user/Fodenn)
+* **Graphics**
+  * Icon made by Freepik from [www.flaticon.com](https://www.flaticon.com) and modified by [OOPMan](https://github.com/OOPMan)

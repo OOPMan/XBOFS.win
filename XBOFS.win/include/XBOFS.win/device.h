@@ -3,6 +3,7 @@
 // Define below GUIDs
 //
 #include <initguid.h>
+#include "stdafx.h"
 
 //
 // Device Interface GUID.
@@ -33,13 +34,13 @@ CloseDevice(
     _Inout_ PDEVICE_DATA DeviceData
     );
 
-struct RAZER_ATROX_DATA_PACKET
+struct XBO_ARCADE_STICK_DATA_PACKET
 {
     UCHAR data[30];
     ULONG transferred;
 };
 
-struct RAZER_ATROX_BUTTON_STATE
+struct XBO_ARCADE_STICK_BUTTON_STATE
 {
     BOOL buttonX;
     BOOL buttonY;
@@ -58,7 +59,7 @@ struct RAZER_ATROX_BUTTON_STATE
     BOOL stickRight;
 };
 
-enum RAZER_ATROX_PACKET_TYPES
+enum XBO_ARCADE_STICK_PACKET_TYPES
 {
     UNKNOWN,
     DUMMY,
