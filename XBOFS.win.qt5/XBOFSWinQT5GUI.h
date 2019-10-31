@@ -6,6 +6,8 @@
 #include <XBOFS.win/WinUsbDevice.h>
 
 #include <QtWidgets/QMainWindow>
+#include <qnetworkaccessmanager.h>
+#include <qnetworkreply.h>
 #include <qsystemtrayicon.h>
 #include <qsettings.h>
 #include <qstring.h>
@@ -20,11 +22,12 @@ namespace std {
     };
 }
 
-
+const QString VERSION("v0.4");
 const QString SETTINGS_AUTOSTART("autostart");
 const QString SETTINGS_START_MINIMIZED("startMinimized");
 const QString SETTINGS_MINIMIZE_TO_TRAY("minimizeToTray");
 const QString SETTINGS_MINIMIZE_ON_CLOSE("minimizeOnClose");
+const QString SETTINGS_CHECK_FOR_UPDATES("checkForUpdates");
 
 class XBOFSWinQT5GUI : public QMainWindow
 {
@@ -61,14 +64,19 @@ public slots:
     void handleStartMinimizedCheckboxStateChanged(const quint16 state);
     void handleMinimizeToTrayCheckboStateChanged(const quint16 state);
     void handleMinimizeOnCloseCheckboxStateChanged(const quint16 state);
+    void handleUpdateCheckCheckboxStateChanged(const quint16 state);
+    
+    void handleUpdateCheckResponse(QNetworkReply *response);
 
 protected:        
     Ui::XBOFSWinQT5GUIClass ui;     
-    QSettings* settings;    
+    QSettings *settings; 
+    QNetworkAccessManager *networkManager;
     bool autostart = false;
     bool startMinimized = false;    
     bool minimizeToTray = false;
     bool minimizeOnClose = false;
+    bool checkForUpdates = false;
 
     QSystemTrayIcon *systemTrayIcon;
     bool systemTrayIconEnabled = false;
