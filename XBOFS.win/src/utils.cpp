@@ -1,6 +1,7 @@
 #include "XBOFS.win\utils.h"
 #include <cfgmgr32.h>
 #include <ViGEm/km/BusShared.h>
+#include <spdlog/spdlog.h>
 
 /*
 See https://stackoverflow.com/a/3999597/106057

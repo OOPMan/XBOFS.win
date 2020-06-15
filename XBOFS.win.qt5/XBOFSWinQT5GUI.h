@@ -14,14 +14,6 @@
 #include "ui_XBOFSWinQT5GUI.h"
 #include "ui_WinUsbDeviceWidget.h"
 
-namespace std {
-    template<> struct hash<QString> {
-        std::size_t operator()(const QString& s) const {
-            return qHash(s);
-        }
-    };
-}
-
 const QString VERSION("v0.4");
 const QString SETTINGS_AUTOSTART("autostart");
 const QString SETTINGS_START_MINIMIZED("startMinimized");
