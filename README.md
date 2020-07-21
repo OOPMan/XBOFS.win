@@ -2,6 +2,13 @@
 **XBOFS.win** allows you to use your **XBO Fight Stick** controller on Windows without having to install ancient, beta drivers 
 and rewire buttons
 
+## IMPORTANT
+If you ended here looking to download and use **XBOFS.win** with your *XBO arcade stick* then you've landed in the wrong place.
+
+Head over to the [main website](https://xbofs.win) to view the installation instructions and download the application.
+
+## Dependencies
+
 In order to compile this project you will need:
 * [Microsoft Visual Studio Community 2019](https://visualstudio.microsoft.com)
 * [Qt 5.x](https://www.qt.io/download-qt-installer)
@@ -9,6 +16,8 @@ In order to compile this project you will need:
 * [WDK for Windows 10, version 2004](https://docs.microsoft.com/en-ca/windows-hardware/drivers/download-the-wdk)
 * [vcpkg](https://github.com/microsoft/vcpkg)
     * [spdlog](https://github.com/gabime/spdlog) installed using vcpkg: `vcpkg install spdlog:x64-windows`
+
+## Compilation
 
 Compilation is quite simple:
 
