@@ -49,7 +49,7 @@ namespace XBOFSWin {
         std::wstring serialNumber = L"Unknown";
 
         bool deviceHandlesOpen = false;
-        UCHAR XBO_ARCADE_STICK_INIT[5] = { 0x05, 0x20, 0x08, 0x01, 0x05 };
+        UCHAR XBO_ARCADE_STICK_INIT[5] = { 0x05, 0x20, 0x00, 0x01, 0x00 };
         XBO_ARCADE_STICK_DATA_PACKET dataPacket = {};
         XBO_ARCADE_STICK_BUTTON_STATE buttonState = {};
         PVIGEM_CLIENT vigEmClient = NULL;

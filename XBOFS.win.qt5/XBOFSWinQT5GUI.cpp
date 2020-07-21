@@ -221,6 +221,7 @@ void XBOFSWinQT5GUI::handleVigEmTargetInfo(const std::wstring &devicePath, quint
 
 void XBOFSWinQT5GUI::handleVigEmError(const std::wstring &devicePath) {
     // TODO: Note error output in text area
+
 }
 
 void XBOFSWinQT5GUI::handleWinUsbDeviceOpen(const std::wstring &devicePath) {
