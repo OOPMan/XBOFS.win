@@ -1,4 +1,4 @@
-﻿# XBOFS.win
+﻿# XBOFS.win v0.4.1
 **XBOFS.win** allows you to use your **XBO Fight Stick** controller on Windows without having to install ancient, beta 
 drivers and rewire buttons
 
@@ -63,9 +63,10 @@ Steam only sees the virtual XB360 controller
 
 ## Updating
 
-01. Browser to [https://github.com/OOPMan/XBOFS.win/releases/latest](https://github.com/OOPMan/XBOFS.win/releases/latest) and download 
+01. Exit **XBOFS.win**
+02. Browser to [https://github.com/OOPMan/XBOFS.win/releases/latest](https://github.com/OOPMan/XBOFS.win/releases/latest) and download 
     the latest **XBOFS.win.zip** bundle. Extract this bundle over your existing folder containg **XBOFS.win**, overwriting any files if asked
-02. Restart your computer
+03. Restart your computer
 
 
 ## Usage
@@ -99,6 +100,13 @@ Steam only sees the virtual XB360 controller
 
 
 ## Support
+
+##### I extracted **XBOFS.win.zip** but can't find **XBOFS.win.qt5.exe**
+You may have accidentally download the source code. If the contents of the zip file look like this:
+
+![Source Code](images/wrong_zip.jpg)
+then you have downloaded the source code by mistake. Head back to step 3 of the [installation guide](#installation) and make sure the download the file **XBOFS.win.zip**.
+Do not download **Source Code (zip)** or **Source Code (tar.gz)**, these do not contain the application.
 
 ##### XBOFS.win doesn't seem to be able to detect my controller
 This usually indicates an issue with the **WinUSB** driver installation. Please check the [ZaDig WinUSB driver installation guide](/zadig.md) and confirm
@@ -161,14 +169,14 @@ It's very likely. Take a look at the [device contributor guide](/device_contribu
   * [xpad.c](https://github.com/torvalds/linux/blob/master/drivers/input/joystick/xpad.c)
 * **Tools**
   * [Device Monitoring Studio](https://www.hhdsoftware.com/device-monitoring-studio)
-  * [Microsoft Visual Studio Community 2017](https://visualstudio.microsoft.com)
+  * [Microsoft Visual Studio Community 2019](https://visualstudio.microsoft.com)
   * [ZaDig](https://zadig.akeo.ie)
   * [InkScape](https://inkscape.org)
 * **Testing**
   * Multiple Atrox support
     * [Manick74](https://www.reddit.com/user/Manick74)
     * [TheDecn](https://www.reddit.com/user/TheDecn)
-  * Madcatz TE2 XBO data collection
+  * Madcatz TE2 XBO support
     * [Fodenn](https://www.reddit.com/user/Fodenn)
 * **Graphics**
   * Icon made by Freepik from [www.flaticon.com](https://www.flaticon.com) and modified by [OOPMan](https://github.com/OOPMan)
