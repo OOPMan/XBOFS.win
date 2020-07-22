@@ -51,7 +51,7 @@ Steam only sees the virtual XB360 controller
 02. Install **VigEmBus** and reboot
 03. Browse to [https://github.com/OOPMan/XBOFS.win/releases/latest](https://github.com/OOPMan/XBOFS.win/releases/latest) and download the 
     latest **XBOFS.win.zip** bundle. Extract this bundle somewhere. I recommend the root of your C: drive
-04. Browse to [https://zadig.akeo.ie](https://zadig.akeo.ie) and download **Zadig 2.4** to the *XBOFS.win* folder extracted in the previous step
+04. Browse to [https://zadig.akeo.ie](https://zadig.akeo.ie) and download the latest version of **ZaDig** to the *XBOFS.win* folder extracted in the previous step
 05. Open the [ZaDig WinUSB driver installation guide](/zadig.md) and follow the instructions there to install 
     a **WinUSB** driver for your supported controller. If you own multiple different supported controllers then you must repeat step 5
     for each different supported controller
