@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AnalogEmulationSettingsWidget</class>
+ <widget class="QWidget" name="AnalogEmulationSettingsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>492</width>
+    <height>350</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetDefaultConstraint</enum>
+   </property>
+   <item row="1" column="2">
+    <widget class="QComboBox" name="toggleModeButtonComboBox">
+     <item>
+      <property name="text">
+       <string>Guide Button</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>View Button</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Start Button</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>A</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>B</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Y</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>RB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>LB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>RT</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>LT</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="yAxisMinimumLabel">
+     <property name="text">
+      <string>Y-Axis Minimum</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="toggleModeActionComboBox">
+     <item>
+      <property name="text">
+       <string>Press</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Hold</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Not Bound</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QComboBox" name="toggleStickButtonComboBox">
+     <item>
+      <property name="text">
+       <string>Guide Button</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>View Button</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Start Button</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>A</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>B</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Y</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>RB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>LB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>RT</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>LT</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="xAxisMinimumLabel">
+     <property name="text">
+      <string>X-Axis Minimum</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QComboBox" name="defaultModeComboBox">
+     <item>
+      <property name="text">
+       <string>Digital</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Analog</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="2">
+    <widget class="QSlider" name="horizontalSlider">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>100</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+     <property name="tickInterval">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Toggle Digital/Analog Mode</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Interpolation Duration (ms)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Toggle Left/Right Analog Stick</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="xAxisMaximumLabel">
+     <property name="text">
+      <string>X-Axis Maximum</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Default Mode</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QComboBox" name="toggleStickActionComboBox">
+     <item>
+      <property name="text">
+       <string>Press</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Hold</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Not Bound</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="QLineEdit" name="interpolationDurationLineEdit">
+     <property name="inputMask">
+      <string>900000</string>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="2">
+    <widget class="QSlider" name="horizontalSlider_2">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>100</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+     <property name="tickInterval">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="yAxisMaximumLabel">
+     <property name="text">
+      <string>Y-Axis Maximum</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="2">
+    <widget class="QSlider" name="horizontalSlider_3">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>100</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+     <property name="tickInterval">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1" colspan="2">
+    <widget class="QSlider" name="horizontalSlider_4">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>100</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+     <property name="tickInterval">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

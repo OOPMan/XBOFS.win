@@ -40,6 +40,9 @@
     <QtUic Include="WinUsbDeviceWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="AnalogEmulationSettingsWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="XBOFSWinQT5GUI.qrc">

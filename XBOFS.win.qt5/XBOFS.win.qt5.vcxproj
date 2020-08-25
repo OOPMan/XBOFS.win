@@ -143,6 +143,7 @@
     <QtMoc Include="XBOFSWinQT5GUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="AnalogEmulationSettingsWidget.ui" />
     <QtUic Include="WinUsbDeviceWidget.ui" />
     <QtUic Include="XBOFSWinQT5GUI.ui" />
   </ItemGroup>
