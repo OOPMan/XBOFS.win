@@ -185,6 +185,20 @@
              </property>
             </widget>
            </item>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="updateCheckCheckbox">
+             <property name="text">
+              <string>Check for updates on Start</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="autostartCheckBox">
+             <property name="text">
+              <string>Start automatically on login</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="1">
             <widget class="QCheckBox" name="startMinimizedCheckbox">
              <property name="text">
@@ -199,17 +213,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="autostartCheckBox">
+           <item row="2" column="1">
+            <widget class="QCheckBox" name="analogEmulationCheckBox">
              <property name="text">
-              <string>Start automatically on login</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QCheckBox" name="updateCheckCheckbox">
-             <property name="text">
-              <string>Check for updates on Start</string>
+              <string>Analog Emulation</string>
              </property>
             </widget>
            </item>
