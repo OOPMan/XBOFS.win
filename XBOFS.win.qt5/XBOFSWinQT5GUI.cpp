@@ -58,6 +58,7 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
     minimizeOnClose = settings->value(SETTINGS_MINIMIZE_ON_CLOSE, false).toBool();
     minimizeToTray = settings->value(SETTINGS_MINIMIZE_TO_TRAY, true).toBool();
     checkForUpdates = settings->value(SETTINGS_CHECK_FOR_UPDATES, true).toBool();
+    analogEmulation = settings->value(SETTINGS_ANALOG_EMULATION, false).toBool();
     // UI
     ui.setupUi(this);      
     ui.versionLabel->setText(currentVersionMessage.arg(VERSION, VERSION));
@@ -66,16 +67,20 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
     ui.minimizeOnCloseCheckBox->setChecked(minimizeOnClose);
     ui.minimizeToTrayCheckbox->setChecked(minimizeToTray);
     ui.updateCheckCheckbox->setChecked(checkForUpdates);
+    ui.analogEmulationSettingsWidget->setEnabled(analogEmulation);
     connect(ui.actionExit, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuExit);
     connect(ui.autostartCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleAutostartCheckboxStateChanged);
     connect(ui.startMinimizedCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleStartMinimizedCheckboxStateChanged);
     connect(ui.minimizeOnCloseCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleMinimizeOnCloseCheckboxStateChanged);
     connect(ui.minimizeToTrayCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleMinimizeToTrayCheckboStateChanged);
     connect(ui.updateCheckCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleUpdateCheckCheckboxStateChanged);
+    connect(ui.analogEmulationCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleAnalogEmulationCheckboxStateChanged);
     connect(ui.versionLabel, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
     connect(ui.homepageLabel, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
     connect(ui.authorLabel, &QLabel::linkActivated, &qtDesktopServicesOpenLink);    
     connect(ui.specialThanksLabel, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
+    // Analog Emulation Settings UI
+    analogEmulationSettingsUi.setupUi(ui.analogEmulationSettingsWidget);
     // Start WinUsbDeviceManager    
     winUsbDeviceManagerThread = new QThread();
     winUsbDeviceManager = new XBOFSWin::WinUsbDeviceManager(XBOFSWin::get_logger("WinUsbDeviceManager", logger->sinks()));
@@ -341,6 +346,14 @@ void XBOFSWinQT5GUI::handleUpdateCheckCheckboxStateChanged(const quint16 state) 
     checkForUpdates = state == Qt::Checked;
     settings->setValue(SETTINGS_CHECK_FOR_UPDATES, checkForUpdates);
 }
+
+void XBOFSWinQT5GUI::handleAnalogEmulationCheckboxStateChanged(const quint16 state)
+{
+    analogEmulation = state == Qt::Checked;
+    settings->setValue(SETTINGS_ANALOG_EMULATION, analogEmulation);
+    ui.analogEmulationSettingsWidget->setEnabled(analogEmulation);
+}
+
 
 void XBOFSWinQT5GUI::handleUpdateCheckResponse(QNetworkReply *response) {
     response->deleteLater();        

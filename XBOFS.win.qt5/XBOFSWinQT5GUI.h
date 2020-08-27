@@ -12,6 +12,7 @@
 #include <qsettings.h>
 #include <qstring.h>
 #include "ui_XBOFSWinQT5GUI.h"
+#include "ui_AnalogEmulationSettingsWidget.h"
 #include "ui_WinUsbDeviceWidget.h"
 
 const QString VERSION("v0.4.1");
@@ -20,6 +21,7 @@ const QString SETTINGS_START_MINIMIZED("startMinimized");
 const QString SETTINGS_MINIMIZE_TO_TRAY("minimizeToTray");
 const QString SETTINGS_MINIMIZE_ON_CLOSE("minimizeOnClose");
 const QString SETTINGS_CHECK_FOR_UPDATES("checkForUpdates");
+const QString SETTINGS_ANALOG_EMULATION("analogEmulation");
 
 class XBOFSWinQT5GUI : public QMainWindow
 {
@@ -57,11 +59,13 @@ public slots:
     void handleMinimizeToTrayCheckboStateChanged(const quint16 state);
     void handleMinimizeOnCloseCheckboxStateChanged(const quint16 state);
     void handleUpdateCheckCheckboxStateChanged(const quint16 state);
+    void handleAnalogEmulationCheckboxStateChanged(const quint16 state);
     
     void handleUpdateCheckResponse(QNetworkReply *response);
 
 protected:        
-    Ui::XBOFSWinQT5GUIClass ui;     
+    Ui::XBOFSWinQT5GUIClass ui;
+    Ui::AnalogEmulationSettingsWidget analogEmulationSettingsUi;
     QSettings *settings; 
     QNetworkAccessManager *networkManager;
     bool autostart = false;
@@ -69,6 +73,7 @@ protected:
     bool minimizeToTray = false;
     bool minimizeOnClose = false;
     bool checkForUpdates = false;
+    bool analogEmulation = false;
 
     QSystemTrayIcon *systemTrayIcon;
     bool systemTrayIconEnabled = false;
