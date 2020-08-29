@@ -67,6 +67,7 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
     ui.minimizeOnCloseCheckBox->setChecked(minimizeOnClose);
     ui.minimizeToTrayCheckbox->setChecked(minimizeToTray);
     ui.updateCheckCheckbox->setChecked(checkForUpdates);
+    ui.analogEmulationCheckBox->setChecked(analogEmulation);
     ui.analogEmulationSettingsWidget->setEnabled(analogEmulation);
     connect(ui.actionExit, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuExit);
     connect(ui.autostartCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleAutostartCheckboxStateChanged);

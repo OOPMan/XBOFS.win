@@ -136,6 +136,7 @@
     </CopyFileToFolders>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnalogEmulationSettings.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="XBOFSWinQT5GUI.cpp" />
   </ItemGroup>
@@ -159,6 +160,10 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="AnalogEmulationSettings.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtNetwork</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtNetwork</IncludePath>
+    </QtMoc>
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,9 @@
    </property>
    <item row="1" column="2">
     <widget class="QComboBox" name="toggleModeButtonComboBox">
+     <property name="editable">
+      <bool>false</bool>
+     </property>
      <item>
       <property name="text">
        <string>Guide Button</string>
@@ -85,6 +88,9 @@
    </item>
    <item row="1" column="1">
     <widget class="QComboBox" name="toggleModeActionComboBox">
+     <property name="editable">
+      <bool>false</bool>
+     </property>
      <item>
       <property name="text">
        <string>Press</string>
@@ -104,6 +110,12 @@
    </item>
    <item row="3" column="2">
     <widget class="QComboBox" name="toggleStickButtonComboBox">
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentText">
+      <string>View Button</string>
+     </property>
      <item>
       <property name="text">
        <string>Guide Button</string>
@@ -170,6 +182,9 @@
    </item>
    <item row="0" column="1" colspan="2">
     <widget class="QComboBox" name="defaultModeComboBox">
+     <property name="editable">
+      <bool>false</bool>
+     </property>
      <item>
       <property name="text">
        <string>Digital</string>
@@ -244,6 +259,12 @@
    </item>
    <item row="3" column="1">
     <widget class="QComboBox" name="toggleStickActionComboBox">
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentText">
+      <string>Hold</string>
+     </property>
      <item>
       <property name="text">
        <string>Press</string>
@@ -263,11 +284,26 @@
    </item>
    <item row="4" column="1" colspan="2">
     <widget class="QLineEdit" name="interpolationDurationLineEdit">
+     <property name="cursor">
+      <cursorShape>SizeVerCursor</cursorShape>
+     </property>
+     <property name="acceptDrops">
+      <bool>false</bool>
+     </property>
      <property name="inputMask">
-      <string>900000</string>
+      <string notr="true">900000</string>
      </property>
      <property name="text">
       <string>0</string>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="cursorPosition">
+      <number>1</number>
+     </property>
+     <property name="clearButtonEnabled">
+      <bool>false</bool>
      </property>
     </widget>
    </item>

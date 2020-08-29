@@ -5,6 +5,9 @@
     <ClCompile Include="XBOFSWinQT5GUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AnalogEmulationSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -30,6 +33,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="XBOFSWinQT5GUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AnalogEmulationSettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

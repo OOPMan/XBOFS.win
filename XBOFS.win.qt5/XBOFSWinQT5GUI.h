@@ -22,6 +22,7 @@ const QString SETTINGS_MINIMIZE_TO_TRAY("minimizeToTray");
 const QString SETTINGS_MINIMIZE_ON_CLOSE("minimizeOnClose");
 const QString SETTINGS_CHECK_FOR_UPDATES("checkForUpdates");
 const QString SETTINGS_ANALOG_EMULATION("analogEmulation");
+const QString SETTINGS_ANALOG_EMULATION_DEFAULT_MODE("defaultMode");
 
 class XBOFSWinQT5GUI : public QMainWindow
 {
