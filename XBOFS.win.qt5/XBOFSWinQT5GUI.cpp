@@ -10,7 +10,7 @@
 #include <qstandardpaths.h>
 #include <qdir.h>
 #include <qfile.h>
-#include <qnetworkconfiguration.h>
+//#include <qnetworkconfiguration.h>
 #include <qsslsocket.h>
 #include <fmt/core.h>
 #include <XBOFS.win/utils.h>
