@@ -150,6 +150,8 @@
     </CopyFileToFolders>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConfigureBindingsDialog.cpp" />
+    <ClCompile Include="ControlBindingDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="WinUsbDeviceTabWidget.cpp" />
     <ClCompile Include="XBOFSWinQT5GUI.cpp" />
@@ -177,6 +179,8 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="ConfigureBindingsDialog.h" />
+    <QtMoc Include="ControlBindingDialog.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="WinUsbDeviceTabWidget.h" />
   </ItemGroup>

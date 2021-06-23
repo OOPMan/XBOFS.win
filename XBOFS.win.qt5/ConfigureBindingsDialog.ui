@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>configureBindingsDialog</class>
- <widget class="QDialog" name="configureBindingsDialog">
+ <class>ConfigureBindingsDialog</class>
+ <widget class="QDialog" name="ConfigureBindingsDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -141,7 +141,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>configureBindingsDialog</receiver>
+   <receiver>ConfigureBindingsDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -157,7 +157,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>configureBindingsDialog</receiver>
+   <receiver>ConfigureBindingsDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

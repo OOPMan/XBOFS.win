@@ -5,6 +5,15 @@
     <ClCompile Include="XBOFSWinQT5GUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WinUsbDeviceTabWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigureBindingsDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlBindingDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -30,6 +39,15 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="XBOFSWinQT5GUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WinUsbDeviceTabWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ConfigureBindingsDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ControlBindingDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

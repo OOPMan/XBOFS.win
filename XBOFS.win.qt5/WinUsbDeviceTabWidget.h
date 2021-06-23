@@ -3,6 +3,8 @@
 #include <XBOFS.win/WinUsbDevice.h>
 #include <QWidget>
 #include "ui_WinUsbDeviceWidget.h"
+#include "ConfigureBindingsDialog.h"
+#include "ui_DebuggingWidget.h"
 
 class WinUsbDeviceTabWidget : public QWidget
 {
@@ -30,9 +32,13 @@ public slots:
     void handleWinUsbDeviceError(const std::wstring &devicePath);
 
     void handleBindingEnabledCheckBoxStateChanged(int state);
+    void handleConfigureBindingsPushButtonClicked(bool checked = false);
+    void handleConfigureGuideDownBindingsPushButtonClicked(bool checked = false);
 
 protected:
     const std::shared_ptr<spdlog::logger> logger;
     Ui::WinUsbDeviceWidget ui;
     const XBOFSWin::WinUsbDevice* winUsbDevice;
+    ConfigureBindingsDialog* configureBindingsDialog;
+    ConfigureBindingsDialog* configureGuideDownBindingsDialog;
 };

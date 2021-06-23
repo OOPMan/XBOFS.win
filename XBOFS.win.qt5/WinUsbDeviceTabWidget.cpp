@@ -3,6 +3,8 @@
 WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(QWidget *parent, QString devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice, std::shared_ptr<spdlog::logger> logger)
     : QWidget(parent), winUsbDevice(winUsbDevice), logger(logger)
 {
+    configureBindingsDialog = new ConfigureBindingsDialog(this);
+    configureGuideDownBindingsDialog = new ConfigureBindingsDialog(this);
     setObjectName(devicePath);
     ui.setupUi(this);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmConnect, this, &WinUsbDeviceTabWidget::handleVigEmConnect);
@@ -20,10 +22,14 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(QWidget *parent, QString devicePath
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceTerminating, this, &WinUsbDeviceTabWidget::handleWinUsbDeviceTerminating);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceError, this, &WinUsbDeviceTabWidget::handleWinUsbDeviceError);    
     connect(ui.bindingEnabledCheckBox, &QCheckBox::stateChanged, this, &WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged);
+    connect(ui.configureBindingsButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked);
+    connect(ui.configureGuideDownBindingsButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleConfigureGuideDownBindingsPushButtonClicked);
 }
 
 WinUsbDeviceTabWidget::~WinUsbDeviceTabWidget()
 {
+    delete configureBindingsDialog;
+    delete configureGuideDownBindingsDialog;
 }
 
 void WinUsbDeviceTabWidget::handleVigEmConnect(const std::wstring &devicePath) {
@@ -90,3 +96,10 @@ void WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged(int state) 
     ui.configureGuideDownBindingsButton->setEnabled((bool)state);
 }
 
+void WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked(bool checked) {
+    auto result = configureBindingsDialog->exec();
+}
+
+void WinUsbDeviceTabWidget::handleConfigureGuideDownBindingsPushButtonClicked(bool checked) {
+    auto result = configureGuideDownBindingsDialog->exec();
+}
