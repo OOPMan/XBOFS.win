@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="WinUsbDeviceTabWidget.cpp" />
     <ClCompile Include="XBOFSWinQT5GUI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <QtMoc Include="WinUsbDeviceTabWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="XBOFS.win.qt5.rc">
