@@ -14,7 +14,7 @@
 #include "ui_XBOFSWinQT5GUI.h"
 #include "ui_WinUsbDeviceWidget.h"
 
-const QString VERSION("v0.4.1");
+const QString VERSION("v0.5.0");
 const QString SETTINGS_AUTOSTART("autostart");
 const QString SETTINGS_START_MINIMIZED("startMinimized");
 const QString SETTINGS_MINIMIZE_TO_TRAY("minimizeToTray");
