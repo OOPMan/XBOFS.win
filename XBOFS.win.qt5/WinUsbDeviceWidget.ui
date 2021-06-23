@@ -209,6 +209,9 @@
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QCheckBox" name="bindingEnabledCheckBox">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Enabled</string>
         </property>
@@ -217,7 +220,7 @@
       <item>
        <widget class="QFrame" name="configureBindingsButtonsFrame">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>

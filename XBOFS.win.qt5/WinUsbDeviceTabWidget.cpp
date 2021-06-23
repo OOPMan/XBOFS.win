@@ -19,6 +19,7 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(QWidget *parent, QString devicePath
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceReadingInput, this, &WinUsbDeviceTabWidget::handleWinUsbDeviceReadingInput);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceTerminating, this, &WinUsbDeviceTabWidget::handleWinUsbDeviceTerminating);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceError, this, &WinUsbDeviceTabWidget::handleWinUsbDeviceError);    
+    connect(ui.bindingEnabledCheckBox, &QCheckBox::stateChanged, this, &WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged);
 }
 
 WinUsbDeviceTabWidget::~WinUsbDeviceTabWidget()
@@ -84,4 +85,8 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceError(const std::wstring &devicePa
     // TODO: Note error output in text area
 }
 
+void WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged(int state) {
+    ui.configureBindingsButton->setEnabled((bool)state);
+    ui.configureGuideDownBindingsButton->setEnabled((bool)state);
+}
 

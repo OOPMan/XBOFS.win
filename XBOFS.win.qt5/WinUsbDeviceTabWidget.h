@@ -29,6 +29,8 @@ public slots:
     void handleWinUsbDeviceTerminating(const std::wstring &devicePath);
     void handleWinUsbDeviceError(const std::wstring &devicePath);
 
+    void handleBindingEnabledCheckBoxStateChanged(int state);
+
 protected:
     const std::shared_ptr<spdlog::logger> logger;
     Ui::WinUsbDeviceWidget ui;
