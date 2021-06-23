@@ -40,6 +40,18 @@
     <QtUic Include="WinUsbDeviceWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="ConfigureBindingsDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ControlBindingWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ControlBindingDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="DebuggingWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="XBOFSWinQT5GUI.qrc">

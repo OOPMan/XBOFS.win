@@ -157,6 +157,10 @@
     <QtMoc Include="XBOFSWinQT5GUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="ConfigureBindingsDialog.ui" />
+    <QtUic Include="ControlBindingDialog.ui" />
+    <QtUic Include="ControlBindingWidget.ui" />
+    <QtUic Include="DebuggingWidget.ui" />
     <QtUic Include="WinUsbDeviceWidget.ui" />
     <QtUic Include="XBOFSWinQT5GUI.ui" />
   </ItemGroup>
