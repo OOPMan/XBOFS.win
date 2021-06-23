@@ -34,36 +34,3 @@ CloseDevice(
     _Inout_ PDEVICE_DATA DeviceData
     );
 
-struct XBO_ARCADE_STICK_DATA_PACKET
-{
-    UCHAR data[30];
-    ULONG transferred;
-};
-
-struct XBO_ARCADE_STICK_BUTTON_STATE
-{
-    BOOL buttonX;
-    BOOL buttonY;
-    BOOL buttonA;
-    BOOL buttonB;
-    BOOL rightButton;
-    BOOL leftButton;
-    BOOL rightTrigger;
-    BOOL leftTrigger;
-    BOOL buttonMenu;
-    BOOL buttonView;
-    BOOL buttonGuide;
-    BOOL stickUp;
-    BOOL stickLeft;
-    BOOL stickDown;
-    BOOL stickRight;
-};
-
-enum XBO_ARCADE_STICK_PACKET_TYPES
-{
-    UNKNOWN,
-    DUMMY,
-    HEARTBEAT,
-    GUIDE,
-    BUTTON_INPUT
-};

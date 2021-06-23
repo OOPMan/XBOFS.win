@@ -32,6 +32,20 @@ WinUsbDevice::WinUsbDevice(std::wstring devicePath, std::shared_ptr<spdlog::logg
     
 }
 
+/*
+ * Toggle usage of control binding and Guide Up/Down modifier
+ */
+void WinUsbDevice::setBindingEnabled(bool state) {
+    bindingEnabled = state;
+}
+
+/*
+ * Toggle debugging info output
+ */
+void WinUsbDevice::setDebuggingEnabled(bool state) {
+    debuggingEnabled = state;
+}
+
 void WinUsbDevice::run() {    
     logger->info("Entered run()");
     bool loop = true;
@@ -103,8 +117,12 @@ void WinUsbDevice::run() {
                 currentFailedReads += 1;
                 continue;
             }
-            processInputFromXBOArcadeStick();
-            if (!dispatchInputToVigEmController()) failedWrites += 1;
+            auto packetType = processInputFromXBOArcadeStick();
+            if (debuggingEnabled) emit debuggingInfoButtonState(buttonState);
+            if (!dispatchInputToVigEmController()) {
+                logger->warn("Failed to write to VigEm Controller");
+                failedWrites += 1;
+            }
         }
         if (currentFailedReads >= 5) {
             emit winUsbDeviceError(devicePath);            
@@ -199,16 +217,18 @@ bool WinUsbDevice::closeDevice() {
 /*
 Process data read from XBO Arcade Stick
 */
-XBO_ARCADE_STICK_PACKET_TYPES WinUsbDevice::processInputFromXBOArcadeStick() {
-    if (dataPacket.transferred == 0) return UNKNOWN;
+PACKET_TYPES WinUsbDevice::processInputFromXBOArcadeStick() {
+    previousButtonState = buttonState;
+    if (dataPacket.transferred == 0) return PACKET_TYPES::UNKNOWN;
     switch (dataPacket.data[0]) {
     case 0x01: // Dummy packet?
-        return DUMMY;
+        return PACKET_TYPES::DUMMY;
     case 0x03: // Heartbeat packet?
-        return HEARTBEAT;
+        return PACKET_TYPES::HEARTBEAT;
     case 0x07: // Guide button
         buttonState.buttonGuide = dataPacket.data[4] & 0x01;
-        return GUIDE;
+        state = buttonState.buttonGuide ? GLOBAL_INPUT_STATE::GUIDE_DOWN : GLOBAL_INPUT_STATE::GUIDE_UP;
+        return PACKET_TYPES::GUIDE;
     case 0x20: // Inputs
         buttonState.buttonA = dataPacket.data[22] & 0x10;
         buttonState.buttonB = dataPacket.data[22] & 0x20;
@@ -224,9 +244,9 @@ XBO_ARCADE_STICK_PACKET_TYPES WinUsbDevice::processInputFromXBOArcadeStick() {
         buttonState.stickDown = dataPacket.data[05] & 0x02;
         buttonState.stickLeft = dataPacket.data[05] & 0x04;
         buttonState.stickRight = dataPacket.data[05] & 0x08;
-        return BUTTON_INPUT;
+        return PACKET_TYPES::BUTTON_INPUT;
     }
-    return UNKNOWN;
+    return PACKET_TYPES::UNKNOWN;
 }
 
 /*
@@ -249,10 +269,11 @@ bool WinUsbDevice::initXBOArcadeStick() {
 }
 
 /*
-Dispatch data to the VigEm XB360 controller
+Prepare data for VigEm XB360 controller
 */
-bool WinUsbDevice::dispatchInputToVigEmController() {
-    XUSB_REPORT controllerData{};
+XUSB_REPORT WinUsbDevice::prepareInputForVigEmController() {
+    XUSB_REPORT controllerData {};
+    // TODO: Handle binding and state
     if (buttonState.buttonGuide)    controllerData.wButtons |= XUSB_GAMEPAD_GUIDE;
     if (buttonState.buttonMenu)     controllerData.wButtons |= XUSB_GAMEPAD_START;
     if (buttonState.buttonView)     controllerData.wButtons |= XUSB_GAMEPAD_BACK;
@@ -268,6 +289,16 @@ bool WinUsbDevice::dispatchInputToVigEmController() {
     if (buttonState.stickRight)     controllerData.wButtons |= XUSB_GAMEPAD_DPAD_RIGHT;
     if (buttonState.leftTrigger)    controllerData.bLeftTrigger = 0xff;
     if (buttonState.rightTrigger)   controllerData.bRightTrigger = 0xff;
+    return controllerData;
+}
+
+/*
+Dispatch data to the VigEm XB360 controller
+*/
+bool WinUsbDevice::dispatchInputToVigEmController() {
+    auto controllerData = prepareInputForVigEmController();
     const auto controllerUpdateResult = vigem_target_x360_update(vigEmClient, vigEmTarget, controllerData);
-    return VIGEM_SUCCESS(controllerUpdateResult);
+    auto result = VIGEM_SUCCESS(controllerUpdateResult);    
+    if (result && debuggingEnabled) emit debuggingInfoControllerState(controllerData);
+    return result;
 }
