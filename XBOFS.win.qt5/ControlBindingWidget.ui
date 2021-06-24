@@ -47,9 +47,9 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QCheckBox" name="stickUpCheckBox">
+       <widget class="QCheckBox" name="dPadUpCheckBox">
         <property name="text">
-         <string>Stick Up</string>
+         <string>D-Pad Up</string>
         </property>
        </widget>
       </item>
@@ -68,9 +68,9 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="stickLeftCheckBox">
+       <widget class="QCheckBox" name="dPadLeftCheckBox">
         <property name="text">
-         <string>Stick Left</string>
+         <string>D-Pad Left</string>
         </property>
        </widget>
       </item>
@@ -131,9 +131,9 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QCheckBox" name="stickRightCheckBox">
+       <widget class="QCheckBox" name="dPadRightCheckBox">
         <property name="text">
-         <string>Stick Right</string>
+         <string>D-Pad Right</string>
         </property>
        </widget>
       </item>
@@ -145,9 +145,9 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QCheckBox" name="stickDownCheckBox">
+       <widget class="QCheckBox" name="dPadDownCheckBox">
         <property name="text">
-         <string>Stick Down</string>
+         <string>D-Pad Down</string>
         </property>
        </widget>
       </item>

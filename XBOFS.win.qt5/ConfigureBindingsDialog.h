@@ -1,5 +1,6 @@
 #pragma once
 
+#include <XBOFS.win/utils.h>
 #include <QDialog>
 #include <qsettings.h>
 #include <spdlog/spdlog.h>
