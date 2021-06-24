@@ -1,10 +1,12 @@
 #include "WinUsbDeviceTabWidget.h"
 
-WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(QWidget *parent, QString devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice, std::shared_ptr<spdlog::logger> logger)
-    : QWidget(parent), winUsbDevice(winUsbDevice), logger(logger)
+WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
+    QWidget *parent, QString devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice, QSettings *settings, std::shared_ptr<spdlog::logger> logger
+)
+: QWidget(parent), winUsbDevice(winUsbDevice), settings(settings), logger(logger)
 {
-    configureBindingsDialog = new ConfigureBindingsDialog(this);
-    configureGuideDownBindingsDialog = new ConfigureBindingsDialog(this);
+    configureBindingsDialog = new ConfigureBindingsDialog(settings, this);
+    configureGuideDownBindingsDialog = new ConfigureBindingsDialog(settings, this);
     setObjectName(devicePath);
     ui.setupUi(this);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmConnect, this, &WinUsbDeviceTabWidget::handleVigEmConnect);
@@ -64,11 +66,17 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceOpen(const std::wstring &devicePat
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,
                                             const std::wstring &manufacturer, const std::wstring &product, const std::wstring &serialNumber) {
-    ui.vendorIdLabel->setText(QString::fromStdString(fmt::format("0x{:04X}", vendorId)));
-    ui.productIdLabel->setText(QString::fromStdString(fmt::format("0x{:04X}", productId)));
-    ui.manufacturerLabel->setText(QString::fromStdWString(manufacturer));
-    ui.productLabel->setText(QString::fromStdWString(product));
-    ui.serialNumberLabel->setText(QString::fromStdWString(serialNumber));    
+    this->vendorId = QString::fromStdString(fmt::format("0x{:04X}", vendorId));
+    this->productId = QString::fromStdString(fmt::format("0x{:04X}", productId));
+    this->manufacturer = QString::fromStdWString(manufacturer);
+    this->product = QString::fromStdWString(product);
+    this->serialNumber = QString::fromStdWString(serialNumber);
+    ui.vendorIdLabel->setText(this->vendorId);
+    ui.productIdLabel->setText(this->productId);
+    ui.manufacturerLabel->setText(this->manufacturer);
+    ui.productLabel->setText(this->product);
+    ui.serialNumberLabel->setText(this->serialNumber);    
+    ui.bindingEnabledCheckBox->setEnabled(true);
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceOpened(const std::wstring &devicePath) {
@@ -97,9 +105,9 @@ void WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged(int state) 
 }
 
 void WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked(bool checked) {
-    auto result = configureBindingsDialog->exec();
+    configureBindingsDialog->open(vendorId, productId, product, serialNumber, false);
 }
 
 void WinUsbDeviceTabWidget::handleConfigureGuideDownBindingsPushButtonClicked(bool checked) {
-    auto result = configureGuideDownBindingsDialog->exec();
+    configureGuideDownBindingsDialog->open(vendorId, productId, product, serialNumber, true);
 }

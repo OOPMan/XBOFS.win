@@ -2,6 +2,7 @@
 
 #include <XBOFS.win/WinUsbDevice.h>
 #include <QWidget>
+#include <qsettings.h>
 #include "ui_WinUsbDeviceWidget.h"
 #include "ConfigureBindingsDialog.h"
 #include "ui_DebuggingWidget.h"
@@ -11,7 +12,7 @@ class WinUsbDeviceTabWidget : public QWidget
     Q_OBJECT
 
 public:
-    WinUsbDeviceTabWidget(QWidget *parent, QString devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice, std::shared_ptr<spdlog::logger> logger);
+    WinUsbDeviceTabWidget(QWidget *parent, QString devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice, QSettings *settings, std::shared_ptr<spdlog::logger> logger);
     ~WinUsbDeviceTabWidget();
 
 public slots:
@@ -37,6 +38,12 @@ public slots:
 
 protected:
     const std::shared_ptr<spdlog::logger> logger;
+    QSettings* settings;
+    QString vendorId;
+    QString productId;
+    QString manufacturer;
+    QString product;
+    QString serialNumber;
     Ui::WinUsbDeviceWidget ui;
     const XBOFSWin::WinUsbDevice* winUsbDevice;
     ConfigureBindingsDialog* configureBindingsDialog;
