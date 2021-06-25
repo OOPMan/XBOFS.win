@@ -48,5 +48,5 @@ protected:
     XBOFSWin::XBO_ARCADE_STICK_BUTTONS button;
     Ui::ControlBindingDialog ui;
     Ui::ControlBindingWidget controlBindingWidget;
-    std::vector<QCheckBox*> checkboxes;
+    std::unordered_map<XBOFSWin::XB360_CONTROL_BUTTONS, QCheckBox*> checkboxes;
 };

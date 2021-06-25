@@ -6,25 +6,24 @@ ControlBindingDialog::ControlBindingDialog(QSettings *settings, QWidget *parent)
     ui.setupUi(this);
     controlBindingWidget.setupUi(ui.controlPanelWidget);
     ui.controlPanelWidget->setEnabled(false);
-    checkboxes = std::vector<QCheckBox*> {
-        ui.bindCheckBox,
-        controlBindingWidget.dPadUpCheckBox,
-        controlBindingWidget.dPadDownCheckBox,
-        controlBindingWidget.dPadLeftCheckBox,
-        controlBindingWidget.dPadRightCheckBox,
-        controlBindingWidget.yButtonCheckBox,
-        controlBindingWidget.xButtonCheckBox,
-        controlBindingWidget.aButtonCheckBox,
-        controlBindingWidget.bButtonCheckBox,
-        controlBindingWidget.rbButtonCheckBox,
-        controlBindingWidget.rtButtonCheckBox,
-        controlBindingWidget.lbButtonCheckBox,
-        controlBindingWidget.ltButtonCheckBox,    
-        controlBindingWidget.viewButtonCheckBox,
-        controlBindingWidget.startButtonCheckBox,
-        controlBindingWidget.guideButtonCheckBox,
-        controlBindingWidget.leftThumbstickButtonCheckBox,
-        controlBindingWidget.rightThumbstickButtonCheckBox
+    checkboxes = std::unordered_map<XBOFSWin::XB360_CONTROL_BUTTONS, QCheckBox*> {
+        {XBOFSWin::XB360_CONTROL_BUTTONS::DPAD_UP, controlBindingWidget.dPadUpCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::DPAD_DOWN, controlBindingWidget.dPadDownCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::DPAD_LEFT, controlBindingWidget.dPadLeftCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::DPAD_RIGHT, controlBindingWidget.dPadRightCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::Y, controlBindingWidget.yButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::X, controlBindingWidget.xButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::A, controlBindingWidget.aButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::B, controlBindingWidget.bButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::RB, controlBindingWidget.rbButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::RT, controlBindingWidget.rtButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::LB, controlBindingWidget.lbButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::LT, controlBindingWidget.ltButtonCheckBox},    
+        {XBOFSWin::XB360_CONTROL_BUTTONS::VIEW, controlBindingWidget.viewButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::START, controlBindingWidget.startButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::GUIDE, controlBindingWidget.guideButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::THUMB_LEFT, controlBindingWidget.leftThumbstickButtonCheckBox},
+        {XBOFSWin::XB360_CONTROL_BUTTONS::THUMB_RIGHT, controlBindingWidget.rightThumbstickButtonCheckBox},
     };
     setModal(true);
     connect(ui.bindCheckBox, &QCheckBox::stateChanged, this, &ControlBindingDialog::handleBindCheckBoxStateChanged);
@@ -35,17 +34,17 @@ ControlBindingDialog::~ControlBindingDialog()
 }
 
 void ControlBindingDialog::accept() {
-    settings->setValue(QString("%1/%2").arg(settingsKey, "bind"), ui.bindCheckBox->isChecked());
+    settings->setValue(QString("%1/bind").arg(settingsKey), ui.bindCheckBox->isChecked());
     for (auto& item : checkboxes) {
-        auto keyName = QString("%1/%2").arg(settingsKey, item->text());
-        settings->setValue(keyName, item->isChecked());
+        auto keyName = QString("%1/%2").arg(settingsKey, QString::number(static_cast<int>(item.first)));
+        settings->setValue(keyName, item.second->isChecked());
     }
     QDialog::accept();
 }
 
 void ControlBindingDialog::open(QString vendorId, QString productId, QString product, QString serialNumber, bool guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS button) {
     auto buttonName = buttonNames.at(button);
-    this->settingsKey = QString("bindings/%1/%2/%3/%4/%5").arg(vendorId, productId, serialNumber, QString::number(guideDown), buttonName);
+    settingsKey = QString("bindings/%1/%2/%3/%4/%5").arg(vendorId, productId, serialNumber, QString::number(guideDown), buttonName);
     this->vendorId = vendorId;
     this->productId = productId;
     this->product = product;
@@ -55,9 +54,10 @@ void ControlBindingDialog::open(QString vendorId, QString productId, QString pro
     auto prefix = QString(guideDown ? "Guide Down Binding": "Binding");
     setWindowTitle(QString("Configuring %1 for %2").arg(prefix, buttonName));
     for (auto& item : checkboxes) {
-        auto keyName = QString("%1/%2").arg(settingsKey, item->text());
-        item->setChecked(settings->value(keyName, false).toBool());
+        auto keyName = QString("%1/%2").arg(settingsKey, QString::number(static_cast<int>(item.first)));
+        item.second->setChecked(settings->value(keyName, false).toBool());
     }
+    ui.bindCheckBox->setChecked(settings->value(QString("%1/bind").arg(settingsKey), false).toBool());
     QDialog::open();
 }
 
