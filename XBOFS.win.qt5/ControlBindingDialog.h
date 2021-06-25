@@ -33,6 +33,7 @@ public:
     ~ControlBindingDialog();
 
 public slots:
+    void accept();
     void open(QString vendorId, QString productId, QString product, QString serialNumber, bool guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS button);
     void handleBindCheckBoxStateChanged(int state);
 
@@ -44,6 +45,8 @@ protected:
     QString serialNumber;    
     bool guideDown;
     XBOFSWin::XBO_ARCADE_STICK_BUTTONS button;
+    QString settingsKey;
     Ui::ControlBindingDialog ui;
     Ui::ControlBindingWidget controlBindingWidget;
+    std::vector<QCheckBox*> checkboxes;
 };
