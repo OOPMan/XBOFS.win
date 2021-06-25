@@ -71,12 +71,14 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePat
     this->manufacturer = QString::fromStdWString(manufacturer);
     this->product = QString::fromStdWString(product);
     this->serialNumber = QString::fromStdWString(serialNumber);
+    this->settingsKey = QString("bindings/%1/%2/%3").arg(this->vendorId, this->productId, this->serialNumber);
     ui.vendorIdLabel->setText(this->vendorId);
     ui.productIdLabel->setText(this->productId);
     ui.manufacturerLabel->setText(this->manufacturer);
     ui.productLabel->setText(this->product);
     ui.serialNumberLabel->setText(this->serialNumber);    
     ui.bindingEnabledCheckBox->setEnabled(true);
+    ui.bindingEnabledCheckBox->setChecked(settings->value(QString("%1/%2").arg(settingsKey, "binding"), false).toBool());
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceOpened(const std::wstring &devicePath) {
@@ -100,6 +102,7 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceError(const std::wstring &devicePa
 }
 
 void WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged(int state) {
+    settings->setValue(QString("%1/%2").arg(settingsKey, "binding"), (bool)state);
     ui.configureBindingsButton->setEnabled((bool)state);
     ui.configureGuideDownBindingsButton->setEnabled((bool)state);
 }

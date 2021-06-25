@@ -38,6 +38,7 @@ public slots:
 
 protected:
     const std::shared_ptr<spdlog::logger> logger;
+    QString settingsKey;
     QSettings* settings;
     QString vendorId;
     QString productId;

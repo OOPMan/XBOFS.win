@@ -38,6 +38,7 @@ public slots:
     void handleBindCheckBoxStateChanged(int state);
 
 protected:
+    QString settingsKey;
     QSettings* settings;
     QString vendorId;
     QString productId;
@@ -45,7 +46,6 @@ protected:
     QString serialNumber;    
     bool guideDown;
     XBOFSWin::XBO_ARCADE_STICK_BUTTONS button;
-    QString settingsKey;
     Ui::ControlBindingDialog ui;
     Ui::ControlBindingWidget controlBindingWidget;
     std::vector<QCheckBox*> checkboxes;
