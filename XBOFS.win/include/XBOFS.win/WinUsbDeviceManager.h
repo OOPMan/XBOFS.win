@@ -14,7 +14,7 @@ namespace XBOFSWin {
     {
         Q_OBJECT
     public:        
-        WinUsbDeviceManager(std::shared_ptr<spdlog::logger> logger, QObject* parent=nullptr);
+        WinUsbDeviceManager(bool autoStartWinUsbDevices, std::shared_ptr<spdlog::logger> logger, QObject* parent=nullptr);
         ~WinUsbDeviceManager() {};
 
     public slots:
@@ -30,6 +30,7 @@ namespace XBOFSWin {
 
     protected:
         const std::shared_ptr<spdlog::logger> logger;
+        const bool autoStartWinUsbDevices;
         std::unordered_map<std::wstring, std::pair<QThread*, WinUsbDevice*>> devicePathWinUsbDeviceMap;
         std::set<std::wstring> previousDevicePaths;
 

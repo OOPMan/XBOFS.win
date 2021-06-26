@@ -8,8 +8,8 @@ using namespace XBOFSWin;
 /*
 Constructs the WinUsbDeviceManager and starts its event loop in a separate thread
 */
-WinUsbDeviceManager::WinUsbDeviceManager(std::shared_ptr<spdlog::logger> logger, QObject* parent)
-: QObject(parent), logger(logger)
+WinUsbDeviceManager::WinUsbDeviceManager(bool autoStartWinUsbDevices, std::shared_ptr<spdlog::logger> logger, QObject* parent)
+: QObject(parent), logger(logger), autoStartWinUsbDevices(autoStartWinUsbDevices)
 {}
 
 void WinUsbDeviceManager::run() {        
@@ -30,6 +30,7 @@ void WinUsbDeviceManager::run() {
             connect(winUsbDeviceThread, &QThread::started, winUsbDevice, &WinUsbDevice::run);
             winUsbDevice->moveToThread(winUsbDeviceThread);
             devicePathWinUsbDeviceMap.insert({ devicePath, std::make_pair(winUsbDeviceThread, winUsbDevice) });                        
+            if (autoStartWinUsbDevices) winUsbDeviceThread->start();
             emit winUsbDeviceAdded(devicePath, winUsbDevice);
         }  
         // Check for WinUsbDevices to remove
