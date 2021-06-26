@@ -3,6 +3,7 @@
 #include <XBOFS.win/WinUsbDevice.h>
 #include <QWidget>
 #include <qsettings.h>
+#include <qregularexpression.h>
 #include "ui_WinUsbDeviceWidget.h"
 #include "ConfigureBindingsDialog.h"
 #include "ui_DebuggingWidget.h"
@@ -23,8 +24,8 @@ public slots:
     void handleVigEmTargetInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId, const ulong index);
     void handleVigEmError(const std::wstring &devicePath);
     void handleWinUsbDeviceOpen(const std::wstring &devicePath);
-    void handleWinUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,
-                                const std::wstring &manufacturer, const std::wstring &product, const std::wstring &serialNumber);
+    void handleWinUsbDeviceInfo(const std::wstring &devicePath, const QString &vendorId, const QString &vendorName,
+                                const QString &productId, const QString &productName, const QString &serialNumber);   
     void handleWinUsbDeviceOpened(const std::wstring &devicePath);
     void handleWinUsbDeviceInit(const std::wstring &devicePath);
     void handleWinUsbDeviceInitComplete(const std::wstring &devicePath);
@@ -41,9 +42,9 @@ protected:
     QString settingsKey;
     QSettings* settings;
     QString vendorId;
+    QString vendorName;
     QString productId;
-    QString manufacturer;
-    QString product;
+    QString productName;
     QString serialNumber;
     Ui::WinUsbDeviceWidget ui;
     const XBOFSWin::WinUsbDevice* winUsbDevice;

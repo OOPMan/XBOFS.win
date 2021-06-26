@@ -2,6 +2,9 @@
 #include <XBOFS.win/pch.h>
 #include <ViGEm/Client.h>
 #include <qobject.h>
+#include <qstring.h>
+#include <qregularexpression.h>
+#include <qsettings.h>
 #include <optional>
 
 namespace XBOFSWin {
@@ -59,8 +62,7 @@ namespace XBOFSWin {
 
     public slots:
         void run();
-        void setBindingEnabled(bool state);
-        void setDebuggingEnabled(bool state);
+        void refreshSettings();
 
     signals:
         void vigEmConnect(const std::wstring &devicePath);
@@ -70,8 +72,8 @@ namespace XBOFSWin {
         void vigEmTargetInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId, const ulong index);
         void vigEmError(const std::wstring &devicePath);
         void winUsbDeviceOpen(const std::wstring &devicePath);
-        void winUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId, 
-                              const std::wstring &manufacturer, const std::wstring &product, const std::wstring &serialNumber);
+        void winUsbDeviceInfo(const std::wstring &devicePath, const QString &vendorId, const QString &vendorName,
+                              const QString &productId, const QString &productName, const QString &serialNumber);
         void winUsbDeviceOpened(const std::wstring &devicePath);
         void winUsbDeviceInit(const std::wstring &devicePath);
         void winUsbDeviceInitComplete(const std::wstring &devicePath);
@@ -86,9 +88,12 @@ namespace XBOFSWin {
     protected:        
         const std::shared_ptr<spdlog::logger> logger;
         const std::wstring devicePath;
-        std::wstring manufacturer = L"Unknown";
-        std::wstring product = L"Unknown";
-        std::wstring serialNumber = L"Unknown";
+        const QSettings settings;
+        QString vendorId = "";
+        QString vendorName = "";
+        QString productId = "";
+        QString productName = "";
+        QString serialNumber = "";
         GLOBAL_INPUT_STATE state = GLOBAL_INPUT_STATE::GUIDE_UP;
         bool bindingEnabled = false;
         bool debuggingEnabled = false;

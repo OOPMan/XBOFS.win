@@ -27,23 +27,13 @@ std::optional<std::wstring> XBOFSWin::getWinUsbStringDescriptor(const WINUSB_INT
 Constructs the WinUsbDevice instance and starts its event loop in a separate thread
 */
 WinUsbDevice::WinUsbDevice(std::wstring devicePath, std::shared_ptr<spdlog::logger> logger, QObject* parent)
-: QObject(parent), devicePath(devicePath), logger(logger)
+: QObject(parent), devicePath(devicePath), logger(logger), settings(QSettings("OOPMan", "XBOFS.win", this))
 {
     
 }
 
-/*
- * Toggle usage of control binding and Guide Up/Down modifier
- */
-void WinUsbDevice::setBindingEnabled(bool state) {
-    bindingEnabled = state;
-}
+void WinUsbDevice::refreshSettings() {
 
-/*
- * Toggle debugging info output
- */
-void WinUsbDevice::setDebuggingEnabled(bool state) {
-    debuggingEnabled = state;
 }
 
 void WinUsbDevice::run() {    
@@ -188,17 +178,14 @@ bool WinUsbDevice::openDevice() {
         closeDevice();
         return false;
     }
-    // Get Manufacturer string
-    auto optionalManufacturer = getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iManufacturer, 0x0409);
-    if (optionalManufacturer) manufacturer = *optionalManufacturer;
-    // Get Product string
-    auto optionalProduct = getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iProduct, 0x0409);
-    if (optionalProduct) product = *optionalProduct;    
-    // Get Serial number string
-    auto optionalSerialNumber = getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iSerialNumber, 0x0409);
-    if (optionalSerialNumber) serialNumber = *optionalSerialNumber;    
-    // Emit USB descriptor result    
-    emit winUsbDeviceInfo(devicePath, (quint16)winUsbDeviceDescriptor.idVendor, (quint16)winUsbDeviceDescriptor.idProduct, manufacturer, product, serialNumber);
+    vendorName = QString::fromStdWString(getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iManufacturer, 0x0409).value_or(L"Unknown"));
+    vendorId = QString::fromStdString(fmt::format("0x{:04X}", winUsbDeviceDescriptor.idVendor));
+    productName = QString::fromStdWString(getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iProduct, 0x0409).value_or(L"Unknown"));
+    productId = QString::fromStdString(fmt::format("0x{:04X}", winUsbDeviceDescriptor.idProduct));
+    serialNumber = QString::fromStdWString(getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iSerialNumber, 0x0409)
+        .value_or(L"Unknown"))
+        .remove(QRegularExpression("[^0-9A-Z]+"));
+    emit winUsbDeviceInfo(devicePath, vendorId, vendorName, productId, productName, serialNumber);
     logger->info("Opened WinUSB device");
     return true;
 }

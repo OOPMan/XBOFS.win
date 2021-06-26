@@ -63,19 +63,21 @@ void WinUsbDeviceTabWidget::handleVigEmError(const std::wstring &devicePath) {
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceOpen(const std::wstring &devicePath) {
 }
-
-void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,
-                                            const std::wstring &manufacturer, const std::wstring &product, const std::wstring &serialNumber) {
-    this->vendorId = QString::fromStdString(fmt::format("0x{:04X}", vendorId));
-    this->productId = QString::fromStdString(fmt::format("0x{:04X}", productId));
-    this->manufacturer = QString::fromStdWString(manufacturer);
-    this->product = QString::fromStdWString(product);
-    this->serialNumber = QString::fromStdWString(serialNumber);
+    
+void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePath, const QString &vendorId, const QString &vendorName,
+                                                   const QString &productId, const QString &productName, const QString &serialNumber) {
+//void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,
+//                                            const std::wstring &manufacturer, const QString &product, const QString &serialNumber) {
+    this->vendorId = vendorId;
+    this->vendorName = vendorName;
+    this->productId = productId;
+    this->productName = productName;
+    this->serialNumber = serialNumber;
     this->settingsKey = QString("bindings/%1/%2/%3").arg(this->vendorId, this->productId, this->serialNumber);
     ui.vendorIdLabel->setText(this->vendorId);
     ui.productIdLabel->setText(this->productId);
-    ui.manufacturerLabel->setText(this->manufacturer);
-    ui.productLabel->setText(this->product);
+    ui.manufacturerLabel->setText(this->vendorName);
+    ui.productLabel->setText(this->productName);
     ui.serialNumberLabel->setText(this->serialNumber);    
     ui.bindingEnabledCheckBox->setEnabled(true);
     ui.bindingEnabledCheckBox->setChecked(settings->value(QString("%1/%2").arg(settingsKey, "binding"), false).toBool());
@@ -108,9 +110,9 @@ void WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged(int state) 
 }
 
 void WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked(bool checked) {
-    configureBindingsDialog->open(vendorId, productId, product, serialNumber, false);
+    configureBindingsDialog->open(vendorId, productId, productName, serialNumber, false);
 }
 
 void WinUsbDeviceTabWidget::handleConfigureGuideDownBindingsPushButtonClicked(bool checked) {
-    configureGuideDownBindingsDialog->open(vendorId, productId, product, serialNumber, true);
+    configureGuideDownBindingsDialog->open(vendorId, productId, productName, serialNumber, true);
 }
