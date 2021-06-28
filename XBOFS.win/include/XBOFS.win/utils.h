@@ -2,23 +2,6 @@
 #include <XBOFS.win/pch.h>
 
 namespace XBOFSWin {
-    enum class XBO_ARCADE_STICK_BUTTONS {
-        STICK_UP,
-        STICK_DOWN,
-        STICK_LEFT,
-        STICK_RIGHT,
-        X,
-        Y,
-        A,
-        B,
-        RB,
-        RT,
-        LB,
-        LT,
-        VIEW,
-        START,
-        GUIDE
-    };
 
     enum class XB360_CONTROL_BUTTONS {
         DPAD_UP,

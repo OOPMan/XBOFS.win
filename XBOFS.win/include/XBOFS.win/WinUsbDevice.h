@@ -8,6 +8,24 @@
 #include <optional>
 
 namespace XBOFSWin {
+
+    enum class XBO_ARCADE_STICK_BUTTONS {
+        STICK_UP,
+        STICK_DOWN,
+        STICK_LEFT,
+        STICK_RIGHT,
+        X,
+        Y,
+        A,
+        B,
+        RB,
+        RT,
+        LB,
+        LT,
+        VIEW,
+        START,
+        GUIDE
+    };
     enum class GLOBAL_INPUT_STATE { GUIDE_UP, GUIDE_DOWN };
 
     const int defaultBindings[15][3] = {

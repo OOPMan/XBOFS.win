@@ -1,6 +1,6 @@
 #pragma once
 
-#include <XBOFS.win/utils.h>
+#include <XBOFS.win/WinUsbDevice.h>
 #include <QDialog>
 #include <qsettings.h>
 #include <spdlog/spdlog.h>
