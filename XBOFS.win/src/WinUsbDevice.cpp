@@ -280,7 +280,7 @@ Prepare data for VigEm XB360 controller
 XUSB_REPORT WinUsbDevice::prepareInputForVigEmController() {
     XUSB_REPORT controllerData {};
     for (int i = 0; i < 14; i++) {
-        auto [buttonValue, rtValue, ltValue] = defaultBindings[i];
+        auto & [buttonValue, rtValue, ltValue] = defaultBindings[i];
         controllerData.wButtons         |= (buttonValue * buttons[i]);
         controllerData.bRightTrigger    |= (rtValue     * buttons[i]);
         controllerData.bLeftTrigger     |= (ltValue     * buttons[i]);
