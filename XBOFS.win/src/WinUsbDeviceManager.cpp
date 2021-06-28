@@ -83,7 +83,7 @@ void WinUsbDeviceManager::startWinUsbDeviceThread(const std::wstring& devicePath
     auto iterator = devicePathWinUsbDeviceMap.find(devicePath);
     if (iterator != devicePathWinUsbDeviceMap.end()) {
         logger->info(L"Starting thread handling {}", devicePath);
-        iterator->second.first->start();
+        iterator->second.first->start(QThread::HighestPriority);
     }
     else {
         logger->error(L"Unable to locate thread handling {}", devicePath);
