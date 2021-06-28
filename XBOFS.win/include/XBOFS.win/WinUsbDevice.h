@@ -10,6 +10,42 @@
 namespace XBOFSWin {
     enum class GLOBAL_INPUT_STATE { GUIDE_UP, GUIDE_DOWN };
 
+    const int defaultBindings[15][3] = {
+        {XUSB_GAMEPAD_DPAD_UP,          0,      0},     // STICK_UP
+        {XUSB_GAMEPAD_DPAD_DOWN,        0,      0},     // STICK_DOWN
+        {XUSB_GAMEPAD_DPAD_LEFT,        0,      0},     // STICK_LEFT
+        {XUSB_GAMEPAD_DPAD_RIGHT,       0,      0},     // STICK_RIGHT
+        {XUSB_GAMEPAD_X,                0,      0},     // X
+        {XUSB_GAMEPAD_Y,                0,      0},     // Y
+        {XUSB_GAMEPAD_A,                0,      0},     // A
+        {XUSB_GAMEPAD_B,                0,      0},     // B
+        {XUSB_GAMEPAD_RIGHT_SHOULDER,   0,      0},     // RB
+        {0,                             0xff,   0},     // RT
+        {XUSB_GAMEPAD_LEFT_SHOULDER,    0,      0},     // LB
+        {0,                             0,      0xff},  // LT
+        {XUSB_GAMEPAD_BACK,             0,      0},     // VIEW
+        {XUSB_GAMEPAD_START,            0,      0},     // START
+        {XUSB_GAMEPAD_GUIDE,            0,      0}      // GUIDE
+    };
+
+    const int defaultAlternateBindings[15][3] = {
+        {XUSB_GAMEPAD_DPAD_UP,          0,      0},     // STICK_UP
+        {XUSB_GAMEPAD_DPAD_DOWN,        0,      0},     // STICK_DOWN
+        {XUSB_GAMEPAD_DPAD_LEFT,        0,      0},     // STICK_LEFT
+        {XUSB_GAMEPAD_DPAD_RIGHT,       0,      0},     // STICK_RIGHT
+        {XUSB_GAMEPAD_X,                0,      0},     // X
+        {XUSB_GAMEPAD_Y,                0,      0},     // Y
+        {XUSB_GAMEPAD_A,                0,      0},     // A
+        {XUSB_GAMEPAD_B,                0,      0},     // B
+        {XUSB_GAMEPAD_RIGHT_SHOULDER,   0,      0},     // RB
+        {0,                             0xff,   0},     // RT
+        {XUSB_GAMEPAD_LEFT_SHOULDER,    0,      0},     // LB
+        {0,                             0,      0xff},  // LT
+        {XUSB_GAMEPAD_GUIDE,            0,      0},     // VIEW
+        {XUSB_GAMEPAD_START,            0,      0},     // START
+        {XUSB_GAMEPAD_GUIDE,            0,      0}      // GUIDE
+    };
+
     struct XBO_ARCADE_STICK_DATA_PACKET
     {
         UCHAR data[30];
@@ -48,6 +84,14 @@ namespace XBOFSWin {
         UCHAR   bLength;
         UCHAR   bDescriptorType;
         WCHAR   bString[126];
+    };
+
+    struct WIN_USB_DEVICE_DETAILS {
+        QString vendorId = "";
+        QString vendorName = "";
+        QString productId = "";
+        QString productName = "";
+        QString serialNumber = "";
     };
 
     std::optional<std::wstring> getWinUsbStringDescriptor(const WINUSB_INTERFACE_HANDLE &winUsbHandle, UCHAR index, USHORT languageId);
@@ -97,6 +141,8 @@ namespace XBOFSWin {
         GLOBAL_INPUT_STATE state = GLOBAL_INPUT_STATE::GUIDE_UP;
         bool bindingEnabled = false;
         bool debuggingEnabled = false;
+
+        bool buttons[15] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
         bool deviceHandlesOpen = false;
         UCHAR XBO_ARCADE_STICK_INIT[5] = { 0x05, 0x20, 0x00, 0x01, 0x00 };

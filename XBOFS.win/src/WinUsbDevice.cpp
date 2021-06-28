@@ -33,7 +33,10 @@ WinUsbDevice::WinUsbDevice(std::wstring devicePath, std::shared_ptr<spdlog::logg
 }
 
 void WinUsbDevice::refreshSettings() {
-
+    logger->info("Refreshing settings");
+    auto settingsKey = QString("%1/%2/%3").arg(vendorId, productId, serialNumber);
+    bindingEnabled = settings.value(QString("%1/%2").arg(settingsKey, "bind"), false).toBool();
+    debuggingEnabled = settings.value(QString("%1/%2").arg(settingsKey, "debug"), false).toBool();
 }
 
 void WinUsbDevice::run() {    
@@ -102,6 +105,7 @@ void WinUsbDevice::run() {
         logger->info("Reading input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
         int currentFailedReads = 0;
         while (loop && currentFailedReads < 5 && !QThread::currentThread()->isInterruptionRequested()) {            
+            QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
             if (!readInputFromXBOArcadeStick()) {                
                 logger->warn("Failed to read input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
                 currentFailedReads += 1;
@@ -213,24 +217,39 @@ PACKET_TYPES WinUsbDevice::processInputFromXBOArcadeStick() {
     case 0x03: // Heartbeat packet?
         return PACKET_TYPES::HEARTBEAT;
     case 0x07: // Guide button
-        buttonState.buttonGuide = dataPacket.data[4] & 0x01;
-        state = buttonState.buttonGuide ? GLOBAL_INPUT_STATE::GUIDE_DOWN : GLOBAL_INPUT_STATE::GUIDE_UP;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::GUIDE]       = dataPacket.data[4] & 0x01;
+        //buttonState.buttonGuide = dataPacket.data[4] & 0x01;
+        //state = buttonState.buttonGuide ? GLOBAL_INPUT_STATE::GUIDE_DOWN : GLOBAL_INPUT_STATE::GUIDE_UP;
         return PACKET_TYPES::GUIDE;
     case 0x20: // Inputs
-        buttonState.buttonA = dataPacket.data[22] & 0x10;
-        buttonState.buttonB = dataPacket.data[22] & 0x20;
-        buttonState.buttonX = dataPacket.data[22] & 0x01;
-        buttonState.buttonY = dataPacket.data[22] & 0x02;
-        buttonState.rightButton = dataPacket.data[22] & 0x04;
-        buttonState.leftButton = dataPacket.data[22] & 0x08;
-        buttonState.rightTrigger = dataPacket.data[22] & 0x40;
-        buttonState.leftTrigger = dataPacket.data[22] & 0x80;
-        buttonState.buttonMenu = dataPacket.data[04] & 0x04;
-        buttonState.buttonView = dataPacket.data[04] & 0x08;
-        buttonState.stickUp = dataPacket.data[05] & 0x01;
-        buttonState.stickDown = dataPacket.data[05] & 0x02;
-        buttonState.stickLeft = dataPacket.data[05] & 0x04;
-        buttonState.stickRight = dataPacket.data[05] & 0x08;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::STICK_UP]    = dataPacket.data[05] & 0x01;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::STICK_DOWN]  = dataPacket.data[05] & 0x02;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::STICK_LEFT]  = dataPacket.data[05] & 0x04;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::STICK_RIGHT] = dataPacket.data[05] & 0x08;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::X]           = dataPacket.data[22] & 0x01;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::Y]           = dataPacket.data[22] & 0x02;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::A]           = dataPacket.data[22] & 0x10;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::B]           = dataPacket.data[22] & 0x20;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::RB]          = dataPacket.data[22] & 0x04;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::RT]          = dataPacket.data[22] & 0x40;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::LB]          = dataPacket.data[22] & 0x08;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::LT]          = dataPacket.data[22] & 0x80;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::VIEW]        = dataPacket.data[04] & 0x08;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::START]       = dataPacket.data[04] & 0x04;
+        //buttonState.buttonA = dataPacket.data[22] & 0x10;
+        //buttonState.buttonB = dataPacket.data[22] & 0x20;
+        //buttonState.buttonX = dataPacket.data[22] & 0x01;
+        //buttonState.buttonY = dataPacket.data[22] & 0x02;
+        //buttonState.rightButton = dataPacket.data[22] & 0x04;
+        //buttonState.leftButton = dataPacket.data[22] & 0x08;
+        //buttonState.rightTrigger = dataPacket.data[22] & 0x40;
+        //buttonState.leftTrigger = dataPacket.data[22] & 0x80;
+        //buttonState.buttonMenu = dataPacket.data[04] & 0x04;
+        //buttonState.buttonView = dataPacket.data[04] & 0x08;
+        //buttonState.stickUp = dataPacket.data[05] & 0x01;
+        //buttonState.stickDown = dataPacket.data[05] & 0x02;
+        //buttonState.stickLeft = dataPacket.data[05] & 0x04;
+        //buttonState.stickRight = dataPacket.data[05] & 0x08;
         return PACKET_TYPES::BUTTON_INPUT;
     }
     return PACKET_TYPES::UNKNOWN;
@@ -260,22 +279,28 @@ Prepare data for VigEm XB360 controller
 */
 XUSB_REPORT WinUsbDevice::prepareInputForVigEmController() {
     XUSB_REPORT controllerData {};
+    for (int i = 0; i < 14; i++) {
+        auto [buttonValue, rtValue, ltValue] = defaultBindings[i];
+        controllerData.wButtons         |= (buttonValue * buttons[i]);
+        controllerData.bRightTrigger    |= (rtValue     * buttons[i]);
+        controllerData.bLeftTrigger     |= (ltValue     * buttons[i]);
+    }
     // TODO: Handle binding and state
-    if (buttonState.buttonGuide)    controllerData.wButtons |= XUSB_GAMEPAD_GUIDE;
-    if (buttonState.buttonMenu)     controllerData.wButtons |= XUSB_GAMEPAD_START;
-    if (buttonState.buttonView)     controllerData.wButtons |= XUSB_GAMEPAD_BACK;
-    if (buttonState.buttonA)        controllerData.wButtons |= XUSB_GAMEPAD_A;
-    if (buttonState.buttonB)        controllerData.wButtons |= XUSB_GAMEPAD_B;
-    if (buttonState.buttonX)        controllerData.wButtons |= XUSB_GAMEPAD_X;
-    if (buttonState.buttonY)        controllerData.wButtons |= XUSB_GAMEPAD_Y;
-    if (buttonState.leftButton)     controllerData.wButtons |= XUSB_GAMEPAD_LEFT_SHOULDER;
-    if (buttonState.rightButton)    controllerData.wButtons |= XUSB_GAMEPAD_RIGHT_SHOULDER;
-    if (buttonState.stickUp)        controllerData.wButtons |= XUSB_GAMEPAD_DPAD_UP;
-    if (buttonState.stickDown)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_DOWN;
-    if (buttonState.stickLeft)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_LEFT;
-    if (buttonState.stickRight)     controllerData.wButtons |= XUSB_GAMEPAD_DPAD_RIGHT;
-    if (buttonState.leftTrigger)    controllerData.bLeftTrigger = 0xff;
-    if (buttonState.rightTrigger)   controllerData.bRightTrigger = 0xff;
+    //if (buttonState.buttonGuide)    controllerData.wButtons |= XUSB_GAMEPAD_GUIDE;
+    //if (buttonState.buttonMenu)     controllerData.wButtons |= XUSB_GAMEPAD_START;
+    //if (buttonState.buttonView)     controllerData.wButtons |= XUSB_GAMEPAD_BACK;
+    //if (buttonState.buttonA)        controllerData.wButtons |= XUSB_GAMEPAD_A;
+    //if (buttonState.buttonB)        controllerData.wButtons |= XUSB_GAMEPAD_B;
+    //if (buttonState.buttonX)        controllerData.wButtons |= XUSB_GAMEPAD_X;
+    //if (buttonState.buttonY)        controllerData.wButtons |= XUSB_GAMEPAD_Y;
+    //if (buttonState.leftButton)     controllerData.wButtons |= XUSB_GAMEPAD_LEFT_SHOULDER;
+    //if (buttonState.rightButton)    controllerData.wButtons |= XUSB_GAMEPAD_RIGHT_SHOULDER;
+    //if (buttonState.stickUp)        controllerData.wButtons |= XUSB_GAMEPAD_DPAD_UP;
+    //if (buttonState.stickDown)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_DOWN;
+    //if (buttonState.stickLeft)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_LEFT;
+    //if (buttonState.stickRight)     controllerData.wButtons |= XUSB_GAMEPAD_DPAD_RIGHT;
+    //if (buttonState.leftTrigger)    controllerData.bLeftTrigger = 0xff;
+    //if (buttonState.rightTrigger)   controllerData.bRightTrigger = 0xff;
     return controllerData;
 }
 
