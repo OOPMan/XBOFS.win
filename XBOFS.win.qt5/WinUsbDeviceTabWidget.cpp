@@ -9,6 +9,7 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
     configureGuideDownBindingsDialog = new ConfigureBindingsDialog(settings, this);
     setObjectName(devicePath);
     ui.setupUi(this);
+    connect(this, &WinUsbDeviceTabWidget::settingsChanged, winUsbDevice, &XBOFSWin::WinUsbDevice::refreshSettings);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmConnect, this, &WinUsbDeviceTabWidget::handleVigEmConnect);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmConnected, this, &WinUsbDeviceTabWidget::handleVigEmConnected);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::vigEmTargetAdd, this, &WinUsbDeviceTabWidget::handleVigEmTargetAdd);
@@ -24,6 +25,7 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceTerminating, this, &WinUsbDeviceTabWidget::handleWinUsbDeviceTerminating);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceError, this, &WinUsbDeviceTabWidget::handleWinUsbDeviceError);    
     connect(ui.bindingEnabledCheckBox, &QCheckBox::stateChanged, this, &WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged);
+    connect(ui.debuggingEnabledCheckBox, &QCheckBox::stateChanged, this, &WinUsbDeviceTabWidget::handleDebuggingEnabledCheckBoxStateChanged);
     connect(ui.configureBindingsButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked);
     connect(ui.configureGuideDownBindingsButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleConfigureGuideDownBindingsPushButtonClicked);
 }
@@ -47,7 +49,7 @@ void WinUsbDeviceTabWidget::handleVigEmTargetAdd(const std::wstring &devicePath)
 }
 
 void WinUsbDeviceTabWidget::handleVigEmTargetAdded(const std::wstring &devicePath) {
-    ui.vigEmTargetStatus->setText(QString::fromUtf8("Added")); // TODO: Display more details on target
+    ui.vigEmTargetStatus->setText(QString::fromUtf8("Added"));
 }
 
 void WinUsbDeviceTabWidget::handleVigEmTargetInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId, const ulong index) {
@@ -57,23 +59,17 @@ void WinUsbDeviceTabWidget::handleVigEmTargetInfo(const std::wstring &devicePath
 }
 
 void WinUsbDeviceTabWidget::handleVigEmError(const std::wstring &devicePath) {
-    // TODO: Note error output in text area
-
-}
-
-void WinUsbDeviceTabWidget::handleWinUsbDeviceOpen(const std::wstring &devicePath) {
+    ui.vigEmTargetStatus->setText(QString::fromUtf8("Error!"));
 }
     
 void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePath, const QString &vendorId, const QString &vendorName,
                                                    const QString &productId, const QString &productName, const QString &serialNumber) {
-//void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,
-//                                            const std::wstring &manufacturer, const QString &product, const QString &serialNumber) {
     this->vendorId = vendorId;
     this->vendorName = vendorName;
     this->productId = productId;
     this->productName = productName;
     this->serialNumber = serialNumber;
-    this->settingsKey = QString("bindings/%1/%2/%3").arg(this->vendorId, this->productId, this->serialNumber);
+    this->settingsKey = QString("%1/%2/%3").arg(this->vendorId, this->productId, this->serialNumber);
     ui.vendorIdLabel->setText(this->vendorId);
     ui.productIdLabel->setText(this->productId);
     ui.manufacturerLabel->setText(this->vendorName);
@@ -81,15 +77,24 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePat
     ui.serialNumberLabel->setText(this->serialNumber);    
     ui.bindingEnabledCheckBox->setEnabled(true);
     ui.bindingEnabledCheckBox->setChecked(settings->value(QString("%1/%2").arg(settingsKey, "binding"), false).toBool());
+    ui.debuggingEnabledCheckBox->setEnabled(true);
+    ui.debuggingEnabledCheckBox->setChecked(settings->value(QString("%1/%2").arg(settingsKey, "debug"), false).toBool());
+}
+
+void WinUsbDeviceTabWidget::handleWinUsbDeviceOpen(const std::wstring &devicePath) {
+    ui.winUsbDeviceStatus->setText(QString::fromUtf8("Opening..."));
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceOpened(const std::wstring &devicePath) {
+    ui.winUsbDeviceStatus->setText(QString::fromUtf8("Open"));
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceInit(const std::wstring &devicePath) {
+    ui.winUsbDeviceStatus->setText(QString::fromUtf8("Init"));
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceInitComplete(const std::wstring &devicePath) {
+    ui.winUsbDeviceStatus->setText(QString::fromUtf8("Init complete"));
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceReadingInput(const std::wstring &devicePath) {
@@ -97,16 +102,26 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceReadingInput(const std::wstring &d
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceTerminating(const std::wstring &devicePath) {
+    ui.winUsbDeviceStatus->setText(QString::fromUtf8("Terminating..."));
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceError(const std::wstring &devicePath) { 
-    // TODO: Note error output in text area
+    ui.winUsbDeviceStatus->setText(QString::fromUtf8("Error!"));
 }
 
 void WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged(int state) {
     settings->setValue(QString("%1/%2").arg(settingsKey, "binding"), (bool)state);
     ui.configureBindingsButton->setEnabled((bool)state);
     ui.configureGuideDownBindingsButton->setEnabled((bool)state);
+    logger->info("Notifying device to refresh settings");
+    emit settingsChanged();
+}
+
+void WinUsbDeviceTabWidget::handleDebuggingEnabledCheckBoxStateChanged(int state) {
+    settings->setValue(QString("%1/%2").arg(settingsKey, "debug"), (bool)state);
+    // TODO: Display/hide debugging info
+    logger->info("Notifying device to refresh settings");
+    emit settingsChanged();
 }
 
 void WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked(bool checked) {

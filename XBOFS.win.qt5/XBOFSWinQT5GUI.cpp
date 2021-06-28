@@ -78,7 +78,7 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
     connect(ui.specialThanksLabel, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
     // Start WinUsbDeviceManager    
     winUsbDeviceManagerThread = new QThread();
-    winUsbDeviceManager = new XBOFSWin::WinUsbDeviceManager(XBOFSWin::get_logger("WinUsbDeviceManager", logger->sinks()));
+    winUsbDeviceManager = new XBOFSWin::WinUsbDeviceManager(false, XBOFSWin::get_logger("WinUsbDeviceManager", logger->sinks()));
     connect(winUsbDeviceManagerThread, &QThread::finished, winUsbDeviceManager, &QObject::deleteLater);
     connect(winUsbDeviceManagerThread, &QThread::started, winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::run);
     connect(winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::winUsbDeviceManagerScanning, this, &XBOFSWinQT5GUI::handleWinUsbDeviceManagerScanning);

@@ -44,7 +44,7 @@ void ControlBindingDialog::accept() {
 
 void ControlBindingDialog::open(QString vendorId, QString productId, QString product, QString serialNumber, bool guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS button) {
     auto buttonName = buttonNames.at(button);
-    settingsKey = QString("bindings/%1/%2/%3/%4/%5").arg(vendorId, productId, serialNumber, QString::number(guideDown), buttonName);
+    settingsKey = QString("%1/%2/%3/%4/%5").arg(vendorId, productId, serialNumber, QString::number(guideDown), buttonName);
     this->vendorId = vendorId;
     this->productId = productId;
     this->product = product;

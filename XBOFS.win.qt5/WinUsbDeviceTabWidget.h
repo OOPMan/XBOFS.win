@@ -34,8 +34,12 @@ public slots:
     void handleWinUsbDeviceError(const std::wstring &devicePath);
 
     void handleBindingEnabledCheckBoxStateChanged(int state);
+    void handleDebuggingEnabledCheckBoxStateChanged(int state);
     void handleConfigureBindingsPushButtonClicked(bool checked = false);
     void handleConfigureGuideDownBindingsPushButtonClicked(bool checked = false);
+
+signals:
+    void settingsChanged();
 
 protected:
     const std::shared_ptr<spdlog::logger> logger;
