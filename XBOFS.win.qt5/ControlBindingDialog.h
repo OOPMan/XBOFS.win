@@ -1,6 +1,6 @@
 #pragma once
 
-#include <XBOFS.win/WinUsbDevice.h>
+#include <XBOFS.win/constants.h>
 #include <QDialog>
 #include <qsettings.h>
 #include "ui_ControlBindingDialog.h"

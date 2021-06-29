@@ -2,7 +2,7 @@
 #include <qabstracteventdispatcher.h>
 #include <qeventloop.h>
 
-#include "XBOFS.win\WinUsbDevice.h"
+#include <XBOFS.win/WinUsbDevice.h>
 
 using namespace XBOFSWin;
 

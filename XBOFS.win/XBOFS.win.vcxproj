@@ -134,6 +134,7 @@
     <ClCompile Include="src\WinUsbDeviceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\XBOFS.win\constants.h" />
     <ClInclude Include="include\XBOFS.win\device.h" />
     <ClInclude Include="include\XBOFS.win\pch.h" />
     <ClInclude Include="include\XBOFS.win\stdafx.h" />
