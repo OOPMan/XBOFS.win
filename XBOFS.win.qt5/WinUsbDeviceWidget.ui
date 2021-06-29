@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>570</width>
-    <height>545</height>
+    <width>593</width>
+    <height>629</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -218,18 +218,36 @@
        </widget>
       </item>
       <item>
-       <widget class="QFrame" name="configureBindingsButtonsFrame">
+       <widget class="QGroupBox" name="groupBox">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+        <property name="title">
+         <string>Profile</string>
         </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0" colspan="2">
+          <widget class="QComboBox" name="activeProfileComboBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QPushButton" name="deleteProfileButton">
+           <property name="text">
+            <string>Delete Profile</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QPushButton" name="addProfileButton">
+           <property name="text">
+            <string>Add Profile</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
           <widget class="QPushButton" name="configureBindingsButton">
            <property name="enabled">
             <bool>false</bool>
@@ -239,7 +257,7 @@
            </property>
           </widget>
          </item>
-         <item>
+         <item row="1" column="4" colspan="2">
           <widget class="QPushButton" name="configureGuideDownBindingsButton">
            <property name="enabled">
             <bool>false</bool>
