@@ -27,7 +27,7 @@ std::optional<std::wstring> XBOFSWin::getWinUsbStringDescriptor(const WINUSB_INT
 Constructs the WinUsbDevice instance and starts its event loop in a separate thread
 */
 WinUsbDevice::WinUsbDevice(std::wstring devicePath, std::shared_ptr<spdlog::logger> logger, QObject* parent)
-: QObject(parent), devicePath(devicePath), logger(logger), settings(QSettings("OOPMan", "XBOFS.win", this))
+: QObject(parent), devicePath(devicePath), logger(logger)
 {
     
 }

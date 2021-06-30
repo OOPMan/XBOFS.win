@@ -1,8 +1,12 @@
 #pragma once
 #include <XBOFS.win/pch.h>
 #include <ViGEm/Client.h>
+#include <qstring.h>
 
 namespace XBOFSWin { 
+    const QString SETTINGS_ORGANIZATION = "OOPMan";
+    const QString SETTINGS_APPLICATION = "XBOFS.win";
+
     enum class XBO_ARCADE_STICK_BUTTONS {
         STICK_UP,
         STICK_DOWN,
