@@ -11,6 +11,7 @@
 #include <qsystemtrayicon.h>
 #include <qsettings.h>
 #include <qstring.h>
+#include <XBOFS.win/constants.h>
 #include "WinUsbDeviceTabWidget.h"
 #include "ui_XBOFSWinQT5GUI.h"
 #include "ui_WinUsbDeviceWidget.h"

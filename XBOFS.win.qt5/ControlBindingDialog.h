@@ -29,7 +29,7 @@ class ControlBindingDialog : public QDialog
     Q_OBJECT
 
 public:
-    ControlBindingDialog(QSettings *settings, QWidget *parent);
+    ControlBindingDialog(QWidget *parent);
     ~ControlBindingDialog();
 
 public slots:
@@ -39,7 +39,7 @@ public slots:
 
 protected:
     QString settingsKey;
-    QSettings* settings;
+    QSettings settings = QSettings(XBOFSWin::SETTINGS_ORGANIZATION, XBOFSWin::SETTINGS_APPLICATION);
     QString vendorId;
     QString productId;
     QString product;

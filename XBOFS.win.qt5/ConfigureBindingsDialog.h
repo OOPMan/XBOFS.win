@@ -12,7 +12,7 @@ class ConfigureBindingsDialog : public QDialog
     Q_OBJECT
 
 public:
-    ConfigureBindingsDialog(QSettings *settings, QWidget *parent);
+    ConfigureBindingsDialog(QWidget *parent);
     ~ConfigureBindingsDialog();
 
 public slots:
@@ -33,7 +33,7 @@ public slots:
     void handleStartButtonPushButtonClicked(bool checked = false);
 
 protected:    
-    QSettings* settings;
+    QSettings settings = QSettings(XBOFSWin::SETTINGS_ORGANIZATION, XBOFSWin::SETTINGS_APPLICATION);
     QString vendorId;
     QString productId;
     QString product;

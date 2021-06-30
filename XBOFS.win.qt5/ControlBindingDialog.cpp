@@ -1,7 +1,7 @@
 #include "ControlBindingDialog.h"
 
-ControlBindingDialog::ControlBindingDialog(QSettings *settings, QWidget *parent)
-    : QDialog(parent), settings(settings)
+ControlBindingDialog::ControlBindingDialog(QWidget *parent)
+    : QDialog(parent)
 {
     ui.setupUi(this);
     controlBindingWidget.setupUi(ui.controlPanelWidget);
@@ -34,10 +34,10 @@ ControlBindingDialog::~ControlBindingDialog()
 }
 
 void ControlBindingDialog::accept() {
-    settings->setValue(QString("%1/bind").arg(settingsKey), ui.bindCheckBox->isChecked());
+    settings.setValue(QString("%1/bind").arg(settingsKey), ui.bindCheckBox->isChecked());
     for (auto& item : checkboxes) {
         auto keyName = QString("%1/%2").arg(settingsKey, QString::number(static_cast<int>(item.first)));
-        settings->setValue(keyName, item.second->isChecked());
+        settings.setValue(keyName, item.second->isChecked());
     }
     QDialog::accept();
 }
@@ -55,9 +55,9 @@ void ControlBindingDialog::open(QString vendorId, QString productId, QString pro
     setWindowTitle(QString("Configuring %1 for %2").arg(prefix, buttonName));
     for (auto& item : checkboxes) {
         auto keyName = QString("%1/%2").arg(settingsKey, QString::number(static_cast<int>(item.first)));
-        item.second->setChecked(settings->value(keyName, false).toBool());
+        item.second->setChecked(settings.value(keyName, false).toBool());
     }
-    ui.bindCheckBox->setChecked(settings->value(QString("%1/bind").arg(settingsKey), false).toBool());
+    ui.bindCheckBox->setChecked(settings.value(QString("%1/bind").arg(settingsKey), false).toBool());
     QDialog::open();
 }
 

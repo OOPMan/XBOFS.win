@@ -1,9 +1,9 @@
 #include "ConfigureBindingsDialog.h"
 
-ConfigureBindingsDialog::ConfigureBindingsDialog(QSettings *settings, QWidget *parent)
-    : QDialog(parent), settings(settings)
+ConfigureBindingsDialog::ConfigureBindingsDialog(QWidget *parent)
+    : QDialog(parent)
 {
-    controlBindingDialog = new ControlBindingDialog(settings, this);
+    controlBindingDialog = new ControlBindingDialog(this);
     ui.setupUi(this);
     setModal(true);
     connect(ui.stickUpPushButton,       &QPushButton::clicked, this, &ConfigureBindingsDialog::handleStickUpPushButtonClicked);

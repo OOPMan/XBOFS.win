@@ -13,7 +13,7 @@ class WinUsbDeviceTabWidget : public QWidget
     Q_OBJECT
 
 public:
-    WinUsbDeviceTabWidget(QWidget *parent, QString devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice, QSettings *settings, std::shared_ptr<spdlog::logger> logger);
+    WinUsbDeviceTabWidget(QWidget *parent, QString devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice, std::shared_ptr<spdlog::logger> logger);
     ~WinUsbDeviceTabWidget();
 
 public slots:
@@ -34,22 +34,25 @@ public slots:
     void handleWinUsbDeviceError(const std::wstring &devicePath);
 
     void handleBindingEnabledCheckBoxStateChanged(int state);
-    void handleDebuggingEnabledCheckBoxStateChanged(int state);
+    void handleActiveProfileComboBoxCurrentIndexChanged(int index);
+    void handleAddProfilePushButtonClicked(bool checked = false);
+    void handleDeleteProfilePushButtonClicked(bool checked = false);
     void handleConfigureBindingsPushButtonClicked(bool checked = false);
     void handleConfigureGuideDownBindingsPushButtonClicked(bool checked = false);
+    void handleDebuggingEnabledCheckBoxStateChanged(int state);
 
 signals:
     void settingsChanged();
 
 protected:
     const std::shared_ptr<spdlog::logger> logger;
-    QString settingsKey;
-    QSettings* settings;
+    QSettings settings = QSettings(XBOFSWin::SETTINGS_ORGANIZATION, XBOFSWin::SETTINGS_APPLICATION);
     QString vendorId;
     QString vendorName;
     QString productId;
     QString productName;
     QString serialNumber;
+    QString activeProfile;
     Ui::WinUsbDeviceWidget ui;
     const XBOFSWin::WinUsbDevice* winUsbDevice;
     ConfigureBindingsDialog* configureBindingsDialog;

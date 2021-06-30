@@ -1,12 +1,14 @@
+#include <qinputdialog.h>
+
 #include "WinUsbDeviceTabWidget.h"
 
 WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
-    QWidget *parent, QString devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice, QSettings *settings, std::shared_ptr<spdlog::logger> logger
+    QWidget *parent, QString devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice, std::shared_ptr<spdlog::logger> logger
 )
-: QWidget(parent), winUsbDevice(winUsbDevice), settings(settings), logger(logger)
+: QWidget(parent), winUsbDevice(winUsbDevice), logger(logger)
 {
-    configureBindingsDialog = new ConfigureBindingsDialog(settings, this);
-    configureGuideDownBindingsDialog = new ConfigureBindingsDialog(settings, this);
+    configureBindingsDialog = new ConfigureBindingsDialog(this);
+    configureGuideDownBindingsDialog = new ConfigureBindingsDialog(this);
     setObjectName(devicePath);
     ui.setupUi(this);
     connect(this, &WinUsbDeviceTabWidget::settingsChanged, winUsbDevice, &XBOFSWin::WinUsbDevice::refreshSettings);
@@ -25,9 +27,12 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceTerminating, this, &WinUsbDeviceTabWidget::handleWinUsbDeviceTerminating);
     connect(winUsbDevice, &XBOFSWin::WinUsbDevice::winUsbDeviceError, this, &WinUsbDeviceTabWidget::handleWinUsbDeviceError);    
     connect(ui.bindingEnabledCheckBox, &QCheckBox::stateChanged, this, &WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged);
-    connect(ui.debuggingEnabledCheckBox, &QCheckBox::stateChanged, this, &WinUsbDeviceTabWidget::handleDebuggingEnabledCheckBoxStateChanged);
+    connect(ui.activeProfileComboBox, &QComboBox::currentIndexChanged, this, &WinUsbDeviceTabWidget::handleActiveProfileComboBoxCurrentIndexChanged);
+    connect(ui.addProfileButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleAddProfilePushButtonClicked);
+    connect(ui.deleteProfileButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleDeleteProfilePushButtonClicked);
     connect(ui.configureBindingsButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked);
     connect(ui.configureGuideDownBindingsButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleConfigureGuideDownBindingsPushButtonClicked);
+    connect(ui.debuggingEnabledCheckBox, &QCheckBox::stateChanged, this, &WinUsbDeviceTabWidget::handleDebuggingEnabledCheckBoxStateChanged);
 }
 
 WinUsbDeviceTabWidget::~WinUsbDeviceTabWidget()
@@ -69,16 +74,24 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePat
     this->productId = productId;
     this->productName = productName;
     this->serialNumber = serialNumber;
-    this->settingsKey = QString("%1/%2/%3").arg(this->vendorId, this->productId, this->serialNumber);
+    while (settings.group() != "") settings.endGroup();
+    settings.beginGroup(QString("%1/%2/%3").arg(this->vendorId, this->productId, this->serialNumber));
+    auto profiles = settings.childGroups();
+    auto activeProfile = settings.value("activeProfile", "").toString();
+    for (QStringList::const_iterator profileIterator = profiles.constBegin(); profileIterator != profiles.constEnd(); ++profileIterator) {
+        auto profileName = *profileIterator;
+        if (!settings.value(QString("%1/deleted").arg(profileName), true).toBool()) ui.activeProfileComboBox->addItem(profileName);
+    }
+    ui.activeProfileComboBox->setCurrentText(activeProfile);
     ui.vendorIdLabel->setText(this->vendorId);
     ui.productIdLabel->setText(this->productId);
     ui.manufacturerLabel->setText(this->vendorName);
     ui.productLabel->setText(this->productName);
     ui.serialNumberLabel->setText(this->serialNumber);    
     ui.bindingEnabledCheckBox->setEnabled(true);
-    ui.bindingEnabledCheckBox->setChecked(settings->value(QString("%1/%2").arg(settingsKey, "binding"), false).toBool());
+    ui.bindingEnabledCheckBox->setChecked(settings.value("binding", false).toBool());
     ui.debuggingEnabledCheckBox->setEnabled(true);
-    ui.debuggingEnabledCheckBox->setChecked(settings->value(QString("%1/%2").arg(settingsKey, "debug"), false).toBool());
+    ui.debuggingEnabledCheckBox->setChecked(settings.value("debug", false).toBool());
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceOpen(const std::wstring &devicePath) {
@@ -110,18 +123,39 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceError(const std::wstring &devicePa
 }
 
 void WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged(int state) {
-    settings->setValue(QString("%1/%2").arg(settingsKey, "binding"), (bool)state);
-    ui.configureBindingsButton->setEnabled((bool)state);
-    ui.configureGuideDownBindingsButton->setEnabled((bool)state);
-    logger->info("Notifying device to refresh settings");
+    settings.setValue("binding", (bool)state);
+    ui.bindingProfileGroupBox->setEnabled((bool)state);
+    ui.activeProfileComboBox->setEnabled((bool)state);
     emit settingsChanged();
 }
 
 void WinUsbDeviceTabWidget::handleDebuggingEnabledCheckBoxStateChanged(int state) {
-    settings->setValue(QString("%1/%2").arg(settingsKey, "debug"), (bool)state);
+    settings.setValue("debug", (bool)state);
     // TODO: Display/hide debugging info
-    logger->info("Notifying device to refresh settings");
     emit settingsChanged();
+}
+
+void WinUsbDeviceTabWidget::handleActiveProfileComboBoxCurrentIndexChanged(int index) {
+    ui.configureBindingsButton->setEnabled(index > -1);
+    ui.configureGuideDownBindingsButton->setEnabled(index > -1);
+    settings.setValue("activeProfile", ui.activeProfileComboBox->currentText());
+}
+
+void WinUsbDeviceTabWidget::handleAddProfilePushButtonClicked(bool checked) {
+    bool ok;
+    QString profileName = QInputDialog::getText(this, "Add Profile", "Profile Name", QLineEdit::Normal, "", &ok);
+    if (ok && !profileName.isEmpty() && ui.activeProfileComboBox->findText(profileName) == -1) {
+        ui.activeProfileComboBox->addItem(profileName);
+        settings.setValue(QString("%1/deleted").arg(profileName), false);
+    }
+}
+
+void WinUsbDeviceTabWidget::handleDeleteProfilePushButtonClicked(bool checked) {
+    if (ui.activeProfileComboBox->count()) {
+        settings.setValue(QString("%1/deleted").arg(ui.activeProfileComboBox->currentText()), true);
+        ui.activeProfileComboBox->removeItem(ui.activeProfileComboBox->currentIndex());
+    }
+
 }
 
 void WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked(bool checked) {

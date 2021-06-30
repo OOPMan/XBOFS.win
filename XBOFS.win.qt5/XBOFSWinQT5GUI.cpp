@@ -52,7 +52,7 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
 : QMainWindow(parent), logger(logger)
 {    
     // Settings
-    settings = new QSettings("OOPMan", "XBOFS.win", this);
+    settings = new QSettings(XBOFSWin::SETTINGS_ORGANIZATION, XBOFSWin::SETTINGS_APPLICATION, this);
     autostart = settings->value(SETTINGS_AUTOSTART, false).toBool();
     startMinimized = settings->value(SETTINGS_START_MINIMIZED, false).toBool();
     minimizeOnClose = settings->value(SETTINGS_MINIMIZE_ON_CLOSE, false).toBool();
@@ -137,7 +137,7 @@ std::optional<std::pair<int, std::vector<std::tuple<std::wstring, WinUsbDeviceTa
 void XBOFSWinQT5GUI::handleWinUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice) {        
     // Update UI    
     auto devicePathQString = QString::fromStdWString(devicePath);
-    auto tabWidget = new WinUsbDeviceTabWidget(ui.tabWidget, devicePathQString, winUsbDevice, settings, logger);
+    auto tabWidget = new WinUsbDeviceTabWidget(ui.tabWidget, devicePathQString, winUsbDevice, logger);
     auto tabIndex = ui.tabWidget->addTab(tabWidget, QString());    
     ui.tabWidget->setTabText(tabIndex, QString::fromStdWString(fmt::format(L"Stick {}", tabIndex)));
     tabs.push_back(std::make_tuple(devicePath, tabWidget));
