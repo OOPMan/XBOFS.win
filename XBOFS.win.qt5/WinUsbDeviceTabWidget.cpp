@@ -1,4 +1,5 @@
 #include <qinputdialog.h>
+#include <qmessagebox.h>
 
 #include "WinUsbDeviceTabWidget.h"
 
@@ -151,7 +152,9 @@ void WinUsbDeviceTabWidget::handleAddProfilePushButtonClicked(bool checked) {
 }
 
 void WinUsbDeviceTabWidget::handleDeleteProfilePushButtonClicked(bool checked) {
-    if (ui.activeProfileComboBox->count()) {
+    if (!ui.activeProfileComboBox->count()) return;
+    auto response = QMessageBox::question(this, XBOFSWin::SETTINGS_APPLICATION, "Are you sure?");
+    if (response == QMessageBox::Yes) {
         settings.setValue(QString("%1/deleted").arg(ui.activeProfileComboBox->currentText()), true);
         ui.activeProfileComboBox->removeItem(ui.activeProfileComboBox->currentIndex());
     }
