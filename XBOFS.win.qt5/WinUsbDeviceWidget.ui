@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>593</width>
+    <width>605</width>
     <height>629</height>
    </rect>
   </property>
@@ -226,20 +226,27 @@
          <string>Profile</string>
         </property>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0" colspan="2">
-          <widget class="QComboBox" name="activeProfileComboBox">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="editable">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="5">
           <widget class="QPushButton" name="deleteProfileButton">
            <property name="text">
             <string>Delete Profile</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QPushButton" name="configureBindingsButton">   
+		   <property name="enabled">
+            <bool>false</bool>
+           </property>		  
+           <property name="text">
+            <string>Configure Bindings</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_7">           
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Guide Button behaviour:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -250,24 +257,44 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QPushButton" name="configureBindingsButton">
-           <property name="enabled">
+         <item row="1" column="4" colspan="2">
+          <widget class="QPushButton" name="configureAlternateBindingsButton">           
+		   <property name="enabled">
             <bool>false</bool>
-           </property>
+           </property>		  
            <property name="text">
-            <string>Configure Bindings</string>
+            <string>Configure Alternate Bindings</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="4" colspan="2">
-          <widget class="QPushButton" name="configureGuideDownBindingsButton">
-           <property name="enabled">
+         <item row="0" column="0" colspan="2">
+          <widget class="QComboBox" name="activeProfileComboBox">           
+           <property name="editable">
             <bool>false</bool>
            </property>
-           <property name="text">
-            <string>Configure Guide Down Bindings</string>
+          </widget>
+         </item>
+         <item row="2" column="4" colspan="2">
+          <widget class="QComboBox" name="guideButtonBehaviourComboBox">           
+		   <property name="enabled">
+            <bool>false</bool>
            </property>
+           <property name="editable">
+            <bool>false</bool>
+           </property>
+           <property name="currentText">
+            <string>Hold Guide button to Activate Alternate Bindings</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Hold Guide button to Activate Alternate Bindings</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Press Guide button to Switch between Bindings and Alternate Bindings</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>

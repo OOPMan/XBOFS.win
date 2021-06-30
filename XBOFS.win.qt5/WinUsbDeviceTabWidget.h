@@ -38,7 +38,8 @@ public slots:
     void handleAddProfilePushButtonClicked(bool checked = false);
     void handleDeleteProfilePushButtonClicked(bool checked = false);
     void handleConfigureBindingsPushButtonClicked(bool checked = false);
-    void handleConfigureGuideDownBindingsPushButtonClicked(bool checked = false);
+    void handleConfigureAlternateBindingsPushButtonClicked(bool checked = false);
+    void handleGuideButtonBehaviourComboBoxCurrentIndexChanged(int index);
     void handleDebuggingEnabledCheckBoxStateChanged(int state);
 
 signals:
