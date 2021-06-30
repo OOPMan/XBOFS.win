@@ -4,8 +4,16 @@
 #include <qstring.h>
 
 namespace XBOFSWin { 
-    const QString SETTINGS_ORGANIZATION = "OOPMan";
-    const QString SETTINGS_APPLICATION = "XBOFS.win";
+    namespace settings {
+        const QString ORGANIZATION = "OOPMan";
+        const QString APPLICATION = "XBOFS.win";
+        const QString DEBUG = "debug";
+        const QString BIND = "bind";
+        const QString BINDING = "binding";
+        const QString ACTIVE_PROFILE = "activeProfile";
+        const QString GUIDE_BUTTON_MODE = "guideButtonMode";
+        const QString DELETED = "deleted";
+    }
 
     enum class XBO_ARCADE_STICK_BUTTONS {
         STICK_UP,

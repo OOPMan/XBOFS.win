@@ -52,7 +52,7 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
 : QMainWindow(parent), logger(logger)
 {    
     // Settings
-    settings = new QSettings(XBOFSWin::SETTINGS_ORGANIZATION, XBOFSWin::SETTINGS_APPLICATION, this);
+    settings = new QSettings(ORGANIZATION, APPLICATION, this);
     autostart = settings->value(SETTINGS_AUTOSTART, false).toBool();
     startMinimized = settings->value(SETTINGS_START_MINIMIZED, false).toBool();
     minimizeOnClose = settings->value(SETTINGS_MINIMIZE_ON_CLOSE, false).toBool();

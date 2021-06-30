@@ -8,6 +8,8 @@
 #include "ConfigureBindingsDialog.h"
 #include "ui_DebuggingWidget.h"
 
+using namespace XBOFSWin::settings;
+
 class WinUsbDeviceTabWidget : public QWidget
 {
     Q_OBJECT
@@ -47,7 +49,7 @@ signals:
 
 protected:
     const std::shared_ptr<spdlog::logger> logger;
-    QSettings settings = QSettings(XBOFSWin::SETTINGS_ORGANIZATION, XBOFSWin::SETTINGS_APPLICATION);
+    QSettings settings = QSettings(ORGANIZATION, APPLICATION);
     QString vendorId;
     QString vendorName;
     QString productId;

@@ -6,6 +6,8 @@
 #include "ui_ControlBindingDialog.h"
 #include "ui_ControlBindingWidget.h"
 
+using namespace XBOFSWin::settings;
+
 const std::unordered_map<XBOFSWin::XBO_ARCADE_STICK_BUTTONS, QString> buttonNames {
     {XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_UP, QString("Stick Up")},
     {XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_DOWN, QString("Stick Down")},
@@ -39,7 +41,7 @@ public slots:
 
 protected:
     QString settingsKey;
-    QSettings settings = QSettings(XBOFSWin::SETTINGS_ORGANIZATION, XBOFSWin::SETTINGS_APPLICATION);
+    QSettings settings = QSettings(ORGANIZATION, APPLICATION);
     QString vendorId;
     QString productId;
     QString product;

@@ -17,6 +17,9 @@
 #include "ui_WinUsbDeviceWidget.h"
 
 const QString VERSION("v0.5.0");
+
+using namespace XBOFSWin::settings;
+
 const QString SETTINGS_AUTOSTART("autostart");
 const QString SETTINGS_START_MINIMIZED("startMinimized");
 const QString SETTINGS_MINIMIZE_TO_TRAY("minimizeToTray");

@@ -7,6 +7,8 @@
 #include "ui_ConfigureBindingsDialog.h"
 #include "ControlBindingDialog.h"
 
+using namespace XBOFSWin::settings;
+
 class ConfigureBindingsDialog : public QDialog
 {
     Q_OBJECT
@@ -33,7 +35,7 @@ public slots:
     void handleStartButtonPushButtonClicked(bool checked = false);
 
 protected:    
-    QSettings settings = QSettings(XBOFSWin::SETTINGS_ORGANIZATION, XBOFSWin::SETTINGS_APPLICATION);
+    QSettings settings = QSettings(ORGANIZATION, APPLICATION);
     QString vendorId;
     QString productId;
     QString product;

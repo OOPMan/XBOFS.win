@@ -48,7 +48,7 @@ namespace XBOFSWin {
     protected:        
         const std::shared_ptr<spdlog::logger> logger;
         const std::wstring devicePath;
-        QSettings settings = QSettings(SETTINGS_ORGANIZATION, SETTINGS_APPLICATION);
+        QSettings settings = QSettings(settings::ORGANIZATION, settings::APPLICATION);
         QString vendorId = "";
         QString vendorName = "";
         QString productId = "";
