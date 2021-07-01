@@ -27,69 +27,70 @@ ConfigureBindingsDialog::~ConfigureBindingsDialog()
     delete controlBindingDialog;
 }
 
-void ConfigureBindingsDialog::open(QString vendorId, QString productId, QString product, QString serialNumber, bool guideDown) {
+void ConfigureBindingsDialog::open(QString vendorId, QString productId, QString product, QString serialNumber, QString profile, bool alternativeBindings) {
     this->vendorId = vendorId;
     this->productId = productId;
     this->product = product;
     this->serialNumber = serialNumber;
-    this->guideDown = guideDown;
-    auto prefix = QString(guideDown ? "Guide Down Bindings": "Bindings");
-    setWindowTitle(QString("Configuring %1 for %2 (S/N: %3)").arg(prefix, product, serialNumber));
+    this->profile = profile;
+    this->alternativeBindings = alternativeBindings;
+    auto prefix = QString(alternativeBindings ? "Alternative Bindings": "Bindings");
+    setWindowTitle(QString("%1: Configuring %2 for %3 (S/N: %4)").arg(APPLICATION, prefix, product, serialNumber));
     QDialog::open();
 }
 
 void ConfigureBindingsDialog::handleStickUpPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_UP);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_UP);
 }
 
 void ConfigureBindingsDialog::handleStickDownPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_DOWN);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_DOWN);
 }
 
 void ConfigureBindingsDialog::handleStickLeftPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_LEFT);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_LEFT);
 }
 
 void ConfigureBindingsDialog::handleStickRightPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_RIGHT);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::STICK_RIGHT);
 }
 
 void ConfigureBindingsDialog::handleXButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::X);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::X);
 }
 
 void ConfigureBindingsDialog::handleYButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::Y);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::Y);
 }
 
 void ConfigureBindingsDialog::handleAButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::A);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::A);
 }
 
 void ConfigureBindingsDialog::handleBButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::B);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::B);
 }
 
 void ConfigureBindingsDialog::handleRBButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::RB);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::RB);
 }
 
 void ConfigureBindingsDialog::handleRTButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::RT);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::RT);
 }
 
 void ConfigureBindingsDialog::handleLBButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::LB);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::LB);
 }
 
 void ConfigureBindingsDialog::handleLTButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::LT);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::LT);
 }
 
 void ConfigureBindingsDialog::handleViewButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::VIEW);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::VIEW);
 }
 
 void ConfigureBindingsDialog::handleStartButtonPushButtonClicked(bool checked) {
-    controlBindingDialog->open(vendorId, productId, product, serialNumber, guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::START);
+    controlBindingDialog->open(vendorId, productId, product, serialNumber, profile, alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS::START);
 }

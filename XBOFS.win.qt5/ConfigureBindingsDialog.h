@@ -18,7 +18,7 @@ public:
     ~ConfigureBindingsDialog();
 
 public slots:
-    void open(QString vendorId, QString productId, QString product, QString serialNumber, bool guideDown);
+    void open(QString vendorId, QString productId, QString product, QString serialNumber, QString profile, bool alternativeBindings);
     void handleStickUpPushButtonClicked(bool checked = false);
     void handleStickDownPushButtonClicked(bool checked = false);
     void handleStickLeftPushButtonClicked(bool checked = false);
@@ -35,12 +35,12 @@ public slots:
     void handleStartButtonPushButtonClicked(bool checked = false);
 
 protected:    
-    QSettings settings = QSettings(ORGANIZATION, APPLICATION);
     QString vendorId;
     QString productId;
     QString product;
     QString serialNumber;    
-    bool guideDown; 
+    QString profile;
+    bool alternativeBindings; 
     Ui::ConfigureBindingsDialog ui;
     ControlBindingDialog* controlBindingDialog;
 };

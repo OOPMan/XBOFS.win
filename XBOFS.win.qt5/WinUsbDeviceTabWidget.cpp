@@ -92,9 +92,9 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePat
     ui.productLabel->setText(this->productName);
     ui.serialNumberLabel->setText(this->serialNumber);    
     ui.bindingEnabledCheckBox->setEnabled(true);
-    ui.bindingEnabledCheckBox->setChecked(settings.value(BINDING, false).toBool());
+    ui.bindingEnabledCheckBox->setChecked(settings.value(BINDING_ENABLED, false).toBool());
     ui.debuggingEnabledCheckBox->setEnabled(true);
-    ui.debuggingEnabledCheckBox->setChecked(settings.value(DEBUG, false).toBool());
+    ui.debuggingEnabledCheckBox->setChecked(settings.value(DEBUG_ENABLED, false).toBool());
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceOpen(const std::wstring &devicePath) {
@@ -126,15 +126,14 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceError(const std::wstring &devicePa
 }
 
 void WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged(int state) {
-    settings.setValue(BINDING, (bool)state);
+    settings.setValue(BINDING_ENABLED, (bool)state);
     ui.bindingProfileGroupBox->setEnabled((bool)state);
     ui.activeProfileComboBox->setEnabled((bool)state);
-    // TODO: Notify of settings change
     emit settingsChanged();
 }
 
 void WinUsbDeviceTabWidget::handleDebuggingEnabledCheckBoxStateChanged(int state) {
-    settings.setValue("debug", (bool)state);
+    settings.setValue(DEBUG_ENABLED, (bool)state);
     // TODO: Display/hide debugging info
     emit settingsChanged();
 }
@@ -148,7 +147,7 @@ void WinUsbDeviceTabWidget::handleActiveProfileComboBoxCurrentIndexChanged(int i
     ui.guideButtonBehaviourComboBox->setEnabled(enabled);
     ui.guideButtonBehaviourComboBox->setCurrentIndex(settings.value(guideButtonBehaviourKey, 0).toInt());
     settings.setValue(ACTIVE_PROFILE, activeProfile);    
-    // TODO: Notify of settings change
+    emit settingsChanged();
 }
 
 void WinUsbDeviceTabWidget::handleAddProfilePushButtonClicked(bool checked) {
@@ -160,7 +159,7 @@ void WinUsbDeviceTabWidget::handleAddProfilePushButtonClicked(bool checked) {
         auto guideButtonBehaviourKey = QString("%1/%2").arg(activeProfile, GUIDE_BUTTON_MODE);
         settings.setValue(profileDeletedKey, false);
         settings.setValue(guideButtonBehaviourKey, 0);
-        // TODO: Notify of settings change?
+        emit settingsChanged();
     }
 }
 
@@ -172,16 +171,18 @@ void WinUsbDeviceTabWidget::handleDeleteProfilePushButtonClicked(bool checked) {
         auto profileDeletedKey = QString("%1/%2").arg(activeProfile, DELETED);
         settings.setValue(profileDeletedKey, true);
         ui.activeProfileComboBox->removeItem(ui.activeProfileComboBox->currentIndex());
-        // TODO: Notify of settings change
+        emit settingsChanged();
     }
 }
 
 void WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked(bool checked) {
-    configureBindingsDialog->open(vendorId, productId, productName, serialNumber, false);
+    auto activeProfile = ui.activeProfileComboBox->currentText();
+    configureBindingsDialog->open(vendorId, productId, productName, serialNumber, activeProfile, false);
 }
 
 void WinUsbDeviceTabWidget::handleConfigureAlternateBindingsPushButtonClicked(bool checked) {
-    configureGuideDownBindingsDialog->open(vendorId, productId, productName, serialNumber, true);
+    auto activeProfile = ui.activeProfileComboBox->currentText();
+    configureGuideDownBindingsDialog->open(vendorId, productId, productName, serialNumber, activeProfile, true);
 }
 
 void WinUsbDeviceTabWidget::handleGuideButtonBehaviourComboBoxCurrentIndexChanged(int index)
@@ -189,6 +190,6 @@ void WinUsbDeviceTabWidget::handleGuideButtonBehaviourComboBoxCurrentIndexChange
     auto activeProfile = ui.activeProfileComboBox->currentText();
     auto guideButtonBehaviourKey = QString("%1/%2").arg(activeProfile, GUIDE_BUTTON_MODE);
     settings.setValue(guideButtonBehaviourKey, index);
-    // TODO: Notify of settings change
+    emit settingsChanged();
 }
 

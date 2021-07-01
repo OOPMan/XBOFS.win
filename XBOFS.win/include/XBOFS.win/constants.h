@@ -7,12 +7,19 @@ namespace XBOFSWin {
     namespace settings {
         const QString ORGANIZATION = "OOPMan";
         const QString APPLICATION = "XBOFS.win";
-        const QString DEBUG = "debug";
-        const QString BIND = "bind";
-        const QString BINDING = "binding";
+        const QString DEBUG_ENABLED = "debugEnabled";
+        const QString BIND_ENABLED = "bindEnabled";
+        const QString BINDING_ENABLED = "bindingEnabled";
         const QString ACTIVE_PROFILE = "activeProfile";
         const QString GUIDE_BUTTON_MODE = "guideButtonMode";
         const QString DELETED = "deleted";
+        const QString BUTTONS = QString::number(0);
+        const QString LEFT_TRIGGER = QString::number(1);
+        const QString RIGHT_TRIGGER = QString::number(2);
+        const QString THUMB_LX = QString::number(3);
+        const QString THUMB_LY = QString::number(4);
+        const QString THUMB_RX = QString::number(5);
+        const QString THUMB_RY = QString::number(6);
     }
 
     enum class XBO_ARCADE_STICK_BUTTONS {
@@ -65,7 +72,7 @@ namespace XBOFSWin {
         {
             // STICK RIGHT
             {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_DPAD_RIGHT,       0,      0,      0,      0,      0,      0},     // STICK_RIGHT
+            {XUSB_GAMEPAD_DPAD_RIGHT,       0,      0,      0,      0,      0,      0},     // ON
         },
         {
             // X
