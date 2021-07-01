@@ -36,19 +36,12 @@ public:
 
 public slots:
     void accept();
-    void open(QString vendorId, QString productId, QString product, QString serialNumber, bool guideDown, XBOFSWin::XBO_ARCADE_STICK_BUTTONS button);
+    void open(QString vendorId, QString productId, QString product, QString serialNumber, QString profile, bool alternativeBindings, XBOFSWin::XBO_ARCADE_STICK_BUTTONS button);
     void handleBindCheckBoxStateChanged(int state);
 
 protected:
-    QString settingsKey;
     QSettings settings = QSettings(ORGANIZATION, APPLICATION);
-    QString vendorId;
-    QString productId;
-    QString product;
-    QString serialNumber;    
-    bool guideDown;
-    XBOFSWin::XBO_ARCADE_STICK_BUTTONS button;
     Ui::ControlBindingDialog ui;
     Ui::ControlBindingWidget controlBindingWidget;
-    std::unordered_map<XBOFSWin::XB360_CONTROL_BUTTONS, QCheckBox*> checkboxes;
+    std::unordered_map<QCheckBox*, XUSB_BUTTON> checkboxes;
 };
