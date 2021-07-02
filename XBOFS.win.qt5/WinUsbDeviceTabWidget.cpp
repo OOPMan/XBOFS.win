@@ -156,7 +156,7 @@ void WinUsbDeviceTabWidget::handleAddProfilePushButtonClicked(bool checked) {
     if (ok && !profileName.isEmpty() && ui.activeProfileComboBox->findText(profileName) == -1) {
         ui.activeProfileComboBox->addItem(profileName);
         auto profileDeletedKey = QString("%1/%2").arg(profileName, DELETED);
-        auto guideButtonBehaviourKey = QString("%1/%2").arg(activeProfile, GUIDE_BUTTON_MODE);
+        auto guideButtonBehaviourKey = QString("%1/%2").arg(profileName, GUIDE_BUTTON_MODE);
         settings.setValue(profileDeletedKey, false);
         settings.setValue(guideButtonBehaviourKey, 0);
         emit settingsChanged();
