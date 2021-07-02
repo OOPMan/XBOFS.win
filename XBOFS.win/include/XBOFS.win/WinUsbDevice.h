@@ -57,7 +57,7 @@ namespace XBOFSWin {
         QString activeProfile;
 
         bool bindingSelector = 0;
-        int bindings[2][15][2][7];
+        int bindings[2][15][2][7] = {};
         bool buttons[15] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
         GUIDE_BUTTON_MODE guideButtonMode;
 

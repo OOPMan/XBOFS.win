@@ -42,7 +42,7 @@ void WinUsbDevice::refreshSettings() {
     activeProfile = settings.value(settings::ACTIVE_PROFILE, "").toString();
     guideButtonMode = (GUIDE_BUTTON_MODE)settings.value(QString("%1/%2").arg(activeProfile, settings::GUIDE_BUTTON_MODE), 0).toInt();
     // Configure control bindings
-    for (int bindingsSelector = 0; bindingsSelector < 1; bindingsSelector++) {
+    for (int bindingsSelector = 0; bindingsSelector < 2; bindingsSelector++) {
         for (int xboArcadeStickButtonSelector = 0; xboArcadeStickButtonSelector < 14; xboArcadeStickButtonSelector++) {
             auto key = QString("%1/%2/%3").arg(activeProfile, QString::number(bindingsSelector), QString::number(xboArcadeStickButtonSelector));
             auto bindEnabled = settings.value(QString("%1/%2").arg(key, settings::BIND_ENABLED), false).toBool();
@@ -106,8 +106,6 @@ void WinUsbDevice::run() {
     logger->info("Starting Read-Process-Dispatch loop");
     while (loop && !QThread::currentThread()->isInterruptionRequested()) {      
         QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
-        // Refresh settings
-        refreshSettings();
         // Open WinUsbDevice
         emit winUsbDeviceOpen(devicePath);
         if (!openDevice()) {
@@ -128,6 +126,8 @@ void WinUsbDevice::run() {
             continue;
         }
         emit winUsbDeviceInitComplete(devicePath);
+        // Refresh settings
+        refreshSettings();        
         // Read input
         emit winUsbDeviceReadingInput(devicePath);        
         logger->info("Reading input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
@@ -324,4 +324,5 @@ bool WinUsbDevice::dispatchInputToVigEmController() {
     const auto controllerUpdateResult = vigem_target_x360_update(vigEmClient, vigEmTarget, controllerData);
     auto result = VIGEM_SUCCESS(controllerUpdateResult);    
     return result;
+    //return true;
 }
