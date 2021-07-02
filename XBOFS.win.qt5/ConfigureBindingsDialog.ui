@@ -23,13 +23,6 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="2" column="8">
-       <widget class="QPushButton" name="ltButtonPushButton">
-        <property name="text">
-         <string>LT Button</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="6">
        <widget class="QPushButton" name="aButtonPushButton">
         <property name="text">
@@ -58,20 +51,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="9">
-       <widget class="QPushButton" name="lbButtonPushButton">
-        <property name="text">
-         <string>LB Button</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="8">
-       <widget class="QPushButton" name="rtButtonPushButton">
-        <property name="text">
-         <string>RT Button</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="7">
        <widget class="QPushButton" name="bButtonPushButton">
         <property name="text">
@@ -93,13 +72,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="9">
-       <widget class="QPushButton" name="rbButtonPushButton">
-        <property name="text">
-         <string>RB Button</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="6">
        <widget class="QPushButton" name="xButtonPushButton">
         <property name="text">
@@ -118,6 +90,34 @@
        <widget class="QPushButton" name="startButtonPushButton">
         <property name="text">
          <string>Start Button</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="8">
+       <widget class="QPushButton" name="rtButtonPushButton">
+        <property name="text">
+         <string>RT Button</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8">
+       <widget class="QPushButton" name="rbButtonPushButton">
+        <property name="text">
+         <string>RB Button</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="9">
+       <widget class="QPushButton" name="lbButtonPushButton">
+        <property name="text">
+         <string>LB Button</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="9">
+       <widget class="QPushButton" name="ltButtonPushButton">
+        <property name="text">
+         <string>LT Button</string>
         </property>
        </widget>
       </item>
