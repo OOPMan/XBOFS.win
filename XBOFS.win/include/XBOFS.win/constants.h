@@ -40,9 +40,20 @@ namespace XBOFSWin {
         GUIDE
     };
 
-    enum class GLOBAL_INPUT_STATE { GUIDE_UP, GUIDE_DOWN };
+    enum class GUIDE_BUTTON_MODE {
+        HOLD,
+        TOGGLE
+    };
 
     /*
+    * Array layout:
+    * 1st dimension: Default/Alternate selector
+    * 2nd dimension: XBO button selector
+    * 3rd dimension: Button OFF/ON selector
+    * 4th dimension: XUSB_REPORT structure item selector
+    * 
+    * E.g. defaultBindings[0][1][1][0] maps to the XUSB_REPORT.wButtons value for the ON state for the Stick Down control for the Default bindings
+    * 
     * Columns map to variables in XUSB_REPORT structure:
     * Buttons = wButtons
     * LT = bLeftTrigger
@@ -52,173 +63,169 @@ namespace XBOFSWin {
     * RX = sThumbRX
     * RY = sThumbRY
     */
-    const int defaultBindings[15][2][7] = {
+    const int defaultBindings[2][15][2][7] = {
+        // Bindings
+        {
             // Buttons                      LT      RT      LX      LY      RX      RY
-        {
-            // STICK UP
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_DPAD_UP,          0,      0,      0,      0,      0,      0},     // ON
+            {
+                // STICK UP
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_DPAD_UP,          0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // STICK DOWN
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_DPAD_DOWN,        0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // STICK LEFT
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_DPAD_LEFT,        0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // STICK RIGHT
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_DPAD_RIGHT,       0,      0,      0,      0,      0,      0},     // STICK_RIGHT
+            },
+            {
+                // X
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_X,                0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // Y
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_Y,                0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // A
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_A,                0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // B
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_B,                0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // RB
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_RIGHT_SHOULDER,   0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // RT
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {0,                             0,      0xff,   0,      0,      0,      0},     // ON
+            },
+            {
+                // LB
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_LEFT_SHOULDER,    0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // LT
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {0,                             0xff,   0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // VIEW
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_BACK,            0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // START
+                {0,                             0,      0,      0,      0,      0,      0},     // ON
+                {XUSB_GAMEPAD_START,            0,      0,      0,      0,      0,      0},     // OFF
+            },
+            {
+                // GUIDE
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_GUIDE,            0,      0,      0,      0,      0,      0}      // ON
+            }
         },
+        // Alternate bindings
         {
-            // STICK DOWN
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_DPAD_DOWN,        0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // STICK LEFT
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_DPAD_LEFT,        0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // STICK RIGHT
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_DPAD_RIGHT,       0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // X
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_X,                0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // Y
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_Y,                0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // A
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_A,                0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // B
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_B,                0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // RB
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_RIGHT_SHOULDER,   0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // RT
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {0,                             0,      0xff,   0,      0,      0,      0},     // ON
-        },
-        {
-            // LB
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_LEFT_SHOULDER,    0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // LT
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {0,                             0xff,   0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // VIEW
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_BACK,             0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // START
-            {0,                             0,      0,      0,      0,      0,      0},     // ON
-            {XUSB_GAMEPAD_START,            0,      0,      0,      0,      0,      0},     // OFF
-        },
-        {
-            // GUIDE
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_GUIDE,            0,      0,      0,      0,      0,      0}      // ON
+            // Buttons                      LT      RT      LX      LY      RX      RY
+            {
+                // STICK UP
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_DPAD_UP,          0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // STICK DOWN
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_DPAD_DOWN,        0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // STICK LEFT
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_DPAD_LEFT,        0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // STICK RIGHT
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_DPAD_RIGHT,       0,      0,      0,      0,      0,      0},     // STICK_RIGHT
+            },
+            {
+                // X
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_X,                0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // Y
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_Y,                0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // A
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_A,                0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // B
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_B,                0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // RB
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_RIGHT_SHOULDER,   0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // RT
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {0,                             0,      0xff,   0,      0,      0,      0},     // ON
+            },
+            {
+                // LB
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_LEFT_SHOULDER,    0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // LT
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {0,                             0xff,   0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // VIEW
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_GUIDE,            0,      0,      0,      0,      0,      0},     // ON
+            },
+            {
+                // START
+                {0,                             0,      0,      0,      0,      0,      0},     // ON
+                {XUSB_GAMEPAD_START,            0,      0,      0,      0,      0,      0},     // OFF
+            },
+            {
+                // GUIDE
+                {0,                             0,      0,      0,      0,      0,      0},     // OFF
+                {XUSB_GAMEPAD_GUIDE,            0,      0,      0,      0,      0,      0}      // ON
+            }
         }
     };
 
-    /*
-    * Columns map to variables in XUSB_REPORT structure:
-    * Buttons = wButtons
-    * LT = bLeftTrigger
-    * RT = bRightTrigger
-    * LX = sThumbLX
-    * LY = sThumbLY
-    * RX = sThumbRX
-    * RY = sThumbRY
-    */
-    const int defaultAlternateBindings[15][2][7] = {
-            // Buttons                      LT      RT      LX      LY      RX      RY
-        {
-            // STICK UP
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_DPAD_UP,          0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // STICK DOWN
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_DPAD_DOWN,        0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // STICK LEFT
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_DPAD_LEFT,        0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // STICK RIGHT
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_DPAD_RIGHT,       0,      0,      0,      0,      0,      0},     // STICK_RIGHT
-        },
-        {
-            // X
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_X,                0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // Y
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_Y,                0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // A
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_A,                0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // B
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_B,                0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // RB
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_RIGHT_SHOULDER,   0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // RT
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {0,                             0,      0xff,   0,      0,      0,      0},     // ON
-        },
-        {
-            // LB
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_LEFT_SHOULDER,    0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // LT
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {0,                             0xff,   0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // VIEW
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_GUIDE,            0,      0,      0,      0,      0,      0},     // ON
-        },
-        {
-            // START
-            {0,                             0,      0,      0,      0,      0,      0},     // ON
-            {XUSB_GAMEPAD_START,            0,      0,      0,      0,      0,      0},     // OFF
-        },
-        {
-            // GUIDE
-            {0,                             0,      0,      0,      0,      0,      0},     // OFF
-            {XUSB_GAMEPAD_GUIDE,            0,      0,      0,      0,      0,      0}      // ON
-        }
-    };
+    const int OFF = 0;
+    const int ON = 1;
 
     struct XBO_ARCADE_STICK_DATA_PACKET
     {

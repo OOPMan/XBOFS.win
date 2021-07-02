@@ -41,8 +41,6 @@ namespace XBOFSWin {
         void winUsbDeviceTerminating(const std::wstring &devicePath);
         void winUsbDeviceError(const std::wstring &devicePath);
 
-        void debuggingInfoButtonState(const XBO_ARCADE_STICK_BUTTON_STATE &buttonState);
-        void debuggingInfoControllerState(const XUSB_REPORT &controllerState);
         void debuggingInfoPerformanceData(quint16 lastInnerLoopTime, quint16 worstInnerLoopTime, quint16 averageInnerLoopTime, quint16 bestInnerLoopTime);
 
     protected:        
@@ -54,17 +52,18 @@ namespace XBOFSWin {
         QString productId = "";
         QString productName = "";
         QString serialNumber = "";
-        GLOBAL_INPUT_STATE state = GLOBAL_INPUT_STATE::GUIDE_UP;
         bool bindingEnabled = false;
-        bool debuggingEnabled = false;
+        bool debugEnabled = false;
+        QString activeProfile;
 
+        bool bindingSelector = 0;
+        int bindings[2][15][2][7];
         bool buttons[15] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+        GUIDE_BUTTON_MODE guideButtonMode;
 
         bool deviceHandlesOpen = false;
         UCHAR XBO_ARCADE_STICK_INIT[5] = { 0x05, 0x20, 0x00, 0x01, 0x00 };
         XBO_ARCADE_STICK_DATA_PACKET dataPacket = {};
-        XBO_ARCADE_STICK_BUTTON_STATE buttonState = {};
-        XBO_ARCADE_STICK_BUTTON_STATE previousButtonState = {};
         PVIGEM_CLIENT vigEmClient = NULL;
         PVIGEM_TARGET vigEmTarget = NULL;
         WINUSB_INTERFACE_HANDLE winUsbHandle;
