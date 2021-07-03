@@ -7,6 +7,7 @@
 #include <qregularexpression.h>
 #include <qsettings.h>
 #include <optional>
+#include <chrono>
 
 namespace XBOFSWin {
 
@@ -41,7 +42,33 @@ namespace XBOFSWin {
         void winUsbDeviceTerminating(const std::wstring &devicePath);
         void winUsbDeviceError(const std::wstring &devicePath);
 
-        void debuggingInfoPerformanceData(quint16 lastInnerLoopTime, quint16 worstInnerLoopTime, quint16 averageInnerLoopTime, quint16 bestInnerLoopTime);
+        void debugInfoLoopTime(const std::chrono::microseconds &loopTime);
+        void debugInfoButtons(
+            const bool &stickUp,
+            const bool &stickDown,
+            const bool &stickLeft,
+            const bool &stickRight,
+            const bool &x,
+            const bool &y,
+            const bool &a,
+            const bool &b,
+            const bool &rb,
+            const bool &rt,
+            const bool &lb,
+            const bool &lt,
+            const bool &view,
+            const bool &start,
+            const bool &guide
+        );
+        void debugInfoXUSB_REPORT(
+            const USHORT wButtons,
+            const BYTE   bLeftTrigger,
+            const BYTE   bRightTrigger,
+            const SHORT  sThumbLX,
+            const SHORT  sThumbLY,
+            const SHORT  sThumbRX,
+            const SHORT  sThumbRY
+        );
 
     protected:   
         enum class READ_INPUT_INNER_LOOP_RESULT {
@@ -76,7 +103,7 @@ namespace XBOFSWin {
         HANDLE deviceHandle;      
 
         READ_INPUT_INNER_LOOP_RESULT debugDisabledReadInputInnerLoop();
-        READ_INPUT_INNER_LOOP_RESULT debugEnabedReadInputInnerLoop();
+        READ_INPUT_INNER_LOOP_RESULT debugEnabledReadInputInnerLoop();
         READ_INPUT_INNER_LOOP_RESULT(WinUsbDevice::* readInputInnerLoop)() = &WinUsbDevice::debugDisabledReadInputInnerLoop;
 
         bool openDevice();
@@ -86,6 +113,7 @@ namespace XBOFSWin {
         PACKET_TYPES processInputFromXBOArcadeStick();
         XUSB_REPORT prepareInputForVigEmController();
         bool dispatchInputToVigEmController();
+        bool debugDispatchInputToVigEmController();
     };
 }
 

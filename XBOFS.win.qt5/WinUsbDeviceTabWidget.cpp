@@ -10,7 +10,7 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
 {
     configureBindingsDialog = new ConfigureBindingsDialog(this);
     configureGuideDownBindingsDialog = new ConfigureBindingsDialog(this);
-    debuggingDialog = new DebuggingDialog(this);
+    debuggingDialog = new DebuggingDialog(winUsbDevice, this);
     setObjectName(devicePath);
     ui.setupUi(this);
     connect(this, &WinUsbDeviceTabWidget::settingsChanged, winUsbDevice, &XBOFSWin::WinUsbDevice::refreshSettings);

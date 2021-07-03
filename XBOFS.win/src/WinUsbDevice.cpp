@@ -38,10 +38,11 @@ void WinUsbDevice::refreshSettings() {
     settings.beginGroup(QString("%1/%2/%3").arg(this->vendorId, this->productId, this->serialNumber));
     bindingEnabled = settings.value(settings::BINDING_ENABLED, false).toBool();
     bindingSelector = 0;
-    auto newDebugEnabledValue = settings.value(settings::DEBUG_ENABLED, false).toBool();
+    debugEnabled = settings.value(settings::DEBUG_ENABLED, false).toBool();
     activeProfile = settings.value(settings::ACTIVE_PROFILE, "").toString();
     guideButtonMode = (GUIDE_BUTTON_MODE)settings.value(QString("%1/%2").arg(activeProfile, settings::GUIDE_BUTTON_MODE), 0).toInt();
     // Configure control bindings
+    logger->info(bindingEnabled ? "Binding Enabled" : "Binding Disabled");
     for (int bindingsSelector = 0; bindingsSelector < 2; bindingsSelector++) {
         for (int xboArcadeStickButtonSelector = 0; xboArcadeStickButtonSelector < 14; xboArcadeStickButtonSelector++) {
             auto key = QString("%1/%2/%3").arg(activeProfile, QString::number(bindingsSelector), QString::number(xboArcadeStickButtonSelector));
@@ -55,14 +56,9 @@ void WinUsbDevice::refreshSettings() {
             }
         }
     }
-
-    //if (newDebugEnabledValue && !debugEnabled) {
-    //    logger->info("Activating debug mode");
-    //}
-    //else if (debugEnabled && !newDebugEnabledValue) {
-    //    logger->info("Deactivating debug mode");
-
-    //}
+    // Configure debugging
+    logger->info(debugEnabled ? "Debug Mode Enabled" : "Debug Mode Disabled");
+    readInputInnerLoop = debugEnabled ? &WinUsbDevice::debugEnabledReadInputInnerLoop : &WinUsbDevice::debugDisabledReadInputInnerLoop;
 }
 
 void WinUsbDevice::run() {    
@@ -136,25 +132,14 @@ void WinUsbDevice::run() {
             QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
             switch ((this->*readInputInnerLoop)()) {
             case READ_INPUT_INNER_LOOP_RESULT::READ_FAILED:
+                logger->warn("Failed to read input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
                 currentFailedReads += 1;
                 break;
             case READ_INPUT_INNER_LOOP_RESULT::WRITE_FAILED:
+                logger->warn("Failed to write to VigEm Controller");
                 failedWrites += 1;
                 break;
             }
-
-            /*
-            if (!readInputFromXBOArcadeStick()) {                
-                logger->warn("Failed to read input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
-                currentFailedReads += 1;
-                continue;
-            }
-            auto packetType = processInputFromXBOArcadeStick();
-            if (!dispatchInputToVigEmController()) {
-                logger->warn("Failed to write to VigEm Controller");
-                failedWrites += 1;
-            }
-            */
         }
         if (currentFailedReads >= 5) {
             emit winUsbDeviceError(devicePath);            
@@ -337,23 +322,45 @@ bool WinUsbDevice::dispatchInputToVigEmController() {
     return result;
 }
 
+/*
+Debug-mode dispatch data to the VigEm XB360 controller
+*/
+bool WinUsbDevice::debugDispatchInputToVigEmController() {
+    auto controllerData = prepareInputForVigEmController();
+    const auto controllerUpdateResult = vigem_target_x360_update(vigEmClient, vigEmTarget, controllerData);
+    auto result = VIGEM_SUCCESS(controllerUpdateResult);    
+    if (result) emit debugInfoXUSB_REPORT(
+        controllerData.wButtons,
+        controllerData.bLeftTrigger,
+        controllerData.bRightTrigger,
+        controllerData.sThumbLX,
+        controllerData.sThumbLY,
+        controllerData.sThumbRX,
+        controllerData.sThumbRY
+    );
+    return result;
+}
+
 WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT WinUsbDevice::debugDisabledReadInputInnerLoop() {
     auto readInputResult = readInputFromXBOArcadeStick();
     if (!readInputResult) return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::READ_FAILED;
-    /*{                
-        logger->warn("Failed to read input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
-        currentFailedReads += 1;
-        continue;
-    }*/
     auto packetType = processInputFromXBOArcadeStick();
     if (!dispatchInputToVigEmController()) WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::WRITE_FAILED;
-    /*{
-        logger->warn("Failed to write to VigEm Controller");
-        failedWrites += 1;
-    }*/
     return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::SUCCESS;
 }
 
-WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT WinUsbDevice::debugEnabedReadInputInnerLoop() {
+WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT WinUsbDevice::debugEnabledReadInputInnerLoop() {
+    auto readInputResult = readInputFromXBOArcadeStick();
+    auto start = std::chrono::steady_clock::now();
+    if (!readInputResult) return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::READ_FAILED;
+    auto packetType = processInputFromXBOArcadeStick();
+    emit debugInfoButtons(
+        buttons[0], buttons[1], buttons[2], buttons[3], buttons[4], buttons[5], buttons[6], buttons[7], 
+        buttons[8], buttons[9], buttons[10], buttons[11], buttons[12], buttons[13], buttons[14]
+    );
+    if (!debugDispatchInputToVigEmController()) WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::WRITE_FAILED;
+    auto end = std::chrono::steady_clock::now();
+    emit debugInfoLoopTime(std::chrono::duration_cast<std::chrono::microseconds>(end - start));
     return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::SUCCESS;
 }
+

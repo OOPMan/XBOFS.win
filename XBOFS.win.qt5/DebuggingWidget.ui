@@ -112,6 +112,13 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="8">
+    <widget class="QCheckBox" name="guideCheckBox">
+     <property name="text">
+      <string>Guide</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
