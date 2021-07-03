@@ -10,6 +10,7 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
 {
     configureBindingsDialog = new ConfigureBindingsDialog(this);
     configureGuideDownBindingsDialog = new ConfigureBindingsDialog(this);
+    debuggingDialog = new DebuggingDialog(this);
     setObjectName(devicePath);
     ui.setupUi(this);
     connect(this, &WinUsbDeviceTabWidget::settingsChanged, winUsbDevice, &XBOFSWin::WinUsbDevice::refreshSettings);
@@ -35,12 +36,14 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
     connect(ui.configureAlternateBindingsButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleConfigureAlternateBindingsPushButtonClicked);
     connect(ui.guideButtonBehaviourComboBox, &QComboBox::currentIndexChanged, this, &WinUsbDeviceTabWidget::handleGuideButtonBehaviourComboBoxCurrentIndexChanged);
     connect(ui.debuggingEnabledCheckBox, &QCheckBox::stateChanged, this, &WinUsbDeviceTabWidget::handleDebuggingEnabledCheckBoxStateChanged);
+    connect(ui.openDebuggingDialogPushButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleOpenDebuggingDialogPushButtonClicked);
 }
 
 WinUsbDeviceTabWidget::~WinUsbDeviceTabWidget()
 {
     delete configureBindingsDialog;
     delete configureGuideDownBindingsDialog;
+    delete debuggingDialog;
 }
 
 void WinUsbDeviceTabWidget::handleVigEmConnect(const std::wstring &devicePath) {
@@ -95,6 +98,7 @@ void WinUsbDeviceTabWidget::handleWinUsbDeviceInfo(const std::wstring &devicePat
     ui.bindingEnabledCheckBox->setChecked(settings.value(BINDING_ENABLED, false).toBool());
     ui.debuggingEnabledCheckBox->setEnabled(true);
     ui.debuggingEnabledCheckBox->setChecked(settings.value(DEBUG_ENABLED, false).toBool());
+    ui.openDebuggingDialogPushButton->setEnabled(ui.debuggingEnabledCheckBox->isChecked());
 }
 
 void WinUsbDeviceTabWidget::handleWinUsbDeviceOpen(const std::wstring &devicePath) {
@@ -134,7 +138,7 @@ void WinUsbDeviceTabWidget::handleBindingEnabledCheckBoxStateChanged(int state) 
 
 void WinUsbDeviceTabWidget::handleDebuggingEnabledCheckBoxStateChanged(int state) {
     settings.setValue(DEBUG_ENABLED, (bool)state);
-    // TODO: Display/hide debugging info
+    ui.openDebuggingDialogPushButton->setEnabled((bool)state);
     emit settingsChanged();
 }
 
@@ -193,3 +197,6 @@ void WinUsbDeviceTabWidget::handleGuideButtonBehaviourComboBoxCurrentIndexChange
     emit settingsChanged();
 }
 
+void WinUsbDeviceTabWidget::handleOpenDebuggingDialogPushButtonClicked(bool checked) {
+    debuggingDialog->open();
+}

@@ -1,86 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>DebuggingWidget</class>
+ <widget class="QWidget" name="DebuggingWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>508</width>
-    <height>302</height>
+    <width>672</width>
+    <height>329</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" colspan="2">
-    <widget class="QGroupBox" name="controllerStateGroupBox">
-     <property name="title">
-      <string>Controller State</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QLabel" name="averageInnerLoopTimeLabel">
+   <item row="2" column="2">
+    <widget class="QCheckBox" name="stickDownCheckBox">
      <property name="text">
-      <string/>
+      <string>Stick Down</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QGroupBox" name="buttonStateGroupBox">
-     <property name="title">
-      <string>Button State</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="lastInnerLoopTimeLabel">
+   <item row="0" column="5">
+    <widget class="QCheckBox" name="yCheckBox">
      <property name="text">
-      <string/>
+      <string>Y</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_3">
+   <item row="2" column="4">
+    <widget class="QCheckBox" name="aCheckBox">
      <property name="text">
-      <string>Average Inner Loop Time</string>
+      <string>A</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_2">
+   <item row="1" column="1">
+    <widget class="QCheckBox" name="stickLeftCheckBox">
      <property name="text">
-      <string>Worst Inner Loop Time</string>
+      <string>Stick Left</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label">
+   <item row="2" column="6">
+    <widget class="QCheckBox" name="rtCheckBox">
      <property name="text">
-      <string>Last Inner Loop Time</string>
+      <string>RT</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="label_4">
+   <item row="0" column="6">
+    <widget class="QCheckBox" name="rbCheckBox">
      <property name="text">
-      <string>Best Inner Loop Time</string>
+      <string>RB</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QLabel" name="worstInnerLoopTimeLabel">
+   <item row="0" column="2">
+    <widget class="QCheckBox" name="stickUpCheckBox">
      <property name="text">
-      <string/>
+      <string>Stick Up</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
-    <widget class="QLabel" name="bestInnerLoopTimeLabel">
+   <item row="0" column="4">
+    <widget class="QCheckBox" name="xCheckBox">
      <property name="text">
-      <string/>
+      <string>X</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QCheckBox" name="stickRightCheckBox">
+     <property name="text">
+      <string>Stick Right</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QCheckBox" name="lbCheckBox">
+     <property name="text">
+      <string>LB</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QCheckBox" name="bCheckBox">
+     <property name="text">
+      <string>B</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="7">
+    <widget class="QCheckBox" name="ltCheckBox">
+     <property name="text">
+      <string>LT</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="8">
+    <widget class="QCheckBox" name="viewCheckBox">
+     <property name="text">
+      <string>View</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="8">
+    <widget class="QCheckBox" name="startCheckBox">
+     <property name="text">
+      <string>Start</string>
      </property>
     </widget>
    </item>

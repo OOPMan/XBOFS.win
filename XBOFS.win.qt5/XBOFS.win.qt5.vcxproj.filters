@@ -14,6 +14,9 @@
     <ClCompile Include="ControlBindingDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DebuggingDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -50,6 +53,9 @@
     <QtMoc Include="ControlBindingDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="DebuggingDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="XBOFSWinQT5GUI.ui">
@@ -68,6 +74,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="DebuggingWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="DebuggingDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

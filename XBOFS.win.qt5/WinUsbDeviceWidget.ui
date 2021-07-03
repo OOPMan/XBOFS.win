@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>605</width>
-    <height>629</height>
+    <width>599</width>
+    <height>614</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -234,17 +234,17 @@
           </widget>
          </item>
          <item row="1" column="0" colspan="3">
-          <widget class="QPushButton" name="configureBindingsButton">   
-		   <property name="enabled">
+          <widget class="QPushButton" name="configureBindingsButton">
+           <property name="enabled">
             <bool>false</bool>
-           </property>		  
+           </property>
            <property name="text">
             <string>Configure Bindings</string>
            </property>
           </widget>
          </item>
          <item row="2" column="0" colspan="2">
-          <widget class="QLabel" name="label_7">           
+          <widget class="QLabel" name="label_7">
            <property name="text">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Guide Button behaviour:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
@@ -258,25 +258,25 @@
           </widget>
          </item>
          <item row="1" column="3" colspan="3">
-          <widget class="QPushButton" name="configureAlternateBindingsButton">           
-		   <property name="enabled">
+          <widget class="QPushButton" name="configureAlternateBindingsButton">
+           <property name="enabled">
             <bool>false</bool>
-           </property>		  
+           </property>
            <property name="text">
             <string>Configure Alternate Bindings</string>
            </property>
           </widget>
          </item>
          <item row="0" column="0" colspan="2">
-          <widget class="QComboBox" name="activeProfileComboBox">           
+          <widget class="QComboBox" name="activeProfileComboBox">
            <property name="editable">
             <bool>false</bool>
            </property>
           </widget>
          </item>
          <item row="2" column="2" colspan="4">
-          <widget class="QComboBox" name="guideButtonBehaviourComboBox">           
-		   <property name="enabled">
+          <widget class="QComboBox" name="guideButtonBehaviourComboBox">
+           <property name="enabled">
             <bool>false</bool>
            </property>
            <property name="editable">
@@ -308,7 +308,7 @@
      <property name="title">
       <string>Debugging</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QCheckBox" name="debuggingEnabledCheckBox">
         <property name="enabled">
@@ -316,6 +316,16 @@
         </property>
         <property name="text">
          <string>Enabled</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="openDebuggingDialogPushButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Open Debugging Dialog</string>
         </property>
        </widget>
       </item>

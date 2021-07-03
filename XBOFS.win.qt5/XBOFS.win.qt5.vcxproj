@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="ConfigureBindingsDialog.cpp" />
     <ClCompile Include="ControlBindingDialog.cpp" />
+    <ClCompile Include="DebuggingDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="WinUsbDeviceTabWidget.cpp" />
     <ClCompile Include="XBOFSWinQT5GUI.cpp" />
@@ -164,6 +165,7 @@
     <QtUic Include="ConfigureBindingsDialog.ui" />
     <QtUic Include="ControlBindingDialog.ui" />
     <QtUic Include="ControlBindingWidget.ui" />
+    <QtUic Include="DebuggingDialog.ui" />
     <QtUic Include="DebuggingWidget.ui" />
     <QtUic Include="WinUsbDeviceWidget.ui" />
     <QtUic Include="XBOFSWinQT5GUI.ui" />
@@ -182,6 +184,7 @@
   <ItemGroup>
     <QtMoc Include="ConfigureBindingsDialog.h" />
     <QtMoc Include="ControlBindingDialog.h" />
+    <QtMoc Include="DebuggingDialog.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="WinUsbDeviceTabWidget.h" />
   </ItemGroup>

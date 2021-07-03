@@ -7,6 +7,8 @@
 #include "ui_WinUsbDeviceWidget.h"
 #include "ConfigureBindingsDialog.h"
 #include "ui_DebuggingWidget.h"
+#include "ui_ControlBindingWidget.h"
+#include "DebuggingDialog.h"
 
 using namespace XBOFSWin::settings;
 
@@ -43,6 +45,7 @@ public slots:
     void handleConfigureAlternateBindingsPushButtonClicked(bool checked = false);
     void handleGuideButtonBehaviourComboBoxCurrentIndexChanged(int index);
     void handleDebuggingEnabledCheckBoxStateChanged(int state);
+    void handleOpenDebuggingDialogPushButtonClicked(bool checked = false);
 
 signals:
     void settingsChanged();
@@ -60,4 +63,5 @@ protected:
     const XBOFSWin::WinUsbDevice* winUsbDevice;
     ConfigureBindingsDialog* configureBindingsDialog;
     ConfigureBindingsDialog* configureGuideDownBindingsDialog;
+    DebuggingDialog* debuggingDialog;
 };
