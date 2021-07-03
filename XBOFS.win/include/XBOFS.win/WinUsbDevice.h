@@ -43,7 +43,13 @@ namespace XBOFSWin {
 
         void debuggingInfoPerformanceData(quint16 lastInnerLoopTime, quint16 worstInnerLoopTime, quint16 averageInnerLoopTime, quint16 bestInnerLoopTime);
 
-    protected:        
+    protected:   
+        enum class READ_INPUT_INNER_LOOP_RESULT {
+            SUCCESS,
+            READ_FAILED,
+            WRITE_FAILED
+        };
+
         const std::shared_ptr<spdlog::logger> logger;
         const std::wstring devicePath;
         QSettings settings = QSettings(settings::ORGANIZATION, settings::APPLICATION);
@@ -67,7 +73,11 @@ namespace XBOFSWin {
         PVIGEM_CLIENT vigEmClient = NULL;
         PVIGEM_TARGET vigEmTarget = NULL;
         WINUSB_INTERFACE_HANDLE winUsbHandle;
-        HANDLE deviceHandle;        
+        HANDLE deviceHandle;      
+
+        READ_INPUT_INNER_LOOP_RESULT debugDisabledReadInputInnerLoop();
+        READ_INPUT_INNER_LOOP_RESULT debugEnabedReadInputInnerLoop();
+        READ_INPUT_INNER_LOOP_RESULT(WinUsbDevice::* readInputInnerLoop)() = &WinUsbDevice::debugDisabledReadInputInnerLoop;
 
         bool openDevice();
         bool closeDevice();

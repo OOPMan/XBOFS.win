@@ -134,6 +134,16 @@ void WinUsbDevice::run() {
         int currentFailedReads = 0;
         while (loop && currentFailedReads < 5 && !QThread::currentThread()->isInterruptionRequested()) {            
             QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+            switch ((this->*readInputInnerLoop)()) {
+            case READ_INPUT_INNER_LOOP_RESULT::READ_FAILED:
+                currentFailedReads += 1;
+                break;
+            case READ_INPUT_INNER_LOOP_RESULT::WRITE_FAILED:
+                failedWrites += 1;
+                break;
+            }
+
+            /*
             if (!readInputFromXBOArcadeStick()) {                
                 logger->warn("Failed to read input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
                 currentFailedReads += 1;
@@ -144,6 +154,7 @@ void WinUsbDevice::run() {
                 logger->warn("Failed to write to VigEm Controller");
                 failedWrites += 1;
             }
+            */
         }
         if (currentFailedReads >= 5) {
             emit winUsbDeviceError(devicePath);            
@@ -324,5 +335,25 @@ bool WinUsbDevice::dispatchInputToVigEmController() {
     const auto controllerUpdateResult = vigem_target_x360_update(vigEmClient, vigEmTarget, controllerData);
     auto result = VIGEM_SUCCESS(controllerUpdateResult);    
     return result;
-    //return true;
+}
+
+WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT WinUsbDevice::debugDisabledReadInputInnerLoop() {
+    auto readInputResult = readInputFromXBOArcadeStick();
+    if (!readInputResult) return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::READ_FAILED;
+    /*{                
+        logger->warn("Failed to read input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
+        currentFailedReads += 1;
+        continue;
+    }*/
+    auto packetType = processInputFromXBOArcadeStick();
+    if (!dispatchInputToVigEmController()) WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::WRITE_FAILED;
+    /*{
+        logger->warn("Failed to write to VigEm Controller");
+        failedWrites += 1;
+    }*/
+    return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::SUCCESS;
+}
+
+WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT WinUsbDevice::debugEnabedReadInputInnerLoop() {
+    return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::SUCCESS;
 }
