@@ -44,7 +44,7 @@ void WinUsbDevice::refreshSettings() {
     // Configure control bindings
     logger->info(bindingEnabled ? "Binding Enabled" : "Binding Disabled");
     for (int bindingsSelector = 0; bindingsSelector < 2; bindingsSelector++) {
-        for (int xboArcadeStickButtonSelector = 0; xboArcadeStickButtonSelector < 14; xboArcadeStickButtonSelector++) {
+        for (int xboArcadeStickButtonSelector = 0; xboArcadeStickButtonSelector < 15; xboArcadeStickButtonSelector++) {
             auto key = QString("%1/%2/%3").arg(activeProfile, QString::number(bindingsSelector), QString::number(xboArcadeStickButtonSelector));
             auto bindEnabled = settings.value(QString("%1/%2").arg(key, settings::BIND_ENABLED), false).toBool();
             for (int outputValueSelector = 0; outputValueSelector < 7; outputValueSelector++) {
@@ -298,7 +298,7 @@ Prepare data for VigEm XB360 controller
 */
 XUSB_REPORT WinUsbDevice::prepareInputForVigEmController() {
     XUSB_REPORT controllerData {};
-    for (int xboButtonIndex = 0; xboButtonIndex < 14; xboButtonIndex++) {        
+    for (int xboButtonIndex = 0; xboButtonIndex < 15; xboButtonIndex++) {        
         auto buttonState = buttons[xboButtonIndex];
         auto & [buttonValue, ltValue, rtValue, lxValue, lyValue, rxValue, ryValue] = bindings[bindingSelector][xboButtonIndex][buttonState];
         controllerData.wButtons         |= buttonValue;
