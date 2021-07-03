@@ -62,6 +62,5 @@ protected:
     Ui::WinUsbDeviceWidget ui;
     const XBOFSWin::WinUsbDevice* winUsbDevice;
     ConfigureBindingsDialog* configureBindingsDialog;
-    ConfigureBindingsDialog* configureGuideDownBindingsDialog;
     DebuggingDialog* debuggingDialog;
 };

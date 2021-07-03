@@ -9,7 +9,6 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
 : QWidget(parent), winUsbDevice(winUsbDevice), logger(logger)
 {
     configureBindingsDialog = new ConfigureBindingsDialog(this);
-    configureGuideDownBindingsDialog = new ConfigureBindingsDialog(this);
     debuggingDialog = new DebuggingDialog(winUsbDevice, this);
     setObjectName(devicePath);
     ui.setupUi(this);
@@ -37,12 +36,12 @@ WinUsbDeviceTabWidget::WinUsbDeviceTabWidget(
     connect(ui.guideButtonBehaviourComboBox, &QComboBox::currentIndexChanged, this, &WinUsbDeviceTabWidget::handleGuideButtonBehaviourComboBoxCurrentIndexChanged);
     connect(ui.debuggingEnabledCheckBox, &QCheckBox::stateChanged, this, &WinUsbDeviceTabWidget::handleDebuggingEnabledCheckBoxStateChanged);
     connect(ui.openDebuggingDialogPushButton, &QPushButton::clicked, this, &WinUsbDeviceTabWidget::handleOpenDebuggingDialogPushButtonClicked);
+    connect(configureBindingsDialog, &QDialog::finished, this, [&](int result) { emit settingsChanged(); });
 }
 
 WinUsbDeviceTabWidget::~WinUsbDeviceTabWidget()
 {
     delete configureBindingsDialog;
-    delete configureGuideDownBindingsDialog;
     delete debuggingDialog;
 }
 
@@ -186,7 +185,7 @@ void WinUsbDeviceTabWidget::handleConfigureBindingsPushButtonClicked(bool checke
 
 void WinUsbDeviceTabWidget::handleConfigureAlternateBindingsPushButtonClicked(bool checked) {
     auto activeProfile = ui.activeProfileComboBox->currentText();
-    configureGuideDownBindingsDialog->open(vendorId, productId, productName, serialNumber, activeProfile, true);
+    configureBindingsDialog->open(vendorId, productId, productName, serialNumber, activeProfile, true);
 }
 
 void WinUsbDeviceTabWidget::handleGuideButtonBehaviourComboBoxCurrentIndexChanged(int index)
