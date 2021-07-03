@@ -108,6 +108,7 @@ void DebuggingDialog::handleDebugInfoXUSB_REPORT(
     outputDataUi.rightAnalogButtonCheckBox->setChecked(wButtons & XUSB_GAMEPAD_RIGHT_THUMB);
     outputDataUi.startButtonCheckBox->setChecked(wButtons & XUSB_GAMEPAD_START);
     outputDataUi.viewButtonCheckBox->setChecked(wButtons & XUSB_GAMEPAD_BACK);
+    outputDataUi.leftTriggerStrengthSpinBox->setValue(bLeftTrigger);
     outputDataUi.rightTriggerStrengthSpinBox->setValue(bRightTrigger);
     outputDataUi.leftAnalogXaxisSpinBox->setValue(sThumbLX);
     outputDataUi.leftAnalogYaxisSpinBox->setValue(sThumbLY);
