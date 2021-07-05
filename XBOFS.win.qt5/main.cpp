@@ -1,5 +1,5 @@
 #include <string>
-#include <QtWidgets/QApplication>
+#include <qapplication.h>
 #include <qmetatype.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 
@@ -12,9 +12,8 @@ int main(int argc, char *argv[])
     // Configure logging
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%t] [%n] [%l] %v");
     spdlog::flush_every(std::chrono::seconds(1));
-    auto sinks = std::vector<spdlog::sink_ptr>();
     auto rotatingFileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("xbofs.win.qt5.log", 1024 * 1024 * 10, 10);
-    sinks.push_back(rotatingFileSink);
+    auto sinks = std::vector<spdlog::sink_ptr>{ rotatingFileSink };
     auto logger = XBOFSWin::get_logger("XBOFS.Win", sinks);
     logger->info("Logging initialised");
     // Display main window

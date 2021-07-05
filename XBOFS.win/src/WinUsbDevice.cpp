@@ -2,7 +2,7 @@
 #include <qabstracteventdispatcher.h>
 #include <qeventloop.h>
 
-#include "XBOFS.win\WinUsbDevice.h"
+#include <XBOFS.win/WinUsbDevice.h>
 
 using namespace XBOFSWin;
 
@@ -30,6 +30,35 @@ WinUsbDevice::WinUsbDevice(std::wstring devicePath, std::shared_ptr<spdlog::logg
 : QObject(parent), devicePath(devicePath), logger(logger)
 {
     
+}
+
+void WinUsbDevice::refreshSettings() {
+    logger->info("Refreshing settings");
+    while (settings.group() != "") settings.endGroup();
+    settings.beginGroup(QString("%1/%2/%3").arg(this->vendorId, this->productId, this->serialNumber));
+    bindingEnabled = settings.value(settings::BINDING_ENABLED, false).toBool();
+    bindingSelector = 0;
+    debugEnabled = settings.value(settings::DEBUG_ENABLED, false).toBool();
+    activeProfile = settings.value(settings::ACTIVE_PROFILE, "").toString();
+    guideButtonMode = (GUIDE_BUTTON_MODE)settings.value(QString("%1/%2").arg(activeProfile, settings::GUIDE_BUTTON_MODE), 0).toInt();
+    // Configure control bindings
+    logger->info(bindingEnabled ? "Binding Enabled" : "Binding Disabled");
+    for (int bindingsSelector = 0; bindingsSelector < 2; bindingsSelector++) {
+        for (int xboArcadeStickButtonSelector = 0; xboArcadeStickButtonSelector < 15; xboArcadeStickButtonSelector++) {
+            auto key = QString("%1/%2/%3").arg(activeProfile, QString::number(bindingsSelector), QString::number(xboArcadeStickButtonSelector));
+            auto bindEnabled = settings.value(QString("%1/%2").arg(key, settings::BIND_ENABLED), false).toBool();
+            for (int outputValueSelector = 0; outputValueSelector < 7; outputValueSelector++) {
+                auto value = bindingEnabled && bindEnabled
+                    ? settings.value(QString("%1/%2").arg(key, QString::number(outputValueSelector)), 0).toInt() // Binding is enabled in general and for this control
+                    : defaultBindings[bindingsSelector][xboArcadeStickButtonSelector][ON][outputValueSelector]; // Binding is not enabled or is disabled for this control
+                bindings[bindingsSelector][xboArcadeStickButtonSelector][OFF][outputValueSelector] = 0;
+                bindings[bindingsSelector][xboArcadeStickButtonSelector][ON][outputValueSelector] = value;
+            }
+        }
+    }
+    // Configure debugging
+    logger->info(debugEnabled ? "Debug Mode Enabled" : "Debug Mode Disabled");
+    readInputInnerLoop = debugEnabled ? &WinUsbDevice::debugEnabledReadInputInnerLoop : &WinUsbDevice::debugDisabledReadInputInnerLoop;
 }
 
 void WinUsbDevice::run() {    
@@ -93,18 +122,24 @@ void WinUsbDevice::run() {
             continue;
         }
         emit winUsbDeviceInitComplete(devicePath);
+        // Refresh settings
+        refreshSettings();        
         // Read input
         emit winUsbDeviceReadingInput(devicePath);        
         logger->info("Reading input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
         int currentFailedReads = 0;
         while (loop && currentFailedReads < 5 && !QThread::currentThread()->isInterruptionRequested()) {            
-            if (!readInputFromXBOArcadeStick()) {                
+            QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+            switch ((this->*readInputInnerLoop)()) {
+            case READ_INPUT_INNER_LOOP_RESULT::READ_FAILED:
                 logger->warn("Failed to read input from XBO Arcade Stick"); // TODO: Provide more details on stick vendor&product
                 currentFailedReads += 1;
-                continue;
+                break;
+            case READ_INPUT_INNER_LOOP_RESULT::WRITE_FAILED:
+                logger->warn("Failed to write to VigEm Controller");
+                failedWrites += 1;
+                break;
             }
-            processInputFromXBOArcadeStick();
-            if (!dispatchInputToVigEmController()) failedWrites += 1;
         }
         if (currentFailedReads >= 5) {
             emit winUsbDeviceError(devicePath);            
@@ -170,17 +205,14 @@ bool WinUsbDevice::openDevice() {
         closeDevice();
         return false;
     }
-    // Get Manufacturer string
-    auto optionalManufacturer = getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iManufacturer, 0x0409);
-    if (optionalManufacturer) manufacturer = *optionalManufacturer;
-    // Get Product string
-    auto optionalProduct = getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iProduct, 0x0409);
-    if (optionalProduct) product = *optionalProduct;    
-    // Get Serial number string
-    auto optionalSerialNumber = getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iSerialNumber, 0x0409);
-    if (optionalSerialNumber) serialNumber = *optionalSerialNumber;    
-    // Emit USB descriptor result    
-    emit winUsbDeviceInfo(devicePath, (quint16)winUsbDeviceDescriptor.idVendor, (quint16)winUsbDeviceDescriptor.idProduct, manufacturer, product, serialNumber);
+    vendorName = QString::fromStdWString(getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iManufacturer, 0x0409).value_or(L"Unknown"));
+    vendorId = QString::fromStdString(fmt::format("0x{:04X}", winUsbDeviceDescriptor.idVendor));
+    productName = QString::fromStdWString(getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iProduct, 0x0409).value_or(L"Unknown"));
+    productId = QString::fromStdString(fmt::format("0x{:04X}", winUsbDeviceDescriptor.idProduct));
+    serialNumber = QString::fromStdWString(getWinUsbStringDescriptor(winUsbHandle, winUsbDeviceDescriptor.iSerialNumber, 0x0409)
+        .value_or(L"Unknown"))
+        .remove(QRegularExpression("[^0-9A-Z]+"));
+    emit winUsbDeviceInfo(devicePath, vendorId, vendorName, productId, productName, serialNumber);
     logger->info("Opened WinUSB device");
     return true;
 }
@@ -199,34 +231,47 @@ bool WinUsbDevice::closeDevice() {
 /*
 Process data read from XBO Arcade Stick
 */
-XBO_ARCADE_STICK_PACKET_TYPES WinUsbDevice::processInputFromXBOArcadeStick() {
-    if (dataPacket.transferred == 0) return UNKNOWN;
+PACKET_TYPES WinUsbDevice::processInputFromXBOArcadeStick() {
+    if (dataPacket.transferred == 0) return PACKET_TYPES::UNKNOWN;
+    auto guideButtonState = false;
     switch (dataPacket.data[0]) {
     case 0x01: // Dummy packet?
-        return DUMMY;
+        return PACKET_TYPES::DUMMY;
     case 0x03: // Heartbeat packet?
-        return HEARTBEAT;
+        return PACKET_TYPES::HEARTBEAT;
     case 0x07: // Guide button
-        buttonState.buttonGuide = dataPacket.data[4] & 0x01;
-        return GUIDE;
+        guideButtonState = dataPacket.data[4] & 0x01;
+        if (!bindingEnabled) {
+            buttons[(int)XBO_ARCADE_STICK_BUTTONS::GUIDE] = guideButtonState;
+        }
+        else {
+            buttons[(int)XBO_ARCADE_STICK_BUTTONS::GUIDE] = false;
+            if (guideButtonMode == GUIDE_BUTTON_MODE::HOLD) {
+                bindingSelector = guideButtonState;
+            }
+            else if (guideButtonMode == GUIDE_BUTTON_MODE::TOGGLE && guideButtonState) {
+                bindingSelector = !bindingSelector;
+            }
+        }
+        return PACKET_TYPES::GUIDE;
     case 0x20: // Inputs
-        buttonState.buttonA = dataPacket.data[22] & 0x10;
-        buttonState.buttonB = dataPacket.data[22] & 0x20;
-        buttonState.buttonX = dataPacket.data[22] & 0x01;
-        buttonState.buttonY = dataPacket.data[22] & 0x02;
-        buttonState.rightButton = dataPacket.data[22] & 0x04;
-        buttonState.leftButton = dataPacket.data[22] & 0x08;
-        buttonState.rightTrigger = dataPacket.data[22] & 0x40;
-        buttonState.leftTrigger = dataPacket.data[22] & 0x80;
-        buttonState.buttonMenu = dataPacket.data[04] & 0x04;
-        buttonState.buttonView = dataPacket.data[04] & 0x08;
-        buttonState.stickUp = dataPacket.data[05] & 0x01;
-        buttonState.stickDown = dataPacket.data[05] & 0x02;
-        buttonState.stickLeft = dataPacket.data[05] & 0x04;
-        buttonState.stickRight = dataPacket.data[05] & 0x08;
-        return BUTTON_INPUT;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::STICK_UP]    = dataPacket.data[05] & 0x01;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::STICK_DOWN]  = dataPacket.data[05] & 0x02;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::STICK_LEFT]  = dataPacket.data[05] & 0x04;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::STICK_RIGHT] = dataPacket.data[05] & 0x08;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::X]           = dataPacket.data[22] & 0x01;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::Y]           = dataPacket.data[22] & 0x02;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::A]           = dataPacket.data[22] & 0x10;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::B]           = dataPacket.data[22] & 0x20;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::RB]          = dataPacket.data[22] & 0x04;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::RT]          = dataPacket.data[22] & 0x40;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::LB]          = dataPacket.data[22] & 0x08;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::LT]          = dataPacket.data[22] & 0x80;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::VIEW]        = dataPacket.data[04] & 0x08;
+        buttons[(int)XBO_ARCADE_STICK_BUTTONS::START]       = dataPacket.data[04] & 0x04;
+        return PACKET_TYPES::BUTTON_INPUT;
     }
-    return UNKNOWN;
+    return PACKET_TYPES::UNKNOWN;
 }
 
 /*
@@ -249,25 +294,73 @@ bool WinUsbDevice::initXBOArcadeStick() {
 }
 
 /*
+Prepare data for VigEm XB360 controller
+*/
+XUSB_REPORT WinUsbDevice::prepareInputForVigEmController() {
+    XUSB_REPORT controllerData {};
+    for (int xboButtonIndex = 0; xboButtonIndex < 15; xboButtonIndex++) {        
+        auto buttonState = buttons[xboButtonIndex];
+        auto & [buttonValue, ltValue, rtValue, lxValue, lyValue, rxValue, ryValue] = bindings[bindingSelector][xboButtonIndex][buttonState];
+        controllerData.wButtons         |= buttonValue;
+        controllerData.bRightTrigger    |= rtValue;
+        controllerData.bLeftTrigger     |= ltValue;
+        controllerData.sThumbLX         |= lxValue;
+        controllerData.sThumbLY         |= lyValue;
+        controllerData.sThumbRX         |= rxValue;
+        controllerData.sThumbRY         |= ryValue;
+    }
+    return controllerData;
+}
+
+/*
 Dispatch data to the VigEm XB360 controller
 */
 bool WinUsbDevice::dispatchInputToVigEmController() {
-    XUSB_REPORT controllerData{};
-    if (buttonState.buttonGuide)    controllerData.wButtons |= XUSB_GAMEPAD_GUIDE;
-    if (buttonState.buttonMenu)     controllerData.wButtons |= XUSB_GAMEPAD_START;
-    if (buttonState.buttonView)     controllerData.wButtons |= XUSB_GAMEPAD_BACK;
-    if (buttonState.buttonA)        controllerData.wButtons |= XUSB_GAMEPAD_A;
-    if (buttonState.buttonB)        controllerData.wButtons |= XUSB_GAMEPAD_B;
-    if (buttonState.buttonX)        controllerData.wButtons |= XUSB_GAMEPAD_X;
-    if (buttonState.buttonY)        controllerData.wButtons |= XUSB_GAMEPAD_Y;
-    if (buttonState.leftButton)     controllerData.wButtons |= XUSB_GAMEPAD_LEFT_SHOULDER;
-    if (buttonState.rightButton)    controllerData.wButtons |= XUSB_GAMEPAD_RIGHT_SHOULDER;
-    if (buttonState.stickUp)        controllerData.wButtons |= XUSB_GAMEPAD_DPAD_UP;
-    if (buttonState.stickDown)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_DOWN;
-    if (buttonState.stickLeft)      controllerData.wButtons |= XUSB_GAMEPAD_DPAD_LEFT;
-    if (buttonState.stickRight)     controllerData.wButtons |= XUSB_GAMEPAD_DPAD_RIGHT;
-    if (buttonState.leftTrigger)    controllerData.bLeftTrigger = 0xff;
-    if (buttonState.rightTrigger)   controllerData.bRightTrigger = 0xff;
+    auto controllerData = prepareInputForVigEmController();
     const auto controllerUpdateResult = vigem_target_x360_update(vigEmClient, vigEmTarget, controllerData);
-    return VIGEM_SUCCESS(controllerUpdateResult);
+    auto result = VIGEM_SUCCESS(controllerUpdateResult);    
+    return result;
 }
+
+/*
+Debug-mode dispatch data to the VigEm XB360 controller
+*/
+bool WinUsbDevice::debugDispatchInputToVigEmController() {
+    auto controllerData = prepareInputForVigEmController();
+    const auto controllerUpdateResult = vigem_target_x360_update(vigEmClient, vigEmTarget, controllerData);
+    auto result = VIGEM_SUCCESS(controllerUpdateResult);    
+    if (result) emit debugInfoXUSB_REPORT(
+        controllerData.wButtons,
+        controllerData.bLeftTrigger,
+        controllerData.bRightTrigger,
+        controllerData.sThumbLX,
+        controllerData.sThumbLY,
+        controllerData.sThumbRX,
+        controllerData.sThumbRY
+    );
+    return result;
+}
+
+WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT WinUsbDevice::debugDisabledReadInputInnerLoop() {
+    auto readInputResult = readInputFromXBOArcadeStick();
+    if (!readInputResult) return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::READ_FAILED;
+    auto packetType = processInputFromXBOArcadeStick();
+    if (!dispatchInputToVigEmController()) WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::WRITE_FAILED;
+    return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::SUCCESS;
+}
+
+WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT WinUsbDevice::debugEnabledReadInputInnerLoop() {
+    auto readInputResult = readInputFromXBOArcadeStick();
+    auto start = std::chrono::steady_clock::now();
+    if (!readInputResult) return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::READ_FAILED;
+    auto packetType = processInputFromXBOArcadeStick();
+    emit debugInfoButtons(
+        buttons[0], buttons[1], buttons[2], buttons[3], buttons[4], buttons[5], buttons[6], buttons[7], 
+        buttons[8], buttons[9], buttons[10], buttons[11], buttons[12], buttons[13], buttons[14]
+    );
+    if (!debugDispatchInputToVigEmController()) WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::WRITE_FAILED;
+    auto end = std::chrono::steady_clock::now();
+    emit debugInfoLoopTime(std::chrono::duration_cast<std::chrono::microseconds>(end - start));
+    return WinUsbDevice::READ_INPUT_INNER_LOOP_RESULT::SUCCESS;
+}
+

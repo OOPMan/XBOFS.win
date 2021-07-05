@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DebuggingWidget</class>
+ <widget class="QWidget" name="DebuggingWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>672</width>
+    <height>329</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="2">
+    <widget class="QCheckBox" name="stickDownCheckBox">
+     <property name="text">
+      <string>Stick Down</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QCheckBox" name="yCheckBox">
+     <property name="text">
+      <string>Y</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QCheckBox" name="aCheckBox">
+     <property name="text">
+      <string>A</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QCheckBox" name="stickLeftCheckBox">
+     <property name="text">
+      <string>Stick Left</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="6">
+    <widget class="QCheckBox" name="rtCheckBox">
+     <property name="text">
+      <string>RT</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QCheckBox" name="rbCheckBox">
+     <property name="text">
+      <string>RB</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QCheckBox" name="stickUpCheckBox">
+     <property name="text">
+      <string>Stick Up</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QCheckBox" name="xCheckBox">
+     <property name="text">
+      <string>X</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QCheckBox" name="stickRightCheckBox">
+     <property name="text">
+      <string>Stick Right</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QCheckBox" name="lbCheckBox">
+     <property name="text">
+      <string>LB</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QCheckBox" name="bCheckBox">
+     <property name="text">
+      <string>B</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="7">
+    <widget class="QCheckBox" name="ltCheckBox">
+     <property name="text">
+      <string>LT</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="8">
+    <widget class="QCheckBox" name="viewCheckBox">
+     <property name="text">
+      <string>View</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="8">
+    <widget class="QCheckBox" name="startCheckBox">
+     <property name="text">
+      <string>Start</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="8">
+    <widget class="QCheckBox" name="guideCheckBox">
+     <property name="text">
+      <string>Guide</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

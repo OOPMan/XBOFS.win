@@ -8,14 +8,12 @@ using namespace XBOFSWin;
 /*
 Constructs the WinUsbDeviceManager and starts its event loop in a separate thread
 */
-WinUsbDeviceManager::WinUsbDeviceManager(std::shared_ptr<spdlog::logger> logger, QObject* parent)
-: QObject(parent), logger(logger)
+WinUsbDeviceManager::WinUsbDeviceManager(bool autoStartWinUsbDevices, std::shared_ptr<spdlog::logger> logger, QObject* parent)
+: QObject(parent), logger(logger), autoStartWinUsbDevices(autoStartWinUsbDevices)
 {}
 
 void WinUsbDeviceManager::run() {        
     logger->info("Entered run()");        
-    std::unordered_map<std::wstring, std::pair<QThread*, WinUsbDevice*>> devicePathWinUsbDeviceMap;
-    std::set<std::wstring> previousDevicePaths;
     logger->info("Starting scan loop");
     while (!QThread::currentThread()->isInterruptionRequested()) {
         emit winUsbDeviceManagerScanning();        
@@ -32,8 +30,8 @@ void WinUsbDeviceManager::run() {
             connect(winUsbDeviceThread, &QThread::started, winUsbDevice, &WinUsbDevice::run);
             winUsbDevice->moveToThread(winUsbDeviceThread);
             devicePathWinUsbDeviceMap.insert({ devicePath, std::make_pair(winUsbDeviceThread, winUsbDevice) });                        
+            if (autoStartWinUsbDevices) winUsbDeviceThread->start();
             emit winUsbDeviceAdded(devicePath, winUsbDevice);
-            winUsbDeviceThread->start();            
         }  
         // Check for WinUsbDevices to remove
         for (auto iterator = devicePathWinUsbDeviceMap.begin(); iterator != devicePathWinUsbDeviceMap.end(); )
@@ -81,6 +79,16 @@ void WinUsbDeviceManager::run() {
     logger->info("Completed run()");
 }
 
+void WinUsbDeviceManager::startWinUsbDeviceThread(const std::wstring& devicePath) {
+    auto iterator = devicePathWinUsbDeviceMap.find(devicePath);
+    if (iterator != devicePathWinUsbDeviceMap.end()) {
+        logger->info(L"Starting thread handling {}", devicePath);
+        iterator->second.first->start(QThread::HighestPriority);
+    }
+    else {
+        logger->error(L"Unable to locate thread handling {}", devicePath);
+    }
+}
 
 /*
 Retrieve a vector of TCHAR* representing device paths that the device manager will work with

@@ -11,10 +11,15 @@
 #include <qsystemtrayicon.h>
 #include <qsettings.h>
 #include <qstring.h>
+#include <XBOFS.win/constants.h>
+#include "WinUsbDeviceTabWidget.h"
 #include "ui_XBOFSWinQT5GUI.h"
 #include "ui_WinUsbDeviceWidget.h"
 
-const QString VERSION("v0.4.1");
+const QString VERSION("v0.5.0");
+
+using namespace XBOFSWin::settings;
+
 const QString SETTINGS_AUTOSTART("autostart");
 const QString SETTINGS_START_MINIMIZED("startMinimized");
 const QString SETTINGS_MINIMIZE_TO_TRAY("minimizeToTray");
@@ -33,21 +38,6 @@ public slots:
     void handleWinUsbDeviceRemoved(const std::wstring &devicePath);
     void handleWinUsbDeviceManagerScanning();
     void handleTerminateWinUsbDeviceManager();
-    void handleVigEmConnect(const std::wstring &devicePath);
-    void handleVigEmConnected(const std::wstring &devicePath);
-    void handleVigEmTargetAdd(const std::wstring &devicePath);
-    void handleVigEmTargetAdded(const std::wstring &devicePath);
-    void handleVigEmTargetInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId, const ulong index);
-    void handleVigEmError(const std::wstring &devicePath);
-    void handleWinUsbDeviceOpen(const std::wstring &devicePath);
-    void handleWinUsbDeviceInfo(const std::wstring &devicePath, quint16 vendorId, quint16 productId,
-                                const std::wstring &manufacturer, const std::wstring &product, const std::wstring &serialNumber);
-    void handleWinUsbDeviceOpened(const std::wstring &devicePath);
-    void handleWinUsbDeviceInit(const std::wstring &devicePath);
-    void handleWinUsbDeviceInitComplete(const std::wstring &devicePath);
-    void handleWinUsbDeviceReadingInput(const std::wstring &devicePath);
-    void handleWinUsbDeviceTerminating(const std::wstring &devicePath);
-    void handleWinUsbDeviceError(const std::wstring &devicePath);
 
     void handleSystemTrayMenuRestore(const bool &checked);
     void handleSystemTrayMenuExit(const bool &checked);
@@ -59,6 +49,9 @@ public slots:
     void handleUpdateCheckCheckboxStateChanged(const quint16 state);
     
     void handleUpdateCheckResponse(QNetworkReply *response);
+
+signals:
+    void startWinUsbDeviceThread(const std::wstring devicePath);
 
 protected:        
     Ui::XBOFSWinQT5GUIClass ui;     
@@ -78,9 +71,9 @@ protected:
     QThread *winUsbDeviceManagerThread;
     XBOFSWin::WinUsbDeviceManager *winUsbDeviceManager;
 
-    std::vector<std::tuple<std::wstring, QWidget*, Ui::WinUsbDeviceWidget*>> tabs;    
+    std::vector<std::tuple<std::wstring, WinUsbDeviceTabWidget*>> tabs;    
 
-    std::optional<std::pair<int, std::vector<std::tuple<std::wstring, QWidget*, Ui::WinUsbDeviceWidget*>>::iterator>> getIteratorForDevicePath(const std::wstring &devicePath);    
+    std::optional<std::pair<int, std::vector<std::tuple<std::wstring, WinUsbDeviceTabWidget*>>::iterator>> getIteratorForDevicePath(const std::wstring &devicePath);    
 
     void closeEvent(QCloseEvent *event);
     void hideEvent(QHideEvent *event);

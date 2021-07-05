@@ -3,6 +3,26 @@
 
 namespace XBOFSWin {
 
+    enum class XB360_CONTROL_BUTTONS {
+        DPAD_UP,
+        DPAD_DOWN,
+        DPAD_LEFT,
+        DPAD_RIGHT,
+        X,
+        Y,
+        A,
+        B,
+        RB,
+        RT,
+        LB, 
+        LT,
+        VIEW,
+        START,
+        GUIDE,
+        THUMB_LEFT,
+        THUMB_RIGHT
+    };
+
     std::string utf8_encode(const std::wstring &wstr);
     std::wstring utf8_decode(const std::string &str);    
     std::shared_ptr<spdlog::logger> get_logger(std::wstring loggerName, std::vector<spdlog::sink_ptr> sinks);
