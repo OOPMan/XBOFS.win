@@ -1,0 +1,175 @@
+diff --git a/libwdi/.msvc/installer_x64.vcxproj b/libwdi/.msvc/installer_x64.vcxproj
+index aba916b..422cbc2 100644
+--- a/libwdi/.msvc/installer_x64.vcxproj
++++ b/libwdi/.msvc/installer_x64.vcxproj
+@@ -23,6 +23,7 @@
+     <ProjectGuid>{E5A56EE0-182F-470F-8CDC-8C1B7B86EE26}</ProjectGuid>
+     <RootNamespace>installerx64</RootNamespace>
+     <Keyword>Win32Proj</Keyword>
++    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+@@ -66,10 +67,18 @@
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\helper\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\helper\installer_x64\</IntDir>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\helper\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\helper\installer_x64\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)helper\$(Platform)\$(Configuration)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)helper\$(Platform)\$(Configuration)\installer_x64\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)helper\$(Platform)\$(Configuration)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)helper\$(Platform)\$(Configuration)\installer_x64\</IntDir>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
++    <OutDir>$(SolutionDir)helper\$(Platform)\$(Configuration)\</OutDir>
++    <IntDir>$(SolutionDir)helper\$(Platform)\$(Configuration)\installer_x64</IntDir>
++  </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
++    <OutDir>$(SolutionDir)helper\$(Platform)\$(Configuration)\</OutDir>
++    <IntDir>$(SolutionDir)helper\$(Platform)\$(Configuration)\installer_x64\</IntDir>
+   </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <Midl>
+diff --git a/libwdi/.msvc/installer_x86.vcxproj b/libwdi/.msvc/installer_x86.vcxproj
+index 5320279..d3e66cb 100644
+--- a/libwdi/.msvc/installer_x86.vcxproj
++++ b/libwdi/.msvc/installer_x86.vcxproj
+@@ -15,6 +15,7 @@
+     <ProjectGuid>{9B1C561E-F95B-4849-A7AA-A4350E227C20}</ProjectGuid>
+     <RootNamespace>installerx86</RootNamespace>
+     <Keyword>Win32Proj</Keyword>
++    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+@@ -42,10 +43,10 @@
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\helper\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\helper\installer_x86\</IntDir>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\helper\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\helper\installer_x86\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)helper\$(Platform)\$(Configuration)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)helper\$(Platform)\$(Configuration)\installer_x86\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)helper\$(Platform)\$(Configuration)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)helper\$(Platform)\$(Configuration)\installer_x86\</IntDir>
+   </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <ClCompile>
+diff --git a/libwdi/.msvc/libwdi_dll.vcxproj b/libwdi/.msvc/libwdi_dll.vcxproj
+index 625998d..fd2c099 100644
+--- a/libwdi/.msvc/libwdi_dll.vcxproj
++++ b/libwdi/.msvc/libwdi_dll.vcxproj
+@@ -22,6 +22,7 @@
+     <ProjectName>libwdi (dll)</ProjectName>
+     <ProjectGuid>{79275348-41A4-4D07-8990-4068C9594A2C}</ProjectGuid>
+     <RootNamespace>libwdi</RootNamespace>
++    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+@@ -67,14 +68,14 @@
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\dll\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\dll\libwdi\</IntDir>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\dll\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\dll\libwdi\</IntDir>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\dll\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\dll\libwdi\</IntDir>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\dll\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\dll\libwdi\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)dll\$(Configuration)\$(PlatformShortName)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)dll\$(Configuration)\$(PlatformShortName)\libwdi</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)dll\$(Configuration)\$(PlatformShortName)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)dll\$(Configuration)\$(PlatformShortName)\libwdi</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)dll\$(Configuration)\$(PlatformShortName)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)dll\$(Configuration)\$(PlatformShortName)\libwdi</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)dll\$(Configuration)\$(PlatformShortName)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)dll\$(Configuration)\$(PlatformShortName)\libwdi\</IntDir>
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">libwdi</TargetName>
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">libwdi</TargetName>
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">libwdi</TargetName>
+diff --git a/libwdi/.msvc/libwdi_static.vcxproj b/libwdi/.msvc/libwdi_static.vcxproj
+index 01743cf..8498c60 100644
+--- a/libwdi/.msvc/libwdi_static.vcxproj
++++ b/libwdi/.msvc/libwdi_static.vcxproj
+@@ -22,6 +22,7 @@
+     <ProjectName>libwdi (static)</ProjectName>
+     <ProjectGuid>{9AA0E745-1A0A-4700-8ECB-6A6DE9DBF8B9}</ProjectGuid>
+     <RootNamespace>libwdi</RootNamespace>
++    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+@@ -67,14 +68,14 @@
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\lib\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\lib\libwdi\</IntDir>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\lib\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\lib\libwdi\</IntDir>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\lib\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\lib\libwdi\</IntDir>
+-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\lib\</OutDir>
+-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\lib\libwdi\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)lib\$(Configuration)\$(PlatformShortName)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)lib\$(Configuration)\$(PlatformShortName)\libwdi\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)lib\$(Configuration)\$(PlatformShortName)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)lib\$(Configuration)\$(PlatformShortName)\libwdi\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)lib\$(Configuration)\$(PlatformShortName)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)lib\$(Configuration)\$(PlatformShortName)\libwdi\</IntDir>
++    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)lib\$(Configuration)\$(PlatformShortName)\</OutDir>
++    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)lib\$(Configuration)\$(PlatformShortName)\libwdi\</IntDir>
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">libwdi</TargetName>
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">libwdi</TargetName>
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">libwdi</TargetName>
+diff --git a/libwdi/embedder.h b/libwdi/embedder.h
+index 411c8df..63dceb9 100644
+--- a/libwdi/embedder.h
++++ b/libwdi/embedder.h
+@@ -47,14 +47,14 @@
+  */
+ #if defined(_MSC_VER) && !defined(DDKBUILD)
+ #if !defined(SOLUTIONDIR)
+-#define SOLUTIONDIR ".."
++#define SOLUTIONDIR "../.."
+ #endif
+ #if defined(_DEBUG)
+-#define INSTALLER_PATH_32 SOLUTIONDIR "\\Win32\\Debug\\helper"
+-#define INSTALLER_PATH_64 SOLUTIONDIR "\\x64\\Debug\\helper"
++#define INSTALLER_PATH_32 SOLUTIONDIR "\\helper\\Win32\\Debug"
++#define INSTALLER_PATH_64 SOLUTIONDIR "\\helper\\x64\\Debug"
+ #else
+-#define INSTALLER_PATH_32 SOLUTIONDIR "\\Win32\\Release\\helper"
+-#define INSTALLER_PATH_64 SOLUTIONDIR "\\x64\\Release\\helper"
++#define INSTALLER_PATH_32 SOLUTIONDIR "\\helper\\Win32\\Release"
++#define INSTALLER_PATH_64 SOLUTIONDIR "\\helper\\x64\\Release"
+ #endif
+ #else
+ #if !defined(SOLUTIONDIR)
+diff --git a/msvc/config.h b/msvc/config.h
+index d4032df..dea07d4 100644
+--- a/msvc/config.h
++++ b/msvc/config.h
+@@ -37,12 +37,12 @@
+ 
+ /* embed libusb0 driver files from the following location */
+ #ifndef LIBUSB0_DIR
+-#define LIBUSB0_DIR "D:/libusb-win32"
++#define LIBUSB0_DIR "../../libusb-win32"
+ #endif
+ 
+ /* embed libusbK driver files from the following location */
+ #ifndef LIBUSBK_DIR
+-#define LIBUSBK_DIR "D:/libusbK/bin"
++#define LIBUSBK_DIR "../../libusbK/bin"
+ #endif
+ 
+ /* embed user defined driver files from the following location */
