@@ -235,6 +235,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionDriver_Manager"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuFile"/>
@@ -251,6 +252,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionDriver_Manager">
+   <property name="text">
+    <string>Driver Manager</string>
    </property>
   </action>
  </widget>

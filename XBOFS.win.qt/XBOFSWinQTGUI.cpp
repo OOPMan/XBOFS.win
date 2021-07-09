@@ -67,6 +67,7 @@ XBOFSWinQTGUI::XBOFSWinQTGUI(std::shared_ptr<spdlog::logger> logger, QWidget *pa
     ui.minimizeOnCloseCheckBox->setChecked(minimizeOnClose);
     ui.minimizeToTrayCheckbox->setChecked(minimizeToTray);
     ui.updateCheckCheckbox->setChecked(checkForUpdates);
+    connect(ui.actionDriver_Manager, &QAction::triggered, this, [&](bool checked) { handleDriverManagerLinkedClick(""); });
     connect(ui.actionExit, &QAction::triggered, this, &XBOFSWinQTGUI::handleSystemTrayMenuExit);
     connect(ui.autostartCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQTGUI::handleAutostartCheckboxStateChanged);
     connect(ui.startMinimizedCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQTGUI::handleStartMinimizedCheckboxStateChanged);
@@ -128,7 +129,7 @@ void XBOFSWinQTGUI::handleDriverManagerLinkedClick(const QString& link)
         refreshXBOFSWinDriverStatus();
 
     };
-    ui.xbofsWinDriverStatus->setText("Waiting for Driver Manager to exit...");
+    ui.xbofsWinDriverStatus->setText("<span style=\"color:#ff851b;\">Waiting for Driver Manager to exit...</span>");
     driverManagerThread = new QThread();
     driverManagerRunner = new DriverManagerRunner();
     connect(driverManagerThread, &QThread::started, driverManagerRunner, &DriverManagerRunner::run);
