@@ -10,9 +10,9 @@
 #include <qstandardpaths.h>
 #include <qdir.h>
 #include <qfile.h>
-//#include <qnetworkconfiguration.h>
 #include <qsslsocket.h>
 #include <fmt/core.h>
+#include <shellapi.h>
 #include <XBOFS.win/utils.h>
 #include <XBOFS.win/WinUsbDeviceManager.h>
 
@@ -25,7 +25,7 @@ const auto vigEmBusNotInstalledMessage = QString::fromWCharArray(LR"""(
 )""");
 
 const auto xbofsWinDriverNotInstalledMessage = QString::fromWCharArray(LR"""(
-<span style="color:#ff0000">Not Installed!</span> Click <a href="https://xbofs.win/zadig.html"><span style=" text-decoration: underline; color:#0000ff;">here</span></a> to visit the <span style=" font-size:8.25pt; font-weight:600;">XBOFS.win</span> ZaDig WinUSB driver installation guide
+<span style="color:#ff0000">Not Installed!</span> Click <a href="https://xbofs.win/zadig.html"><span style=" text-decoration: underline; color:#0000ff;">here</span></a> to open the <span style=" font-size:8.25pt; font-weight:600;">Driver Manager</span>
 )""");
 
 const auto currentVersionMessage = QString::fromWCharArray(LR"""(
@@ -44,7 +44,8 @@ const auto versionCheckTLSErrorMessage = QString::fromWCharArray(LR"""(
 <a href="https://github.com/OOPMan/XBOFS.win/releases/tag/%1"><span style=" text-decoration: underline; color:#ff851b;">%2</span></a> (Warning: Version check failed due to missing OpenSSL installation. Click <a href="http://slproweb.com/products/Win32OpenSSL.html"><span style=" text-decoration: underline; color:#0000ff;">here</span></a> to download OpenSSL installer)
 )""");
 
-void qtDesktopServicesOpenLink(const QString & link) {
+void qtDesktopServicesOpenLink(const QString &link) 
+{
     QDesktopServices::openUrl(link);
 }
 
@@ -106,11 +107,7 @@ XBOFSWinQTGUI::XBOFSWinQTGUI(std::shared_ptr<spdlog::logger> logger, QWidget *pa
         connect(ui.vigEmBusStatus, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
     }
     // Check for XBOFS.win driver
-    if (XBOFSWin::XBOFSWinDeviceInstalled()) ui.xbofsWinDriverStatus->setText(installedMessage);
-    else {        
-        ui.xbofsWinDriverStatus->setText(xbofsWinDriverNotInstalledMessage);
-        connect(ui.xbofsWinDriverStatus, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
-    }
+    refreshXBOFSWinDriverStatus();
     // Update Check    
     if (checkForUpdates) {
         networkManager = new QNetworkAccessManager(this);
@@ -120,6 +117,33 @@ XBOFSWinQTGUI::XBOFSWinQTGUI(std::shared_ptr<spdlog::logger> logger, QWidget *pa
     // Show or hide
     if (startMinimized) hide();
     else show();
+}
+
+void XBOFSWinQTGUI::handleDriverManagerLinkedClick(const QString& link)
+{
+    
+    auto threadFinishedHandler = [&]() {
+        driverManagerRunner->deleteLater();
+        driverManagerThread->deleteLater();
+        refreshXBOFSWinDriverStatus();
+
+    };
+    ui.xbofsWinDriverStatus->setText("Waiting for Driver Manager to exit...");
+    driverManagerThread = new QThread();
+    driverManagerRunner = new DriverManagerRunner();
+    connect(driverManagerThread, &QThread::started, driverManagerRunner, &DriverManagerRunner::run);
+    connect(driverManagerThread, &QThread::finished, threadFinishedHandler);
+    driverManagerRunner->moveToThread(driverManagerThread);
+    driverManagerThread->start();
+}
+
+void XBOFSWinQTGUI::refreshXBOFSWinDriverStatus()
+{
+    auto status = XBOFSWin::XBOFSWinDeviceInstalled();
+    ui.xbofsWinDriverStatus->setText(
+        XBOFSWin::XBOFSWinDeviceInstalled() ? installedMessage : xbofsWinDriverNotInstalledMessage
+    );
+    if (!status) connect(ui.xbofsWinDriverStatus, &QLabel::linkActivated, this, &XBOFSWinQTGUI::handleDriverManagerLinkedClick, Qt::SingleShotConnection);
 }
 
 std::optional<std::pair<int, std::vector<std::tuple<std::wstring, WinUsbDeviceTabWidget*>>::iterator>> XBOFSWinQTGUI::getIteratorForDevicePath(const std::wstring &devicePath) {
@@ -247,4 +271,24 @@ void XBOFSWinQTGUI::handleUpdateCheckResponse(QNetworkReply *response) {
     auto versionTag = location.split('/').back();
     if (VERSION < versionTag) ui.versionLabel->setText(newVersionMessage.arg(VERSION, VERSION, versionTag));
     else if (VERSION > versionTag) ui.versionLabel->setText(prereleaseVersionMessage.arg(VERSION, VERSION));
+}
+
+void DriverManagerRunner::run() {
+    auto directory = QApplication::applicationDirPath().toStdWString();
+    SHELLEXECUTEINFO shellExecInfo = { 0 };
+    shellExecInfo.cbSize = sizeof(shellExecInfo);
+    shellExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+    shellExecInfo.hwnd = 0;
+    shellExecInfo.lpVerb = L"runas";
+    shellExecInfo.lpFile = L"drivermanager.exe";
+    shellExecInfo.lpDirectory = directory.c_str();
+    shellExecInfo.lpParameters = L"";
+    shellExecInfo.nShow = SW_SHOW;
+    shellExecInfo.hInstApp = 0;
+    if (ShellExecuteEx(&shellExecInfo))
+    {
+        WaitForSingleObject(shellExecInfo.hProcess, INFINITE);
+        CloseHandle(shellExecInfo.hProcess);
+    }
+    QThread::currentThread()->quit();
 }
