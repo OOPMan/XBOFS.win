@@ -15,6 +15,7 @@
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+    <ProjectName>XBOFS.win.qt</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -44,12 +45,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)ViGEmClient\include;$(SolutionDir)XBOFS.win\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)ViGEmClient\include;$(SolutionDir)XBOFS.win\include;$(SolutionDir)libwdi</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)lib\release\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)ViGEmClient\include;$(SolutionDir)XBOFS.win\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)ViGEmClient\include;$(SolutionDir)XBOFS.win\include;$(SolutionDir)libwdi</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)lib\debug\x64</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
@@ -67,7 +68,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;SPDLOG_WCHAR_TO_UTF8_SUPPORT;XBOFSWIN_QT5_DEBUG;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;SPDLOG_WCHAR_TO_UTF8_SUPPORT;XBOFSWIN_QT_DEBUG;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -83,7 +84,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ViGEmClient.lib;XBOFS.win.lib;onecoreuap.lib;winusb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ViGEmClient.lib;XBOFS.win.lib;onecoreuap.lib;winusb.lib;libwdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <QtMoc>
@@ -125,7 +126,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>ViGEmClient.lib;XBOFS.win.lib;onecoreuap.lib;winusb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ViGEmClient.lib;XBOFS.win.lib;onecoreuap.lib;winusb.lib;libwdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <QtMoc>
@@ -156,10 +157,10 @@
     <ClCompile Include="DebuggingDialog.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="WinUsbDeviceTabWidget.cpp" />
-    <ClCompile Include="XBOFSWinQT5GUI.cpp" />
+    <ClCompile Include="XBOFSWinQTGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="XBOFSWinQT5GUI.h" />
+    <QtMoc Include="XBOFSWinQTGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ConfigureBindingsDialog.ui" />
@@ -168,10 +169,10 @@
     <QtUic Include="DebuggingDialog.ui" />
     <QtUic Include="DebuggingWidget.ui" />
     <QtUic Include="WinUsbDeviceWidget.ui" />
-    <QtUic Include="XBOFSWinQT5GUI.ui" />
+    <QtUic Include="XBOFSWinQTGUI.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="XBOFSWinQT5GUI.qrc" />
+    <QtRcc Include="XBOFSWinQTGUI.qrc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\XBOFS.win.ico">
@@ -189,7 +190,7 @@
     <QtMoc Include="WinUsbDeviceTabWidget.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="XBOFS.win.qt5.rc">
+    <ResourceCompile Include="XBOFS.win.qt.rc">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

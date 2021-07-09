@@ -13,7 +13,7 @@
 #include <qstring.h>
 #include <XBOFS.win/constants.h>
 #include "WinUsbDeviceTabWidget.h"
-#include "ui_XBOFSWinQT5GUI.h"
+#include "ui_XBOFSWinQTGUI.h"
 #include "ui_WinUsbDeviceWidget.h"
 
 const QString VERSION("v0.5.0");
@@ -26,12 +26,12 @@ const QString SETTINGS_MINIMIZE_TO_TRAY("minimizeToTray");
 const QString SETTINGS_MINIMIZE_ON_CLOSE("minimizeOnClose");
 const QString SETTINGS_CHECK_FOR_UPDATES("checkForUpdates");
 
-class XBOFSWinQT5GUI : public QMainWindow
+class XBOFSWinQTGUI : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *parent = Q_NULLPTR);
+    XBOFSWinQTGUI(std::shared_ptr<spdlog::logger> logger, QWidget *parent = Q_NULLPTR);
 
 public slots:
     void handleWinUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice);
