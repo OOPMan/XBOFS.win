@@ -1,4 +1,4 @@
-#include "XBOFSWinQT5GUI.h"
+#include "XBOFSWinQTGUI.h"
 #include <vector>
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -10,9 +10,9 @@
 #include <qstandardpaths.h>
 #include <qdir.h>
 #include <qfile.h>
-//#include <qnetworkconfiguration.h>
 #include <qsslsocket.h>
 #include <fmt/core.h>
+#include <shellapi.h>
 #include <XBOFS.win/utils.h>
 #include <XBOFS.win/WinUsbDeviceManager.h>
 
@@ -25,7 +25,7 @@ const auto vigEmBusNotInstalledMessage = QString::fromWCharArray(LR"""(
 )""");
 
 const auto xbofsWinDriverNotInstalledMessage = QString::fromWCharArray(LR"""(
-<span style="color:#ff0000">Not Installed!</span> Click <a href="https://xbofs.win/zadig.html"><span style=" text-decoration: underline; color:#0000ff;">here</span></a> to visit the <span style=" font-size:8.25pt; font-weight:600;">XBOFS.win</span> ZaDig WinUSB driver installation guide
+<span style="color:#ff0000">Not Installed!</span> Click <a href="https://xbofs.win/zadig.html"><span style=" text-decoration: underline; color:#0000ff;">here</span></a> to open the <span style=" font-size:8.25pt; font-weight:600;">Driver Manager</span>
 )""");
 
 const auto currentVersionMessage = QString::fromWCharArray(LR"""(
@@ -44,11 +44,12 @@ const auto versionCheckTLSErrorMessage = QString::fromWCharArray(LR"""(
 <a href="https://github.com/OOPMan/XBOFS.win/releases/tag/%1"><span style=" text-decoration: underline; color:#ff851b;">%2</span></a> (Warning: Version check failed due to missing OpenSSL installation. Click <a href="http://slproweb.com/products/Win32OpenSSL.html"><span style=" text-decoration: underline; color:#0000ff;">here</span></a> to download OpenSSL installer)
 )""");
 
-void qtDesktopServicesOpenLink(const QString & link) {
+void qtDesktopServicesOpenLink(const QString &link) 
+{
     QDesktopServices::openUrl(link);
 }
 
-XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *parent)
+XBOFSWinQTGUI::XBOFSWinQTGUI(std::shared_ptr<spdlog::logger> logger, QWidget *parent)
 : QMainWindow(parent), logger(logger)
 {    
     // Settings
@@ -66,12 +67,13 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
     ui.minimizeOnCloseCheckBox->setChecked(minimizeOnClose);
     ui.minimizeToTrayCheckbox->setChecked(minimizeToTray);
     ui.updateCheckCheckbox->setChecked(checkForUpdates);
-    connect(ui.actionExit, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuExit);
-    connect(ui.autostartCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleAutostartCheckboxStateChanged);
-    connect(ui.startMinimizedCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleStartMinimizedCheckboxStateChanged);
-    connect(ui.minimizeOnCloseCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleMinimizeOnCloseCheckboxStateChanged);
-    connect(ui.minimizeToTrayCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleMinimizeToTrayCheckboStateChanged);
-    connect(ui.updateCheckCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQT5GUI::handleUpdateCheckCheckboxStateChanged);
+    connect(ui.actionDriver_Manager, &QAction::triggered, this, [&](bool checked) { handleDriverManagerLinkedClick(""); });
+    connect(ui.actionExit, &QAction::triggered, this, &XBOFSWinQTGUI::handleSystemTrayMenuExit);
+    connect(ui.autostartCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQTGUI::handleAutostartCheckboxStateChanged);
+    connect(ui.startMinimizedCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQTGUI::handleStartMinimizedCheckboxStateChanged);
+    connect(ui.minimizeOnCloseCheckBox, &QCheckBox::stateChanged, this, &XBOFSWinQTGUI::handleMinimizeOnCloseCheckboxStateChanged);
+    connect(ui.minimizeToTrayCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQTGUI::handleMinimizeToTrayCheckboStateChanged);
+    connect(ui.updateCheckCheckbox, &QCheckBox::stateChanged, this, &XBOFSWinQTGUI::handleUpdateCheckCheckboxStateChanged);
     connect(ui.versionLabel, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
     connect(ui.homepageLabel, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
     connect(ui.authorLabel, &QLabel::linkActivated, &qtDesktopServicesOpenLink);    
@@ -81,11 +83,11 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
     winUsbDeviceManager = new XBOFSWin::WinUsbDeviceManager(false, XBOFSWin::get_logger("WinUsbDeviceManager", logger->sinks()));
     connect(winUsbDeviceManagerThread, &QThread::finished, winUsbDeviceManager, &QObject::deleteLater);
     connect(winUsbDeviceManagerThread, &QThread::started, winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::run);
-    connect(winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::winUsbDeviceManagerScanning, this, &XBOFSWinQT5GUI::handleWinUsbDeviceManagerScanning);
-    connect(winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::winUsbDeviceAdded, this, &XBOFSWinQT5GUI::handleWinUsbDeviceAdded);
-    connect(winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::winUsbDeviceRemoved, this, &XBOFSWinQT5GUI::handleWinUsbDeviceRemoved);
-    connect(this, &XBOFSWinQT5GUI::startWinUsbDeviceThread, winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::startWinUsbDeviceThread);
-    connect(this, &XBOFSWinQT5GUI::destroyed, this, &XBOFSWinQT5GUI::handleTerminateWinUsbDeviceManager);
+    connect(winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::winUsbDeviceManagerScanning, this, &XBOFSWinQTGUI::handleWinUsbDeviceManagerScanning);
+    connect(winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::winUsbDeviceAdded, this, &XBOFSWinQTGUI::handleWinUsbDeviceAdded);
+    connect(winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::winUsbDeviceRemoved, this, &XBOFSWinQTGUI::handleWinUsbDeviceRemoved);
+    connect(this, &XBOFSWinQTGUI::startWinUsbDeviceThread, winUsbDeviceManager, &XBOFSWin::WinUsbDeviceManager::startWinUsbDeviceThread);
+    connect(this, &XBOFSWinQTGUI::destroyed, this, &XBOFSWinQTGUI::handleTerminateWinUsbDeviceManager);
     winUsbDeviceManager->moveToThread(winUsbDeviceManagerThread);
     winUsbDeviceManagerThread->start();      
     // System tray icon
@@ -93,9 +95,9 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
         systemTrayIcon = new QSystemTrayIcon(windowIcon(), this);
         auto systemTrayIconMenu = new QMenu(this);
         auto restoreAction = systemTrayIconMenu->addAction("Restore");
-        connect(restoreAction, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuRestore);
+        connect(restoreAction, &QAction::triggered, this, &XBOFSWinQTGUI::handleSystemTrayMenuRestore);
         auto exitAction = systemTrayIconMenu->addAction("Exit");
-        connect(exitAction, &QAction::triggered, this, &XBOFSWinQT5GUI::handleSystemTrayMenuExit);
+        connect(exitAction, &QAction::triggered, this, &XBOFSWinQTGUI::handleSystemTrayMenuExit);
         systemTrayIcon->setContextMenu(systemTrayIconMenu);        
         systemTrayIconEnabled = true;
     }
@@ -106,23 +108,46 @@ XBOFSWinQT5GUI::XBOFSWinQT5GUI(std::shared_ptr<spdlog::logger> logger, QWidget *
         connect(ui.vigEmBusStatus, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
     }
     // Check for XBOFS.win driver
-    if (XBOFSWin::XBOFSWinDeviceInstalled()) ui.xbofsWinDriverStatus->setText(installedMessage);
-    else {        
-        ui.xbofsWinDriverStatus->setText(xbofsWinDriverNotInstalledMessage);
-        connect(ui.xbofsWinDriverStatus, &QLabel::linkActivated, &qtDesktopServicesOpenLink);
-    }
+    refreshXBOFSWinDriverStatus();
     // Update Check    
     if (checkForUpdates) {
         networkManager = new QNetworkAccessManager(this);
-        connect(networkManager, &QNetworkAccessManager::finished, this, &XBOFSWinQT5GUI::handleUpdateCheckResponse);
+        connect(networkManager, &QNetworkAccessManager::finished, this, &XBOFSWinQTGUI::handleUpdateCheckResponse);
         networkManager->head(QNetworkRequest(QUrl("https://github.com/OOPMan/XBOFS.win/releases/latest")));
     }
     // Show or hide
-    show();
-    if (startMinimized) hide();    
+    if (startMinimized) hide();
+    else show();
 }
 
-std::optional<std::pair<int, std::vector<std::tuple<std::wstring, WinUsbDeviceTabWidget*>>::iterator>> XBOFSWinQT5GUI::getIteratorForDevicePath(const std::wstring &devicePath) {
+void XBOFSWinQTGUI::handleDriverManagerLinkedClick(const QString& link)
+{
+    
+    auto threadFinishedHandler = [&]() {
+        driverManagerRunner->deleteLater();
+        driverManagerThread->deleteLater();
+        refreshXBOFSWinDriverStatus();
+
+    };
+    ui.xbofsWinDriverStatus->setText("<span style=\"color:#ff851b;\">Waiting for Driver Manager to exit...</span>");
+    driverManagerThread = new QThread();
+    driverManagerRunner = new DriverManagerRunner();
+    connect(driverManagerThread, &QThread::started, driverManagerRunner, &DriverManagerRunner::run);
+    connect(driverManagerThread, &QThread::finished, threadFinishedHandler);
+    driverManagerRunner->moveToThread(driverManagerThread);
+    driverManagerThread->start();
+}
+
+void XBOFSWinQTGUI::refreshXBOFSWinDriverStatus()
+{
+    auto status = XBOFSWin::XBOFSWinDeviceInstalled();
+    ui.xbofsWinDriverStatus->setText(
+        XBOFSWin::XBOFSWinDeviceInstalled() ? installedMessage : xbofsWinDriverNotInstalledMessage
+    );
+    if (!status) connect(ui.xbofsWinDriverStatus, &QLabel::linkActivated, this, &XBOFSWinQTGUI::handleDriverManagerLinkedClick, Qt::SingleShotConnection);
+}
+
+std::optional<std::pair<int, std::vector<std::tuple<std::wstring, WinUsbDeviceTabWidget*>>::iterator>> XBOFSWinQTGUI::getIteratorForDevicePath(const std::wstring &devicePath) {
     auto iterator = tabs.begin();
     int index;
     for (index = 1; iterator != tabs.end(); index++) {
@@ -134,7 +159,7 @@ std::optional<std::pair<int, std::vector<std::tuple<std::wstring, WinUsbDeviceTa
     return std::optional<std::pair<int, std::vector<std::tuple<std::wstring, WinUsbDeviceTabWidget*>>::iterator>>{std::make_pair(index, iterator)};
 }
 
-void XBOFSWinQT5GUI::handleWinUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice) {        
+void XBOFSWinQTGUI::handleWinUsbDeviceAdded(const std::wstring &devicePath, const XBOFSWin::WinUsbDevice *winUsbDevice) {        
     // Update UI    
     auto devicePathQString = QString::fromStdWString(devicePath);
     auto tabWidget = new WinUsbDeviceTabWidget(ui.tabWidget, devicePathQString, winUsbDevice, logger);
@@ -144,7 +169,7 @@ void XBOFSWinQT5GUI::handleWinUsbDeviceAdded(const std::wstring &devicePath, con
     emit startWinUsbDeviceThread(devicePath);
 }
 
-void XBOFSWinQT5GUI::handleWinUsbDeviceRemoved(const std::wstring &devicePath) {    
+void XBOFSWinQTGUI::handleWinUsbDeviceRemoved(const std::wstring &devicePath) {    
     auto optionalIterator = getIteratorForDevicePath(devicePath);
     if (!optionalIterator) return;
     auto tuple = *optionalIterator;
@@ -159,11 +184,11 @@ void XBOFSWinQT5GUI::handleWinUsbDeviceRemoved(const std::wstring &devicePath) {
     }
 }
 
-void XBOFSWinQT5GUI::handleWinUsbDeviceManagerScanning() {
+void XBOFSWinQTGUI::handleWinUsbDeviceManagerScanning() {
     ui.xbofsWinDeviceManagerStatus->setText(QString::fromWCharArray(LR"""(<span style="color:#2ECC40">Scanning for supported controllers...</span>)"""));
 }
 
-void XBOFSWinQT5GUI::handleTerminateWinUsbDeviceManager() {    
+void XBOFSWinQTGUI::handleTerminateWinUsbDeviceManager() {    
     logger->info("Requesting interruption of thread handling WinUsbDeviceManager");
     winUsbDeviceManagerThread->requestInterruption();
     logger->info("Signalling thread handling WinUsbDeviceManager to quit");
@@ -174,18 +199,18 @@ void XBOFSWinQT5GUI::handleTerminateWinUsbDeviceManager() {
     logger->flush();
 }
 
-void XBOFSWinQT5GUI::handleSystemTrayMenuRestore(const bool &checked) {
+void XBOFSWinQTGUI::handleSystemTrayMenuRestore(const bool &checked) {
     setWindowFlags(previousFlags);
     showNormal();
 }
 
 
-void XBOFSWinQT5GUI::handleSystemTrayMenuExit(const bool &checked) {                
+void XBOFSWinQTGUI::handleSystemTrayMenuExit(const bool &checked) {                
     systemTrayIconEnabled = false;              
     QApplication::quit();
 }
 
-void XBOFSWinQT5GUI::closeEvent(QCloseEvent *event) {
+void XBOFSWinQTGUI::closeEvent(QCloseEvent *event) {
     if (systemTrayIconEnabled && minimizeOnClose) {        
         hide();
         event->ignore();
@@ -193,7 +218,7 @@ void XBOFSWinQT5GUI::closeEvent(QCloseEvent *event) {
     else handleSystemTrayMenuExit(true);
 }
 
-void XBOFSWinQT5GUI::hideEvent(QHideEvent *event) {    
+void XBOFSWinQTGUI::hideEvent(QHideEvent *event) {    
     if (systemTrayIconEnabled && minimizeToTray) {
         systemTrayIcon->show();
         previousFlags = windowFlags();
@@ -201,13 +226,13 @@ void XBOFSWinQT5GUI::hideEvent(QHideEvent *event) {
     }
 }
 
-void XBOFSWinQT5GUI::showEvent(QShowEvent *event) {
+void XBOFSWinQTGUI::showEvent(QShowEvent *event) {
     if (systemTrayIconEnabled) {
         systemTrayIcon->hide();        
     }
 }
 
-void XBOFSWinQT5GUI::handleAutostartCheckboxStateChanged(const quint16 state) {
+void XBOFSWinQTGUI::handleAutostartCheckboxStateChanged(const quint16 state) {
     autostart = state == Qt::Checked;
     settings->setValue(SETTINGS_AUTOSTART, autostart);    
     auto applicationFilePath = QApplication::applicationFilePath();
@@ -217,27 +242,27 @@ void XBOFSWinQT5GUI::handleAutostartCheckboxStateChanged(const quint16 state) {
     else QFile::remove(linkPath);
 }
 
-void XBOFSWinQT5GUI::handleStartMinimizedCheckboxStateChanged(const quint16 state) {
+void XBOFSWinQTGUI::handleStartMinimizedCheckboxStateChanged(const quint16 state) {
     startMinimized = state == Qt::Checked;
     settings->setValue(SETTINGS_START_MINIMIZED, startMinimized);
 }
 
-void XBOFSWinQT5GUI::handleMinimizeOnCloseCheckboxStateChanged(const quint16 state) {
+void XBOFSWinQTGUI::handleMinimizeOnCloseCheckboxStateChanged(const quint16 state) {
     minimizeOnClose = state == Qt::Checked;
     settings->setValue(SETTINGS_MINIMIZE_ON_CLOSE, minimizeOnClose);
 }
 
-void XBOFSWinQT5GUI::handleMinimizeToTrayCheckboStateChanged(const quint16 state) {
+void XBOFSWinQTGUI::handleMinimizeToTrayCheckboStateChanged(const quint16 state) {
     minimizeToTray = state == Qt::Checked;
     settings->setValue(SETTINGS_MINIMIZE_TO_TRAY, minimizeToTray);
 }
 
-void XBOFSWinQT5GUI::handleUpdateCheckCheckboxStateChanged(const quint16 state) {
+void XBOFSWinQTGUI::handleUpdateCheckCheckboxStateChanged(const quint16 state) {
     checkForUpdates = state == Qt::Checked;
     settings->setValue(SETTINGS_CHECK_FOR_UPDATES, checkForUpdates);
 }
 
-void XBOFSWinQT5GUI::handleUpdateCheckResponse(QNetworkReply *response) {
+void XBOFSWinQTGUI::handleUpdateCheckResponse(QNetworkReply *response) {
     response->deleteLater();        
     auto errorCode = response->error();
     if (errorCode == QNetworkReply::UnknownNetworkError && response->errorString().contains("TLS")) 
@@ -247,4 +272,24 @@ void XBOFSWinQT5GUI::handleUpdateCheckResponse(QNetworkReply *response) {
     auto versionTag = location.split('/').back();
     if (VERSION < versionTag) ui.versionLabel->setText(newVersionMessage.arg(VERSION, VERSION, versionTag));
     else if (VERSION > versionTag) ui.versionLabel->setText(prereleaseVersionMessage.arg(VERSION, VERSION));
+}
+
+void DriverManagerRunner::run() {
+    auto directory = QApplication::applicationDirPath().toStdWString();
+    SHELLEXECUTEINFO shellExecInfo = { 0 };
+    shellExecInfo.cbSize = sizeof(shellExecInfo);
+    shellExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+    shellExecInfo.hwnd = 0;
+    shellExecInfo.lpVerb = L"runas";
+    shellExecInfo.lpFile = L"drivermanager.exe";
+    shellExecInfo.lpDirectory = directory.c_str();
+    shellExecInfo.lpParameters = L"";
+    shellExecInfo.nShow = SW_SHOW;
+    shellExecInfo.hInstApp = 0;
+    if (ShellExecuteEx(&shellExecInfo))
+    {
+        WaitForSingleObject(shellExecInfo.hProcess, INFINITE);
+        CloseHandle(shellExecInfo.hProcess);
+    }
+    QThread::currentThread()->quit();
 }

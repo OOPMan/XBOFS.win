@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="XBOFSWinQT5GUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WinUsbDeviceTabWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -15,6 +12,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DebuggingDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XBOFSWinQTGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,9 +41,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="XBOFSWinQT5GUI.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="WinUsbDeviceTabWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -56,11 +53,11 @@
     <QtMoc Include="DebuggingDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="XBOFSWinQTGUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="XBOFSWinQT5GUI.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="WinUsbDeviceWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -79,11 +76,9 @@
     <QtUic Include="DebuggingDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <QtRcc Include="XBOFSWinQT5GUI.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
+    <QtUic Include="XBOFSWinQTGUI.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\XBOFS.win.ico">
@@ -96,11 +91,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="XBOFS.win.qt5.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <CopyFileToFolders Include="Resources\XBOFS.win.svg">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="XBOFS.win.qt.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="XBOFSWinQTGUI.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
 </Project>

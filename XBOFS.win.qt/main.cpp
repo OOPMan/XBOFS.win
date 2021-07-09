@@ -3,7 +3,7 @@
 #include <qmetatype.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 
-#include "XBOFSWinQT5GUI.h"
+#include "XBOFSWinQTGUI.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,8 +17,9 @@ int main(int argc, char *argv[])
     auto logger = XBOFSWin::get_logger("XBOFS.Win", sinks);
     logger->info("Logging initialised");
     // Display main window
-    XBOFSWinQT5GUI mainWindow(XBOFSWin::get_logger("XBOFSWinQT5GUI", logger->sinks()));    
+    XBOFSWinQTGUI mainWindow(XBOFSWin::get_logger("XBOFSWinQTGUI", logger->sinks()));    
     auto result = application.exec();
     logger->info("Application exit");
     return result;
 }
+

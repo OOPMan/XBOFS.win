@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>655</width>
-    <height>427</height>
+    <height>445</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -135,23 +135,6 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;VigEmBus Status:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="vigEmBusStatus">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="textFormat">
-              <enum>Qt::RichText</enum>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_3">
              <property name="text">
@@ -161,6 +144,23 @@
            </item>
            <item row="1" column="1">
             <widget class="QLabel" name="xbofsWinDeviceManagerStatus">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;VigEmBus Status:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="vigEmBusStatus">
              <property name="text">
               <string/>
              </property>
@@ -228,13 +228,14 @@
      <x>0</x>
      <y>0</y>
      <width>655</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionDriver_Manager"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuFile"/>
@@ -253,10 +254,15 @@
     <string>Exit</string>
    </property>
   </action>
+  <action name="actionDriver_Manager">
+   <property name="text">
+    <string>Driver Manager</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="XBOFSWinQT5GUI.qrc"/>
+  <include location="XBOFSWinQTGUI.qrc"/>
  </resources>
  <connections/>
 </ui>

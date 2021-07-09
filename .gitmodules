@@ -1,3 +1,6 @@
 [submodule "ViGEmClient"]
 	path = ViGEmClient
 	url = https://github.com/ViGEm/ViGEmClient
+[submodule "libwdi"]
+	path = libwdi
+	url = https://github.com/pbatard/libwdi.git
