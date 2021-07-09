@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>388</width>
-    <height>292</height>
+    <width>711</width>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,13 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Razer Atrox XBO Driver</string>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="1">
      <widget class="QPushButton" name="razerAtroxXBODriverPushButton">
       <property name="enabled">
@@ -26,6 +33,13 @@
       </property>
       <property name="text">
        <string>Install</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Madcatz TE2 XBO Driver</string>
       </property>
      </widget>
     </item>
@@ -39,38 +53,51 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Razer Atrox XBO Driver</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Madcatz TE2 XBO Driver</string>
-      </property>
-     </widget>
-    </item>
     <item row="3" column="0" colspan="2">
-     <widget class="QLabel" name="diagnosticsLabel">
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>Diagnostics</string>
       </property>
-      <property name="text">
-       <string/>
-      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="diagnosticsLabel">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
     <item row="0" column="0" colspan="2">
-     <widget class="QLabel" name="label_3">
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="autoFillBackground">
+       <bool>false</bool>
       </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Instructions:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;1. Plug device&lt;/p&gt;&lt;p&gt;2. Click button for device&lt;/p&gt;&lt;p&gt;3. Wait&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <property name="title">
+       <string>Instructions</string>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;1. Open the XBOFS.win application&lt;/p&gt;&lt;p&gt;2. Connect your Razer Atrox XBO and/or Madcatz TE2 XBO controller(s)&lt;/p&gt;&lt;p&gt;3. Click the relevant &lt;span style=&quot; font-weight:700;&quot;&gt;Install&lt;/span&gt; button&lt;/p&gt;&lt;p&gt;4. Wait while the Driver is installed. The XBOFS.win application will immediately detect the controller(s) if the Driver installs correctly. If the Driver fails to install correctly note the error code displayed in the &lt;span style=&quot; font-weight:700;&quot;&gt;Diagnostics&lt;/span&gt; area and &lt;a href=&quot;https://github.com/OOPMan/XBOFS.win/issues/new&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;create a support ticket&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>

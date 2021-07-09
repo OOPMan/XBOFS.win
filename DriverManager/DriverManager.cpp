@@ -7,10 +7,6 @@ DriverManager::DriverManager(QWidget *parent)
     ui.setupUi(this);
     connect(ui.razerAtroxXBODriverPushButton, &QPushButton::clicked, this, &DriverManager::handleRazerAtroxXBODriverPushButtonClicked);
     connect(ui.madcatzTE2DriverPushButton, &QPushButton::clicked, this, &DriverManager::handleMadcatzTE2XBODriverPushButtonClicked);
-    deviceButtonMap = std::unordered_map<std::wstring, QPushButton*>{
-        {L"usb\\vid_1532&pid_0a00", ui.razerAtroxXBODriverPushButton},
-        {L"usb\\vid_0738&pid_4a01", ui.madcatzTE2DriverPushButton}
-    };
 }
 
 int DriverManager::installDriver(QString driverName, unsigned short vendorId, unsigned short productId) 
@@ -48,11 +44,11 @@ int DriverManager::installDriver(QString driverName, unsigned short vendorId, un
 
 void DriverManager::handleRazerAtroxXBODriverPushButtonClicked(bool checked) 
 {
-    ui.diagnosticsLabel->setText(QString::number(installDriver("razer_atrox_xbo", 0x1532, 0x0A00)));
+    ui.diagnosticsLabel->setText(QString("libwdi Result Code: %1").arg(QString::number(installDriver("razer_atrox_xbo", 0x1532, 0x0A00))));
 }
 
 void DriverManager::handleMadcatzTE2XBODriverPushButtonClicked(bool checked) 
 {
-    ui.diagnosticsLabel->setText(QString::number(installDriver("madcatz_te2_xbo", 0x0738, 0x4a01)));
+    ui.diagnosticsLabel->setText(QString("libwdi Result Code: %1").arg(QString::number(installDriver("madcatz_te2_xbo", 0x0738, 0x4a01))));
 }
 
