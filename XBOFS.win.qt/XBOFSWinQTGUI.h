@@ -16,7 +16,7 @@
 #include "ui_XBOFSWinQTGUI.h"
 #include "ui_WinUsbDeviceWidget.h"
 
-const QString VERSION("v0.5.0");
+const QString VERSION("v1.0.0");
 
 using namespace XBOFSWin::settings;
 
