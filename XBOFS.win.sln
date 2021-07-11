@@ -18,9 +18,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B758C57A-D285-4991-96CF-8B166A4FE290}"
 	ProjectSection(SolutionItems) = preProject
 		docs\_config.yml = docs\_config.yml
+		bindings.md = bindings.md
 		docs\CNAME = docs\CNAME
+		debugging.md = debugging.md
 		docs\device_contributor_guide.md = docs\device_contributor_guide.md
+		faq.md = faq.md
 		docs\index.md = docs\index.md
+		quickstart.md = quickstart.md
+		docs\images\vigembus_device_manager.jpg = docs\images\vigembus_device_manager.jpg
+		docs\images\winusb_device_manager.jpg = docs\images\winusb_device_manager.jpg
+		docs\images\wrong_zip.jpg = docs\images\wrong_zip.jpg
 		docs\zadig.md = docs\zadig.md
 	EndProjectSection
 EndProject
@@ -70,6 +77,124 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XBOFS.win.qt", "XBOFS.win.q
 	ProjectSection(ProjectDependencies) = postProject
 		{E92A7135-2110-45FC-BEBD-D8207CF56D48} = {E92A7135-2110-45FC-BEBD-D8207CF56D48}
 		{7DB06674-1F4F-464B-8E1C-172E9587F9DC} = {7DB06674-1F4F-464B-8E1C-172E9587F9DC}
+		{42EADFF9-D380-47B1-BBAB-30F9AC03CF32} = {42EADFF9-D380-47B1-BBAB-30F9AC03CF32}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{ADD10A5F-41E1-4F1C-869D-FBBDECA4574A}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\vigembus_device_manager.jpg = docs\images\vigembus_device_manager.jpg
+		docs\images\winusb_device_manager.jpg = docs\images\winusb_device_manager.jpg
+		docs\images\wrong_zip.jpg = docs\images\wrong_zip.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screenshots", "screenshots", "{3D14FDE5-65F2-4B15-B985-F5C3EC88917B}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\screenshots\01.jpg = docs\images\screenshots\01.jpg
+		docs\images\screenshots\02.jpg = docs\images\screenshots\02.jpg
+		docs\images\screenshots\03.jpg = docs\images\screenshots\03.jpg
+		docs\images\screenshots\04.jpg = docs\images\screenshots\04.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zadig", "zadig", "{CF0C1672-0965-4186-852D-5F1BDD855368}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\zadig\01.jpg = docs\images\zadig\01.jpg
+		docs\images\zadig\02.jpg = docs\images\zadig\02.jpg
+		docs\images\zadig\03.jpg = docs\images\zadig\03.jpg
+		docs\images\zadig\04.jpg = docs\images\zadig\04.jpg
+		docs\images\zadig\05.jpg = docs\images\zadig\05.jpg
+		docs\images\zadig\06.jpg = docs\images\zadig\06.jpg
+		docs\images\zadig\07.jpg = docs\images\zadig\07.jpg
+		docs\images\zadig\08.jpg = docs\images\zadig\08.jpg
+		docs\images\zadig\09.jpg = docs\images\zadig\09.jpg
+		docs\images\zadig\10.jpg = docs\images\zadig\10.jpg
+		docs\images\zadig\11.jpg = docs\images\zadig\11.jpg
+		docs\images\zadig\12.jpg = docs\images\zadig\12.jpg
+		docs\images\zadig\13.jpg = docs\images\zadig\13.jpg
+		docs\images\zadig\14.jpg = docs\images\zadig\14.jpg
+		docs\images\zadig\15.jpg = docs\images\zadig\15.jpg
+		docs\images\zadig\16.jpg = docs\images\zadig\16.jpg
+		docs\images\zadig\17.jpg = docs\images\zadig\17.jpg
+		docs\images\zadig\18.jpg = docs\images\zadig\18.jpg
+		docs\images\zadig\19.jpg = docs\images\zadig\19.jpg
+		docs\images\zadig\20.jpg = docs\images\zadig\20.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "device_contributor_guide", "device_contributor_guide", "{C3A6AF10-A737-4C59-9C3F-AD3F7726826E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "check_xbo_controller_driver_version", "check_xbo_controller_driver_version", "{37B0DCFA-1496-4D22-A3F4-F68C54995619}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\device_contributor_guide\check_xbo_controller_driver_version\01.jpg = docs\images\device_contributor_guide\check_xbo_controller_driver_version\01.jpg
+		docs\images\device_contributor_guide\check_xbo_controller_driver_version\02.jpg = docs\images\device_contributor_guide\check_xbo_controller_driver_version\02.jpg
+		docs\images\device_contributor_guide\check_xbo_controller_driver_version\03.jpg = docs\images\device_contributor_guide\check_xbo_controller_driver_version\03.jpg
+		docs\images\device_contributor_guide\check_xbo_controller_driver_version\04.jpg = docs\images\device_contributor_guide\check_xbo_controller_driver_version\04.jpg
+		docs\images\device_contributor_guide\check_xbo_controller_driver_version\05.jpg = docs\images\device_contributor_guide\check_xbo_controller_driver_version\05.jpg
+		docs\images\device_contributor_guide\check_xbo_controller_driver_version\06.jpg = docs\images\device_contributor_guide\check_xbo_controller_driver_version\06.jpg
+		docs\images\device_contributor_guide\check_xbo_controller_driver_version\07.jpg = docs\images\device_contributor_guide\check_xbo_controller_driver_version\07.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data_capture", "data_capture", "{DC8FAA60-856F-4A3F-93C2-77B243B55030}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\device_contributor_guide\data_capture\01.jpg = docs\images\device_contributor_guide\data_capture\01.jpg
+		docs\images\device_contributor_guide\data_capture\02.jpg = docs\images\device_contributor_guide\data_capture\02.jpg
+		docs\images\device_contributor_guide\data_capture\03.jpg = docs\images\device_contributor_guide\data_capture\03.jpg
+		docs\images\device_contributor_guide\data_capture\04.jpg = docs\images\device_contributor_guide\data_capture\04.jpg
+		docs\images\device_contributor_guide\data_capture\05.jpg = docs\images\device_contributor_guide\data_capture\05.jpg
+		docs\images\device_contributor_guide\data_capture\06.jpg = docs\images\device_contributor_guide\data_capture\06.jpg
+		docs\images\device_contributor_guide\data_capture\07.jpg = docs\images\device_contributor_guide\data_capture\07.jpg
+		docs\images\device_contributor_guide\data_capture\08.jpg = docs\images\device_contributor_guide\data_capture\08.jpg
+		docs\images\device_contributor_guide\data_capture\09.jpg = docs\images\device_contributor_guide\data_capture\09.jpg
+		docs\images\device_contributor_guide\data_capture\10.jpg = docs\images\device_contributor_guide\data_capture\10.jpg
+		docs\images\device_contributor_guide\data_capture\11.jpg = docs\images\device_contributor_guide\data_capture\11.jpg
+		docs\images\device_contributor_guide\data_capture\12.jpg = docs\images\device_contributor_guide\data_capture\12.jpg
+		docs\images\device_contributor_guide\data_capture\13.jpg = docs\images\device_contributor_guide\data_capture\13.jpg
+		docs\images\device_contributor_guide\data_capture\14.jpg = docs\images\device_contributor_guide\data_capture\14.jpg
+		docs\images\device_contributor_guide\data_capture\15.jpg = docs\images\device_contributor_guide\data_capture\15.jpg
+		docs\images\device_contributor_guide\data_capture\16.jpg = docs\images\device_contributor_guide\data_capture\16.jpg
+		docs\images\device_contributor_guide\data_capture\17.jpg = docs\images\device_contributor_guide\data_capture\17.jpg
+		docs\images\device_contributor_guide\data_capture\18.jpg = docs\images\device_contributor_guide\data_capture\18.jpg
+		docs\images\device_contributor_guide\data_capture\19.jpg = docs\images\device_contributor_guide\data_capture\19.jpg
+		docs\images\device_contributor_guide\data_capture\20.jpg = docs\images\device_contributor_guide\data_capture\20.jpg
+		docs\images\device_contributor_guide\data_capture\21.jpg = docs\images\device_contributor_guide\data_capture\21.jpg
+		docs\images\device_contributor_guide\data_capture\22.jpg = docs\images\device_contributor_guide\data_capture\22.jpg
+		docs\images\device_contributor_guide\data_capture\23.jpg = docs\images\device_contributor_guide\data_capture\23.jpg
+		docs\images\device_contributor_guide\data_capture\24.jpg = docs\images\device_contributor_guide\data_capture\24.jpg
+		docs\images\device_contributor_guide\data_capture\25.jpg = docs\images\device_contributor_guide\data_capture\25.jpg
+		docs\images\device_contributor_guide\data_capture\26.jpg = docs\images\device_contributor_guide\data_capture\26.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rollback_xbo_controller_driver_version", "rollback_xbo_controller_driver_version", "{C8890E79-BB67-468D-AA51-6C690477E49D}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\01.jpg = docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\01.jpg
+		docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\02.jpg = docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\02.jpg
+		docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\03.jpg = docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\03.jpg
+		docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\04.jpg = docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\04.jpg
+		docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\05.jpg = docs\images\device_contributor_guide\rollback_xbo_controller_driver_version\05.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "update_xbo_controller_driver_version", "update_xbo_controller_driver_version", "{ACF34D29-ADFF-4CEE-AB81-1073DE46817A}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\device_contributor_guide\update_xbo_controller_driver_version\01.jpg = docs\images\device_contributor_guide\update_xbo_controller_driver_version\01.jpg
+		docs\images\device_contributor_guide\update_xbo_controller_driver_version\02.jpg = docs\images\device_contributor_guide\update_xbo_controller_driver_version\02.jpg
+		docs\images\device_contributor_guide\update_xbo_controller_driver_version\03.jpg = docs\images\device_contributor_guide\update_xbo_controller_driver_version\03.jpg
+		docs\images\device_contributor_guide\update_xbo_controller_driver_version\04.jpg = docs\images\device_contributor_guide\update_xbo_controller_driver_version\04.jpg
+		docs\images\device_contributor_guide\update_xbo_controller_driver_version\05.jpg = docs\images\device_contributor_guide\update_xbo_controller_driver_version\05.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{ECF6DBB0-A095-4678-8A98-3934B7330979}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{E8BAD280-B5DC-41D8-B212-C98127B3B95C}"
+	ProjectSection(SolutionItems) = preProject
+		installer\config\config.xml = installer\config\config.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "packages", "packages", "{55C06542-A5A4-49CE-95BE-FCA093346524}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "win.xbofs", "win.xbofs", "{143639FC-1F0D-419B-BEB1-62B8A246F8C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "meta", "meta", "{0DD47FB1-A72C-49D9-9691-927EBA8C4DD1}"
+	ProjectSection(SolutionItems) = preProject
+		installer\packages\win.xbofs\meta\license.txt = installer\packages\win.xbofs\meta\license.txt
+		installer\packages\win.xbofs\meta\package.xml = installer\packages\win.xbofs\meta\package.xml
 	EndProjectSection
 EndProject
 Global
@@ -431,6 +556,19 @@ Global
 		{E5A56EE0-182F-470F-8CDC-8C1B7B86EE26} = {F79DDA85-D1DA-43BB-ABB7-C9F7E415D0EB}
 		{AE83E1B4-CE06-47EE-B7A3-C3A1D7C2D71E} = {B1F3B94A-4EC4-406E-9CBF-056E1EA03DE0}
 		{5FAEF8F7-C809-4A68-862F-F8BC6E775B61} = {F79DDA85-D1DA-43BB-ABB7-C9F7E415D0EB}
+		{ADD10A5F-41E1-4F1C-869D-FBBDECA4574A} = {B758C57A-D285-4991-96CF-8B166A4FE290}
+		{3D14FDE5-65F2-4B15-B985-F5C3EC88917B} = {ADD10A5F-41E1-4F1C-869D-FBBDECA4574A}
+		{CF0C1672-0965-4186-852D-5F1BDD855368} = {ADD10A5F-41E1-4F1C-869D-FBBDECA4574A}
+		{C3A6AF10-A737-4C59-9C3F-AD3F7726826E} = {ADD10A5F-41E1-4F1C-869D-FBBDECA4574A}
+		{37B0DCFA-1496-4D22-A3F4-F68C54995619} = {C3A6AF10-A737-4C59-9C3F-AD3F7726826E}
+		{DC8FAA60-856F-4A3F-93C2-77B243B55030} = {C3A6AF10-A737-4C59-9C3F-AD3F7726826E}
+		{C8890E79-BB67-468D-AA51-6C690477E49D} = {C3A6AF10-A737-4C59-9C3F-AD3F7726826E}
+		{ACF34D29-ADFF-4CEE-AB81-1073DE46817A} = {C3A6AF10-A737-4C59-9C3F-AD3F7726826E}
+		{ECF6DBB0-A095-4678-8A98-3934B7330979} = {1E0515A5-B0AA-4821-90DE-C764A2C35AF2}
+		{E8BAD280-B5DC-41D8-B212-C98127B3B95C} = {ECF6DBB0-A095-4678-8A98-3934B7330979}
+		{55C06542-A5A4-49CE-95BE-FCA093346524} = {ECF6DBB0-A095-4678-8A98-3934B7330979}
+		{143639FC-1F0D-419B-BEB1-62B8A246F8C3} = {55C06542-A5A4-49CE-95BE-FCA093346524}
+		{0DD47FB1-A72C-49D9-9691-927EBA8C4DD1} = {143639FC-1F0D-419B-BEB1-62B8A246F8C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B5964061-63A6-4D2B-9142-462BCF9B6748}
