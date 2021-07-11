@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package>
+    <DisplayName>XBOFS.win</DisplayName>
+    <Description>XBOFS.win</Description>
+    <Version>1.0.0</Version>
+    <ReleaseDate>2021-07-10</ReleaseDate>
+    <Default>true</Default>
+    <Licenses>
+        <License name="License Agreement" file="license.txt" />
+    </Licenses>
+    <Operations>
+        <Operation name="CreateShortcut">
+            <Argument>@TargetDir@/XBOFS.win.qt.exe</Argument>
+            <Argument>@StartMenuDir@/XBOFS.win.lnk</Argument>
+            <Argument>workingDirectory=@TargetDir@</Argument>
+        </Operation>
+        <Operation name="CreateShortcut">
+            <Argument>@TargetDir@/DriverManager.exe</Argument>
+            <Argument>@StartMenuDir@/XBOFS.win Driver Manager.lnk</Argument>
+            <Argument>workingDirectory=@TargetDir@</Argument>
+        </Operation>
+        <Operation name="CreateShortcut">
+            <Argument>@TargetDir@/maintenancetool.exe</Argument>
+            <Argument>@StartMenuDir@/Uninstall XBOFS.win.lnk</Argument>
+            <Argument>workingDirectory=@TargetDir@</Argument>
+        </Operation>
+    </Operations>
+</Package>
