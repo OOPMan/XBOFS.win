@@ -116,8 +116,8 @@ XBOFSWinQTGUI::XBOFSWinQTGUI(std::shared_ptr<spdlog::logger> logger, QWidget *pa
         networkManager->head(QNetworkRequest(QUrl("https://github.com/OOPMan/XBOFS.win/releases/latest")));
     }
     // Show or hide
+    show();
     if (startMinimized) hide();
-    else show();
 }
 
 void XBOFSWinQTGUI::handleDriverManagerLinkedClick(const QString& link)
