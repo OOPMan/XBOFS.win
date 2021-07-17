@@ -203,6 +203,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "application_guide", "application_guide", "{1DA626B8-A5B9-4132-B2A9-08CD14E4DFAD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "binding_guide", "binding_guide", "{17323F45-79CA-466C-9EED-741510369FA4}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\binding_guide\add_profile.png = docs\images\binding_guide\add_profile.png
+		docs\images\binding_guide\binding_enabled_no_profile.png = docs\images\binding_guide\binding_enabled_no_profile.png
+		docs\images\binding_guide\configure_binding_dialog_01.png = docs\images\binding_guide\configure_binding_dialog_01.png
+		docs\images\binding_guide\configure_binding_dialog_02.png = docs\images\binding_guide\configure_binding_dialog_02.png
+		docs\images\binding_guide\configure_binding_dialog_03.png = docs\images\binding_guide\configure_binding_dialog_03.png
+		docs\images\binding_guide\configure_bindings_dialog.png = docs\images\binding_guide\configure_bindings_dialog.png
+		docs\images\binding_guide\guide_button_behaviour.png = docs\images\binding_guide\guide_button_behaviour.png
+		docs\images\binding_guide\profile_added.png = docs\images\binding_guide\profile_added.png
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "debugging_guide", "debugging_guide", "{7640D5E7-A64B-4111-BD77-67D06CB2F1E9}"
 EndProject
