@@ -36,21 +36,22 @@ This guide will lead you through the process of installaing VigEmBus and XBOFS.w
     should appear as so once you've moved the **Driver Manager** window over:
 ![](images/first_run_guide/xbofs.win_first_run_02.png)
 
-03. As per the instructions in the **Driver Manager** connect your Razer Atrox XBO or Madcatz TE2 XBO Controller and then click the 
+03. As per the instructions in the **Driver Manager** connect your Razer Atrox XBO or Madcatz TE2 XBO Fight Stick and then click the 
     appropriate button to install the WinUSB driver for your device. A progress dialog should appear and driver installation will begin
 ![](images/first_run_guide/xbofs.win_first_run_03.png)
 
-04. The **XBOFS.win** application will detect your controller and this is indicative of a successful WinUSB driver installation
+04. The **XBOFS.win** application will detect your Fight Stick and this is indicative of a successful WinUSB driver installation
 ![](images/first_run_guide/xbofs.win_first_run_04.png)
 
-05. Although your controller should now work correctly, it is best to wait until the progress dialog disappears before closing the 
-    **Driver Manager**. You can click the relevant tab in the **XBOFS.win** to view details of the attached controller while you wait
+05. Although your Fight Stick should now work correctly, it is best to wait until the progress dialog disappears before closing the 
+    **Driver Manager**. You can click the relevant tab in the **XBOFS.win** to view details of the attached Fight Stick while you wait
 ![](images/first_run_guide/xbofs.win_first_run_05.png)
 
 06. Once the progress dialog has disappeared the *Diagnostics* area of the **Driver Manager** will update. A result of code of 0 or -13 are
     both indicative of success. Other results may indicate an issue. You can now close the **Driver Manager** or, if you have another
-    supported controller of a different make (I.e. You own both a Razer Atrox XBO *and* a Madcatz TE2 XBO), return to step 3 and
-    repeat the WinUSB driver installation proccess for the other controller
+    supported Fight Stick of a different make (I.e. You own both a Razer Atrox XBO *and* a Madcatz TE2 XBO), return to step 3 and
+    repeat the WinUSB driver installation proccess for the other Fight Stick. If you have multiple Razer Atrox XBO *or* Madcatz TE2 XBO Fight 
+    Sticks you only need to install the WinUSB driver once per device manufacturer
 ![](images/first_run_guide/xbofs.win_first_run_06.png)
 
 07. Once the **Driver Manager** has closed the main tab in the **XBOFS.win** application should update to indicate that the WinUSB
