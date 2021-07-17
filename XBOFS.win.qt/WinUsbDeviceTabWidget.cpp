@@ -156,6 +156,7 @@ void WinUsbDeviceTabWidget::handleActiveProfileComboBoxCurrentIndexChanged(int i
 void WinUsbDeviceTabWidget::handleAddProfilePushButtonClicked(bool checked) {
     bool ok;
     QString profileName = QInputDialog::getText(this, "Add Profile", "Profile Name", QLineEdit::Normal, "", &ok);
+    if (profileName.length() > 255) profileName.resize(255);
     if (ok && !profileName.isEmpty() && ui.activeProfileComboBox->findText(profileName) == -1) {
         ui.activeProfileComboBox->addItem(profileName);
         auto profileDeletedKey = QString("%1/%2").arg(profileName, DELETED);
