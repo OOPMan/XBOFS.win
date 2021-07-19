@@ -1,156 +1,60 @@
-﻿# XBOFS.win v0.4.1
-**XBOFS.win** allows you to use your **XBO Fight Stick** controller on Windows without having to install ancient, beta 
-drivers and rewire buttons
+﻿# XBOFS.win v1.0.0
+**XBOFS.win** allows you to use your **XBO Fight Stick** on Windows without having to install ancient, beta XBO drivers and 
+rewire buttons. 
 
-# Features
-* All buttons on supported controllers work, no rewiring or fiddling required
-* Multiple supported controllers can be connected
-* Supported controllers work in Steam, Windows Store games, etc
-* QT5 GUI
+The application achieves this by communicating directly with your **XBO Fight Stick** using a generic WinUSB driver and 
+forwarding the input data from the controls to a **Virtual XBox 360 Controller** provided by **VigEmBus**. 
 
+From the perspective of games and other software, the **Virtual XBox 360 Controller** is identical to a real controller and 
+**XBOFS.win** is thus able to achieve maximum compatiblity with minimum overhead.
 
-# Supported controllers
+## Supported Fight Sticks
 * Razer Atrox XBO
 * Madcatz TE2 XBO
 
+## Features
+* All buttons on supported fight sticks work, no rewiring or fiddling required!
+* Multiple supported fight sticks can be connected
+* Supported fight sticks work in Steam, Windows Store games, etc
+* A proper Installer and Driver Manager tool to get you up and running fast!
+* Comprehensive profile-based control binding system
+* Additional debugging features
+* QT6 GUI
 
-## Contents
-1. [Requirements](#requirements)
-   1. [Supported controllers](#supported-controllers)
-2. [Screenshots and Videos](#screenshots-and-videos)
-3. [Installation](#installation)
-4. [Updating](#updating)
-5. [Usage](#usage)
-6. [Uninstallation](#uninstallation)
-7. [Support](#support)
-8. [FAQ](#faq)
-9. [Credits](#credits)
+## Quickstart
+1. Download and install the latest version of [VigEmBus](https://github.com/ViGEm/ViGEmBus/releases/latest)
+2. Download and install the latest version of [XBOFS.win](https://github.com/OOPMan/XBOFS.win/releases/latest)
+3. Run **XBOFS.win** and use the **Driver Manager** to install the necessary WinUSB Driver(s) for your **XBO Fight Stick(s)**
+4. **XBOFS.win** should detect your **XBO Fight Stick(s)** and once it does you're good to go! 
 
+#### Don't forget...
+The **XBOFS.win** application needs to be running in order for your Controller to work so it's a good idea to set it to start
+automatically with Windows!
 
-## Requirements
+#### Need more detail?
+For a more comprehensive and in-depth installation and first-run guide, [click here!](/installation_guide.md)
 
-1. Windows 7 or newer
-2. 1 or more supported controllers
+If you would like a guided tour of the application in general, [click here.](/application_guide.md)
 
+## Control Binding
+**XBOFS.win** features a very comprehensive control binding system. Named Profiles can be used to easily switch between different configurations
+and each configuration supports two sets of bindings that can be switched between using the XBox Guide Button.
 
-## Screenshots and Videos
+Read the [Control Binding](/binding_guide.md) page to learn more about why you might want to use it, what you can do with it and how to configure it.
 
-Initial program state when run:
-![](images/screenshots/01.jpg)
-Program state after a supported controller is connected:
-![](images/screenshots/02.jpg)
-Device manager displays the real connected controller as well as the virtual XB360 controller
-![](images/screenshots/03.jpg)
-Steam only sees the virtual XB360 controller
-![](images/screenshots/04.jpg)
+## Debugging
+Another useful feature is the debugging window. When this feature is enabled you can view application performance data and in-depth as well
+as a complete summary of the data being received from your controller and sent to the virtual XB360 controller.
 
-## Installation
+Read the [Debugging](/debugging_guide.md) page to learn more about this feature.
 
-01. Browse  to [https://github.com/ViGEm/ViGEmBus/releases/latest](https://github.com/ViGEm/ViGEmBus/releases/latest) and download the 
-    latest **VigEmBus** installer. If you are on Windows 7 you also need to download the files in the Windows 7 Prerequisites section
-02. Install **VigEmBus** and reboot
-03. Browse to [https://github.com/OOPMan/XBOFS.win/releases/latest](https://github.com/OOPMan/XBOFS.win/releases/latest) and download the 
-    latest **XBOFS.win.zip** bundle. Extract this bundle somewhere. I recommend the root of your C: drive
-04. Browse to [https://zadig.akeo.ie](https://zadig.akeo.ie) and download the latest version of **ZaDig** to the *XBOFS.win* folder extracted in the previous step
-05. Open the [ZaDig WinUSB driver installation guide](/zadig.md) and follow the instructions there to install 
-    a **WinUSB** driver for your supported controller. If you own multiple different supported controllers then you must repeat step 5
-    for each different supported controller
-
-### Optional
-01. Install OpenSSL from [http://slproweb.com/products/Win32OpenSSL.html](http://slproweb.com/products/Win32OpenSSL.html) in order to
-    enable the update check functionality. Without this installed the application is unable to check for updates  
-
-
-## Updating
-
-01. Exit **XBOFS.win**
-02. Browser to [https://github.com/OOPMan/XBOFS.win/releases/latest](https://github.com/OOPMan/XBOFS.win/releases/latest) and download 
-    the latest **XBOFS.win.zip** bundle. Extract this bundle over your existing folder containg **XBOFS.win**, overwriting any files if asked
-03. Restart your computer
-
-
-## Usage
-
-01. Open the folder that you extracted the **XBOFS.win.zip** bundle into
-02. Run **XBOFS.win.qt5.exe** 
-03. Connect your supported controller(s)
-04. Wait for the interface to indicate your device(s) is **Reading input...**. You may 
-    see a pop-up notification about a new XB360 controller(s) being detected, this is normal
-05. You can now minimize the **XBOFS.win.qt5.exe** window if you so choose. The application will minimise to the system tray 
-    by default
-06. You should now be able to play games using your supported controller(s). Any game that supports a standard XB360 
-    controller should work, regardless of whether it is a Steam game, Windows store game or any other platform that 
-    supports the XB360 controller. Note that the input from the stick is mapped to the D-Pad on the virtual XB360 
-    controller not the analog stick
-07. When you are done playing simply unplug your device(s) and pack them away. You can leave the application running minimized
-    as it does not consume a large amount of memory or CPU time. You can exit the application using the *File* menu or the tray icon
-
-
-## Uninstallation
-
-01. Hit *Win* \+ *R*
-02. Enter *devmgmt.msc* in the Run box and press enter
-03. Click *View* and then click *Show hidden devices*
-04. Locate the item in the tree labelled *Universal Serial Bus devices*
-05. Right-click the item associated with your supported controller and click *Uninstall device*
-06. In the dialog box, mark the checkbox labelled *Delete the driver software for this device*
-07. Click *Uninstall*
-08. Replug your supported controller. It will now use whichever driver was previously configured for it
-09. Delete the folder you extracted the **XBOFS.win.zip** bundle into  
-
-
-## Support
-
-##### I extracted **XBOFS.win.zip** but can't find **XBOFS.win.qt5.exe**
-You may have accidentally download the source code. If the contents of the zip file look like this:
-
-![Source Code](images/wrong_zip.jpg)
-then you have downloaded the source code by mistake. Head back to step 3 of the [installation guide](#installation) and make sure the download the file **XBOFS.win.zip**.
-Do not download **Source Code (zip)** or **Source Code (tar.gz)**, these do not contain the application.
-
-##### XBOFS.win doesn't seem to be able to detect my controller
-This usually indicates an issue with the **WinUSB** driver installation. Please check the [ZaDig WinUSB driver installation guide](/zadig.md) and confirm
-that when you plug in your controller, **Device Manager** updates to a state as displayed (controller name may differ):
-
-![Device Manager](images/winusb_device_manager.jpg)
-If this does not happen then you should follow the guide from step 1 to see if it fixes the problem. If your problem is still not fixed then please [submit an issue](https://github.com/OOPMan/XBOFS.win/issues)
-
-##### XBOFS.win doesn't seem to be able to create a virtual XB360 Controller
-This usually indicates an issue with the **VigEmBus** driver installation. Please confirm that the **Virtual Gamepad Emulation Bus** item appears in **Device Manager**
-under the **System Devices** node:
-
-![Device Manager](images/vigembus_device_manager.jpg)
-If this item is missing you have not installed **VigEmBus**. Check the [installation guide](#installation) for details on how to do so. If your problem is still not fixed then please [submit an issue](https://github.com/OOPMan/XBOFS.win/issues)
-
-##### When I press buttons on my controller Windows acts like I am hitting keyboard keys or clicking the mouses
-This problem occurs when **XBox Configuration Support** is enabled in **Steam**:
-1. Open **Steam**
-2. Click *Steam* -> *Settings*
-3. Click *Controller* -> *General Controller Settings*
-4. Uncheck *Xbox Configuration Support*
-5. Click *Back*
-The controller should now work as expected. If not, please [submit an issue](https://github.com/OOPMan/XBOFS.win/issues)
-
-##### I upgraded to a new version of XBOFS.win and now RetroArch isn't recognising my controllers
-This issue occurs if you were running the previous version, exited, upgraded to a new version, started the new version and then started **RetroArch**. 
-In order to solve this issue you should reboot after upgrading **XBOFS.win**. If this does not fix the issue, please [submit an issue](https://github.com/OOPMan/XBOFS.win/issues)
-
-##### My problem isn't listed here
-Please do one of the following:
-1. [Submit an issue](https://github.com/OOPMan/XBOFS.win/issues) on GitHub
-2. [Message](https://www.reddit.com/message/compose/?to=OOPManZA) me on Reddit
-3. Join the XBOFS.win [subreddit](https://www.reddit.com/r/XBOFS/) and post a question
-4. Join the [Nefarius Software Solutions](https://discord.vigem.org/) Discord server and ping **@OOPMan**
-
+## Troubleshooting
+If you run into issues the [Troubleshooting](/troubleshooting.md) page is the first place to read to see if your question has already been
+answered. You'll also find details on how to submit a support ticket.
 
 ## FAQ
-
-##### Why did you develop this piece of software?
-Long story short, I bought a Razer Atrox on special and rather than return it I decided to see if I could work out why it didn't work without jumping
-through a lot of hoops. The problemn ended up being solvable and here we are. More details can be found [here](https://forums.vigem.org/topic/282/xbo-arcade-sticks-vigem-and-a-whole-ton-of-fun/)
-
-##### Can you support my device?
-It's very likely. Take a look at the [device contributor guide](/device_contributor_guide.md) to see how you can collect the data I need to do so...
+The [FAQ](/faq.md) page contains answer to some commonly asked questions that don't fall under trouble-shooting, along with a bit of general
+information on this project.
 
 ## Credits
 
