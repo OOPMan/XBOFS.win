@@ -32,7 +32,8 @@ The **XBOFS.win** application needs to be running in order for your Controller t
 automatically with Windows!
 
 #### Need more detail?
-For a more comprehensive and in-depth installation and first-run guide, [click here!](/installation_guide.md)
+For a more comprehensive and in-depth installation and first-run guide, [click here!](/installation_guide.md) If you're an
+existing user then you should also read the installation guide as it will inform you as to the upgrade process.
 
 If you would like a guided tour of the application in general, [click here.](/application_guide.md)
 
