@@ -7,7 +7,7 @@ through a lot of hoops. The problemn ended up being solvable and here we are. Mo
 ## Can you support my device?
 It's very likely. Take a look at the [device contributor guide](/device_contributor_guide.md) to see how you can collect the data I need to do so...
 
-## How do I uninstall the WinUSB Device Driver(s)
+## How do I uninstall the WinUSB Device Driver(s)?
 01. Hit *Win* \+ *R*
 02. Enter *devmgmt.msc* in the Run box and press enter
 03. Click *View* and then click *Show hidden devices*
@@ -15,5 +15,12 @@ It's very likely. Take a look at the [device contributor guide](/device_contribu
 05. Right-click the item associated with your **XBO Fight Stick** and click *Uninstall device*
 06. In the dialog box, mark the checkbox labelled *Delete the driver software for this device*
 07. Click *Uninstall*
-08. Replug your supported controller. It will now use whichever driver was previously configured for it
+09. If prompted by Windows to restart, do so
+08. Replug your **XBO Fight Stick**. It will now use whichever driver was previously configured for it
 
+## How do I uninstall **XBOFS.win**?
+01. Open *Windows Settings*
+02. Click the *Apps* item
+03. Locate the **XBOFS.win** item in the *Apps & Features* list
+04. Click the **XBOFS.win** item
+05. Click the *Uninstall* button 

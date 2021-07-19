@@ -248,6 +248,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "first_run_guide", "first_ru
 		docs\images\first_run_guide\xbofs.win_first_run_10.png = docs\images\first_run_guide\xbofs.win_first_run_10.png
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{8BA096C6-9C97-4F6A-9992-B86389957D59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_DLL|Win32 = Debug_DLL|Win32
@@ -625,6 +627,7 @@ Global
 		{7640D5E7-A64B-4111-BD77-67D06CB2F1E9} = {ADD10A5F-41E1-4F1C-869D-FBBDECA4574A}
 		{4105BE91-8ADE-431F-BB64-A71048CF301C} = {ADD10A5F-41E1-4F1C-869D-FBBDECA4574A}
 		{22E13D1D-2BBC-4588-98FF-8A4B62DB5922} = {ADD10A5F-41E1-4F1C-869D-FBBDECA4574A}
+		{8BA096C6-9C97-4F6A-9992-B86389957D59} = {B758C57A-D285-4991-96CF-8B166A4FE290}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B5964061-63A6-4D2B-9142-462BCF9B6748}
