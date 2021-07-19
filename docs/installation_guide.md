@@ -64,7 +64,7 @@ This guide will lead you through the process of installaing VigEmBus and XBOFS.w
 06. Once the progress dialog has disappeared the *Diagnostics* area of the **Driver Manager** will update. A result of code of 0 or -13 are
     both indicative of success. Other results may indicate an issue. You can now close the **Driver Manager** or, if you have another
     supported **XBO Fight Stick** of a different make (I.e. You own both a Razer Atrox XBO *and* a Madcatz TE2 XBO), return to step 3 and
-    repeat the WinUSB driver installation proccess for the other Fight Stick. If you have multiple Razer Atrox XBO *or* Madcatz TE2 XBO Fight 
+    repeat the WinUSB driver installation process for the other Fight Stick. If you have multiple Razer Atrox XBO *or* Madcatz TE2 XBO Fight 
     Sticks you only need to install the WinUSB driver once per device manufacturer
 ![](images/first_run_guide/xbofs.win_first_run_06.png)
 

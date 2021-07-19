@@ -1,6 +1,6 @@
 # Device Contributor Guide
 
-This document aims to provide users of unsuppored XBO fight stick controllers with the tools and knowledge they need to assist in the 
+This document aims to provide users of unsupported XBO fight sticks with the tools and knowledge they need to assist in the 
 process of adding support for new devices
 
 
@@ -26,7 +26,7 @@ process of adding support for new devices
 
 ## Preparation
 Before you can start capturing data for your device it is necessary to ensure it is not configured to use the XBO Controller beta drivers
-from 2014. If these drivers are active for your device then Device Montioring Studio will be unable to see the controller.
+from 2014. If these drivers are active for your device then Device Monitoring Studio will be unable to see the controller.
 
 ##### In order to determine whether you are using the beta drivers
 01. Press *Win* + *R* to open the *Run* dialog
@@ -98,7 +98,7 @@ from 2014. If these drivers are active for your device then Device Montioring St
 
 ## Data Capture
 
-01. Plug in your controller. It is also recommended to unplug any other controllers
+01. Plug in your **XBO Fight Stick**. It is also recommended to unplug any other controllers
 02. Confirm the controller is detected correctly using *Device Manager*
 
     ![](images/device_contributor_guide/data_capture/01.jpg)
@@ -184,7 +184,7 @@ from 2014. If these drivers are active for your device then Device Montioring St
     are not sure whether you pressed diagonally, try again and check the data in the *Complete* tab
 
 29. Once you have collected data on all the buttons and stick directions you can close *Device Monitoring Studio* and make sure your data capture text file is 
-    saved. Not that you **DO NOT** need to capture diagonal directions on the stick or any buttom press combinations (E.g. *X* and *Y* together). All that is
+    saved. Not that you **DO NOT** need to capture diagonal directions on the stick or any button press combinations (E.g. *X* and *Y* together). All that is
     required are the single button/direction values
    
 

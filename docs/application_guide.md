@@ -7,8 +7,8 @@ Let's start with the Main tab...
 ![](images/application_guide/main_tab.png)
 
 1. The *Info* area displays basic information about the application along with some clickable links
-2. The *Status* area displays information pertaining to the XBOFS.win WinUSB driver and Device Manager as well as VigEmBus
-3. This checkbox controls whether the application is started automatically when you login to Windows
+2. The *Status* area displays information pertaining to the **XBOFS.win WinUSB Driver** and Device Manager as well as **VigEmBus**
+3. This checkbox controls whether the application is started automatically when you log in to Windows
 4. This checkbox determines whether the application minimizes to the taskbar or the system tray
 5. This checkbox determines whether the application will check for updates on start-up. In order for this functionality to
    work the [Win64 OpenSSL Light](http://slproweb.com/products/Win32OpenSSL.html) distribution needs to be installed

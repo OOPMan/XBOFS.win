@@ -6,9 +6,9 @@ The application achieves this by communicating directly with your **XBO Fight St
 forwarding the input data from the controls to a **Virtual XBox 360 Controller** provided by **VigEmBus**. 
 
 From the perspective of games and other software, the **Virtual XBox 360 Controller** is identical to a real controller and 
-**XBOFS.win** is thus able to achieve maximum compatiblity with minimum overhead.
+**XBOFS.win** is thus able to achieve maximum compatibility with minimum overhead.
 
-## Supported Fight Sticks
+## Supported XBO Fight Sticks
 * Razer Atrox XBO
 * Madcatz TE2 XBO
 
@@ -28,7 +28,7 @@ From the perspective of games and other software, the **Virtual XBox 360 Control
 4. **XBOFS.win** should detect your **XBO Fight Stick(s)** and once it does you're good to go! 
 
 #### Don't forget...
-The **XBOFS.win** application needs to be running in order for your Controller to work so it's a good idea to set it to start
+The **XBOFS.win** application needs to be running in order for your Controller to work, so it's a good idea to set it to start
 automatically with Windows!
 
 #### Need more detail?
@@ -44,7 +44,7 @@ Read the [Control Binding](/binding_guide.md) page to learn more about why you m
 
 ## Debugging
 Another useful feature is the debugging window. When this feature is enabled you can view application performance data and in-depth as well
-as a complete summary of the data being received from your controller and sent to the virtual XB360 controller.
+as a complete summary of the data received from your **XBO Fight Stick** and sent to the **Virtual XBox 360 Controller**.
 
 Read the [Debugging](/debugging_guide.md) page to learn more about this feature.
 

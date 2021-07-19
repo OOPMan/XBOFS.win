@@ -11,7 +11,7 @@ always be loaded for that device.
 
 The Control Binding system also introduces the concept of alternate bindings. Simply put, this enables you to configure two different
 bindings for a given control on your **XBO Fight Stick**. Access to the alternate binding for a given control is provided by the
-**XBox Guide Button** which has been repurposed to function as a modifer button, similar to the *Shift* key on your keyboard.
+**XBox Guide Button** which has been repurposed to function as a modifier button, similar to the *Shift* key on your keyboard.
 
 The utility of the Control Binding system may not immediately obvious but once you consider that whereas a **XBO Fight Stick** provides 
 15 unique inputs (11 buttons and 4 directions) the **Virtual XBox 360 Controller** has many more (2 analog thumbsticks, 2 analog triggers, 
@@ -25,7 +25,7 @@ in v1.0.0 of **XBOFS.win** there is no impact terms of performance when using th
 Without further ado, let's explore!
 
 ## First Steps
-In order to enable the Control Binding sytem for your **XBO Fight Stick** the *Binding* checkbox needs to be enabled in the *Device tab* 
+In order to enable the Control Binding system for your **XBO Fight Stick** the *Binding* checkbox needs to be enabled in the *Device tab* 
 for your **XBO Fight Stick** and a Profile needs to be added.
 
 ![](images/binding_guide/binding_enabled_no_profile.png)
@@ -34,7 +34,7 @@ for your **XBO Fight Stick** and a Profile needs to be added.
 2. The *Add Profile* button
 
 Clicking the Add Profile button will present a dialog allowing you to enter a name for the Profile. The name of your profile must not
-exceed 256 characterd, it it does the trailing characters will be removed.
+exceed 256 characters, if it does the trailing characters will be removed.
 
 ![](images/binding_guide/add_profile.png)
 
@@ -117,7 +117,7 @@ When *Bind* is checked the remaining controls in the dialog become enabled:
 ![](images/binding_guide/configure_binding_dialog_02.png)
 
 1. The *D-Pad* section handles the binding of D-Pad directional inputs
-2. The *Buttons* section handles the binding of the the large majority of the other button-style inputs, including the
+2. The *Buttons* section handles the binding of the large majority of the other button-style inputs, including the
    Guide Button
 3. The *Left Analog Stick* section handles binding of the X and Y axis of the left thumbstick as well as the left thumbstick button 
    input
@@ -129,18 +129,18 @@ When *Bind* is checked the remaining controls in the dialog become enabled:
 * The minimum value for a given axis is -32768
  
   * For the X-axis this corresponds to the left-most position of the thunmbstick
-  * For the Y-axis this corresponnds to the bottom-most position of the thumbstick
+  * For the Y-axis this corresponds to the bottom-most position of the thumbstick
   
 * The maximum value for a given axis is  32767
   
   * For the X-axis this corresponds to the right-most position of the thumbstick
-  * The the Y-axis this corresponds to the upper-most position of the thumbstick
+  * For the Y-axis this corresponds to the upper-most position of the thumbstick
   
 * The spinner controls on the inputs increment/decrement the value in steps of 8192
 
 ##### Notes on the Triggers and Bumpers section
 * The minimum trigger strength value is 0, which corresponds to the trigger being free
-* The maximum trigger streingth value is 255, which corresponds to the trigger beind held completely
+* The maximum trigger strength value is 255, which corresponds to the trigger being held completely
 * The spinner controls on the inputs increment/decrement the value in steps of 255
 
 ## Sample Configurations
@@ -174,8 +174,8 @@ overriding other bindings which annoyed me a lot.
   * RB is set to Right Analog stick X-axis -32768
   * LB is set to Right Analog stick X-axis 32767
 
-The purpose of this configuraiton is to allow the Fight Stick to be used to navigate in the Krypt
-mode. The Kyrpt mode uses the Left Analog Stick for movement while the Right Analog Stick contols the
+The purpose of this configuration is to allow the Fight Stick to be used to navigate in the Krypt
+mode. The Kyrpt mode uses the Left Analog Stick for movement while the Right Analog Stick controls the
 camera. Looking up and down is not that important but being able to rotate the view left and right is.
 This configuration allows you to switch to the Alternate bindings and navigate the game world in the
 Krypt mode without needing to plug in a normal game controller. When you want to play the rest of the
