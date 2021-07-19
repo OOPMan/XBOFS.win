@@ -314,3 +314,8 @@ compile_commands.json
 # Ignore libwdi dependencies
 libusb-win32
 libusbK
+
+# Ignore installer artifacts
+xbofs.win.7z
+XBOFS.win.1.0.0.exe
+
