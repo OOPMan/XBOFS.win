@@ -28,7 +28,7 @@ From the perspective of games and other software, the **Virtual XBox 360 Control
 4. **XBOFS.win** should detect your **XBO Fight Stick(s)** and once it does you're good to go! 
 
 #### Don't forget...
-The **XBOFS.win** application needs to be running in order for your Controller to work, so it's a good idea to set it to start
+The **XBOFS.win** application needs to be running in order for your **XBO Fight Stick** to work, so it's a good idea to set it to start
 automatically with Windows!
 
 #### Need more detail?
