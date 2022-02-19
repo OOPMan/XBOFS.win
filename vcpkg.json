@@ -1,0 +1,15 @@
+{
+  "name": "xbofs-win",
+  "version": "1.0.0",
+  "dependencies": [
+    {
+      "name": "fmt",
+      "version>=": "7.1.3#4"
+    },
+    {
+      "name": "spdlog",
+      "version>=": "1.8.5#2"
+    }
+  ],
+  "builtin-baseline": "08214e18eeb146542944067c35d77faca8962be5"
+}
