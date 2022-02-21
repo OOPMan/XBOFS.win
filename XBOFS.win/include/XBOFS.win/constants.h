@@ -1,6 +1,6 @@
 #pragma once
-#include <XBOFS.win/pch.h>
-#include <ViGEm/Client.h>
+#include "pch.h"
+#include "ViGEm/Client.h"
 #include <qstring.h>
 
 namespace XBOFSWin { 

@@ -12,9 +12,7 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <qmetatype.h>
 
-#include "device.h"
-#include "utils.h"
-#include "stdafx.h"
+
 
 
 Q_DECLARE_METATYPE(std::wstring)
