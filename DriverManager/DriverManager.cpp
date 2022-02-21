@@ -21,10 +21,11 @@ int DriverManager::installDriver(QString driverName, unsigned short vendorId, un
     struct wdi_options_install_driver installOptions = { 
         (HWND)winId() 
     };
+    char deviceGUID[] = "{5ACF052A-3BE5-46AE-905E-356BA17671BD}";
     struct wdi_options_prepare_driver prepareOptions = { 
         0,
         NULL,
-        "{5ACF052A-3BE5-46AE-905E-356BA17671BD}"
+        deviceGUID
     };
     struct wdi_options_create_list cl_options = { 1 };
     struct wdi_device_info *device, *list = NULL;
