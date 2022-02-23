@@ -1,7 +1,7 @@
 #pragma once
-#include <XBOFS.win/pch.h>
-#include <XBOFS.win/constants.h>
-#include <ViGEm/Client.h>
+#include "pch.h"
+#include "XBOFS.win/constants.h"
+#include "ViGEm/Client.h"
 #include <qobject.h>
 #include <qstring.h>
 #include <qregularexpression.h>

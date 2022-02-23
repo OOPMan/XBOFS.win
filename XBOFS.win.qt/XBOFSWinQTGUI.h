@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 #include <XBOFS.win/WinUsbDeviceManager.h>
 #include <XBOFS.win/WinUsbDevice.h>
+#include <XBOFS.win/utils.h>
 
 #include <qmainwindow.h>
 #include <qnetworkaccessmanager.h>

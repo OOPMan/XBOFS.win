@@ -1,5 +1,5 @@
-#include "XBOFS.win\pch.h"
-
+#include "pch.h"
+#include "XBOFS.win/device.h"
 #include <cfgmgr32.h>
 
 HRESULT

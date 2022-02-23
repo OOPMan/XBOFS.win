@@ -1,5 +1,6 @@
 #pragma once
-#include <XBOFS.win/pch.h>
+#include "pch.h"
+#include "device.h"
 
 namespace XBOFSWin {
 

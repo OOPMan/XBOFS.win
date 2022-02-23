@@ -1,5 +1,6 @@
-#include "XBOFS.win\WinUsbDeviceManager.h"
-#include "XBOFS.win\utils.h";
+#include "pch.h"
+#include "XBOFS.win/WinUsbDeviceManager.h"
+#include "XBOFS.win/utils.h"
 #include <qabstracteventdispatcher.h>
 #include <qeventloop.h>
 #include <fmt/core.h>
@@ -140,7 +141,7 @@ std::set<std::wstring> WinUsbDeviceManager::retrieveDevicePaths() {
         }
     } while (configurationManagerResult == CR_BUFFER_SMALL);
     // Handle errors
-    if (resultHandle != S_OK || deviceInterfaceList == TEXT('\0')) {
+    if (resultHandle != S_OK || (*deviceInterfaceList) == _T('\0')) {
         // TODO: Log error?        
     }
     else {        
