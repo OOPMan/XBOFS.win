@@ -10,6 +10,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <PropertyGroup>
+    <XBOFS_WIN_VERSION>v1.1.0</XBOFS_WIN_VERSION>
+  </PropertyGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
@@ -106,7 +109,10 @@
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
     <PostBuildEvent>
-      <Command>set VCINSTALLDIR=$(VCInstallDir)&amp;&amp; cd $(OutputPath) &amp;&amp; $(QTDIR)\$(QtPathBinaries)\windeployqt --debug $(TargetFileName)</Command>
+      <Command>set VCINSTALLDIR=$(VCInstallDir) &amp;&amp; cd $(OutputPath) &amp;&amp; $(QTDIR)\$(QtPathBinaries)\windeployqt --debug $(TargetFileName)
+del $(SolutionDir)\installer\packages\win.xbofs\data\xbofs.win.7z
+cd $(OutputPath) &amp;&amp; $(QTDIR)\..\..\Tools\QtInstallerFramework\4.1\bin\archivegen $(SolutionDir)\installer\packages\win.xbofs\data\xbofs.win.7z  .
+cd $(OutputPath) &amp;&amp; $(QTDIR)\..\..\Tools\QtInstallerFramework\4.1\bin\binarycreator -c $(SolutionDir)\installer\config\config.xml -p $(SolutionDir)\installer\packages $(SolutionDir)\installer\$(SolutionName).$(XBOFS_WIN_VERSION).debug.installer.exe </Command>
     </PostBuildEvent>
     <CopyFileToFolders>
       <DestinationFolders>$(OutDir)Resources</DestinationFolders>
@@ -149,7 +155,10 @@
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
     <PostBuildEvent>
-      <Command>set VCINSTALLDIR=$(VCInstallDir)&amp;&amp; cd $(OutputPath) &amp;&amp; $(QTDIR)\$(QtPathBinaries)\windeployqt --release $(TargetFileName)</Command>
+      <Command>set VCINSTALLDIR=$(VCInstallDir) &amp;&amp; cd $(OutputPath) &amp;&amp; $(QTDIR)\$(QtPathBinaries)\windeployqt --release $(TargetFileName)
+del $(SolutionDir)\installer\packages\win.xbofs\data\xbofs.win.7z
+cd $(OutputPath) &amp;&amp; $(QTDIR)\..\..\Tools\QtInstallerFramework\4.1\bin\archivegen $(SolutionDir)\installer\packages\win.xbofs\data\xbofs.win.7z  .
+cd $(OutputPath) &amp;&amp; $(QTDIR)\..\..\Tools\QtInstallerFramework\4.1\bin\binarycreator -c $(SolutionDir)\installer\config\config.xml -p $(SolutionDir)\installer\packages $(SolutionDir)\installer\$(SolutionName).$(XBOFS_WIN_VERSION).installer.exe</Command>
     </PostBuildEvent>
     <CopyFileToFolders>
       <DestinationFolders>$(OutDir)Resources</DestinationFolders>
