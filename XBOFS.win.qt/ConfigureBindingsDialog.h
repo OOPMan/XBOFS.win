@@ -18,6 +18,7 @@ public:
     ~ConfigureBindingsDialog();
 
 public slots:
+    void accept();
     void open(QString vendorId, QString productId, QString product, QString serialNumber, QString profile, bool alternativeBindings);
     void handleStickUpPushButtonClicked(bool checked = false);
     void handleStickDownPushButtonClicked(bool checked = false);
@@ -32,7 +33,8 @@ public slots:
     void handleLBButtonPushButtonClicked(bool checked = false);
     void handleLTButtonPushButtonClicked(bool checked = false);
     void handleViewButtonPushButtonClicked(bool checked = false);
-    void handleStartButtonPushButtonClicked(bool checked = false);
+    void handleStartButtonPushButtonClicked(bool checked = false);    
+    void handleEnableSOCDCleaningCheckBoxStateChanged(int state);
 
 protected:    
     QString vendorId;
@@ -43,4 +45,5 @@ protected:
     bool alternativeBindings; 
     Ui::ConfigureBindingsDialog ui;
     ControlBindingDialog* controlBindingDialog;
+    QSettings settings = QSettings(ORGANIZATION, APPLICATION);
 };

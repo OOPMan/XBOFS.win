@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>883</width>
-    <height>297</height>
+    <height>306</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -124,18 +124,18 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>SOCD Configuration</string>
+      <string>SOCD Cleaning</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QCheckBox" name="enableSOCDConfigurationCheckBox">
+       <widget class="QCheckBox" name="enableSOCDCleaningCheckBox">
         <property name="text">
          <string>Enabled</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QFrame" name="frame">
+       <widget class="QFrame" name="SOCDCleaningFrame">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -149,12 +149,12 @@
          <item row="0" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>Up + Down Resolution</string>
+            <string>Clean Up + Down to</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="upDownResolutionComboBox">
+          <widget class="QComboBox" name="cleanUpDownToComboBox">
            <item>
             <property name="text">
              <string>Neutral</string>
@@ -175,12 +175,12 @@
          <item row="1" column="0">
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Left + Right Resolution</string>
+            <string>Clean Left + Right to</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QComboBox" name="leftRightResolutionComboBox">
+          <widget class="QComboBox" name="cleanLeftRightToComboBox">
            <item>
             <property name="text">
              <string>Neutral</string>
