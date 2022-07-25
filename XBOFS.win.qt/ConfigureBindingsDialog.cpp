@@ -46,10 +46,10 @@ void ConfigureBindingsDialog::open(QString vendorId, QString productId, QString 
     setWindowTitle(QString("%1: Configuring %2 for %3 (S/N: %4)").arg(APPLICATION, prefix, product, serialNumber)); 
     while (settings.group() != "") settings.endGroup();
     auto group = QString("%1/%2/%3/%4/%5").arg(vendorId, productId, serialNumber, profile, QString::number(alternativeBindings));
+    settings.beginGroup(group);
     ui.enableSOCDCleaningCheckBox->setChecked(settings.value(SOCD_CLEANING_ENABLED, false).toBool());
     ui.cleanUpDownToComboBox->setCurrentIndex(settings.value(SOCD_CLEAN_UP_DOWN_TO, ui.cleanUpDownToComboBox->currentIndex()).toInt());
     ui.cleanLeftRightToComboBox->setCurrentIndex(settings.value(SOCD_CLEAN_LEFT_RIGHT_TO, ui.cleanLeftRightToComboBox->currentIndex()).toInt());
-    settings.beginGroup(group);
     QDialog::open();
 }
 
