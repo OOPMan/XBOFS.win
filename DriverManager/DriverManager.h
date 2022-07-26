@@ -13,6 +13,7 @@ public:
 public slots:
     void handleRazerAtroxXBODriverPushButtonClicked(bool checked = false);
     void handleMadcatzTE2XBODriverPushButtonClicked(bool checked = false);
+    void handleVictrixProFSXBODriverPushButtonClicked(bool checked = false);
 
 protected:
     Ui::DriverManagerClass ui;

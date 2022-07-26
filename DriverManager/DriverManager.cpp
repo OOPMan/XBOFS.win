@@ -7,6 +7,7 @@ DriverManager::DriverManager(QWidget *parent)
     ui.setupUi(this);
     connect(ui.razerAtroxXBODriverPushButton, &QPushButton::clicked, this, &DriverManager::handleRazerAtroxXBODriverPushButtonClicked);
     connect(ui.madcatzTE2DriverPushButton, &QPushButton::clicked, this, &DriverManager::handleMadcatzTE2XBODriverPushButtonClicked);
+    connect(ui.victrixProFSXBODriverPushButton, &QPushButton::clicked, this, &DriverManager::handleVictrixProFSXBODriverPushButtonClicked);
 }
 
 int DriverManager::installDriver(QString driverName, unsigned short vendorId, unsigned short productId) 
@@ -53,3 +54,7 @@ void DriverManager::handleMadcatzTE2XBODriverPushButtonClicked(bool checked)
     ui.diagnosticsLabel->setText(QString("libwdi Result Code: %1").arg(QString::number(installDriver("madcatz_te2_xbo", 0x0738, 0x4a01))));
 }
 
+void DriverManager::handleVictrixProFSXBODriverPushButtonClicked(bool checked)
+{
+    ui.diagnosticsLabel->setText(QString("libwdi Result Code: %1").arg(QString::number(installDriver("victrix_pro_fs_xbo", 0xe6f, 0x205))));
+}
