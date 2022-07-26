@@ -318,6 +318,8 @@ libusbK
 # Ignore installer artifacts
 xbofs.win.7z
 XBOFS.win.1.0.0.exe
+*.installer.exe
+VC_redist.*
 
 # Ignore vcpkg dependencies
 vcpkg_installed
