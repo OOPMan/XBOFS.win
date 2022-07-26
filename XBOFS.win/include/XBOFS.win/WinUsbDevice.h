@@ -93,6 +93,7 @@ namespace XBOFSWin {
         int bindings[2][15][2][7] = {};
         bool buttons[15] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
         GUIDE_BUTTON_MODE guideButtonMode;
+        SOCD_CLEANING_CONFIGURATION socdCleaningConfiguration[2];
 
         bool deviceHandlesOpen = false;
         UCHAR XBO_ARCADE_STICK_INIT[5] = { 0x05, 0x20, 0x00, 0x01, 0x00 };

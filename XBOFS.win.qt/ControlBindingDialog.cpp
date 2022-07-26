@@ -85,4 +85,3 @@ void ControlBindingDialog::open(QString vendorId, QString productId, QString pro
 void ControlBindingDialog::handleBindCheckBoxStateChanged(int state) {
     ui.controlPanelWidget->setEnabled((bool)state);
 }
-

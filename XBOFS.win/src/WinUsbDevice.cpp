@@ -41,12 +41,27 @@ void WinUsbDevice::refreshSettings() {
     bindingSelector = 0;
     debugEnabled = settings.value(settings::DEBUG_ENABLED, false).toBool();
     activeProfile = settings.value(settings::ACTIVE_PROFILE, "").toString();
-    guideButtonMode = (GUIDE_BUTTON_MODE)settings.value(QString("%1/%2").arg(activeProfile, settings::GUIDE_BUTTON_MODE), 0).toInt();
+    guideButtonMode = static_cast<GUIDE_BUTTON_MODE>(settings.value(QString("%1/%2").arg(activeProfile, settings::GUIDE_BUTTON_MODE), 0).toInt());
     // Configure control bindings
     logger->info(bindingEnabled ? "Binding Enabled" : "Binding Disabled");
     for (int bindingsSelector = 0; bindingsSelector < 2; bindingsSelector++) {
+        // Configure SOCD cleaning
+        auto bindingsSelectorQString = QString::number(bindingsSelector);
+        auto key = QString("%1/%2").arg(activeProfile, bindingsSelectorQString);
+        auto socdCleaningEnabled = settings.value(QString("%1/%2").arg(key, settings::SOCD_CLEANING_ENABLED), false).toBool();
+        auto socdCleanUpDownTo = settings.value(QString("%1/%2").arg(key, settings::SOCD_CLEAN_UP_DOWN_TO), static_cast<int>(SOCD_CLEANING_UP_DOWN_OPTIONS::NEUTRAL)).toInt();
+        auto socdCleanLeftRightTo = settings.value(QString("%1/%2").arg(key, settings::SOCD_CLEAN_LEFT_RIGHT_TO), static_cast<int>(SOCD_CLEANING_LEFT_RIGHT_OPTIONS::NEUTRAL)).toInt();
+        socdCleaningConfiguration[bindingsSelector].upDownMasks.insert_or_assign(
+            XUSB_GAMEPAD_DPAD_UP | XUSB_GAMEPAD_DPAD_DOWN, 
+            socdCleaningEnabled ? socdCleaningUpDownOptionsMapping.at(static_cast<SOCD_CLEANING_UP_DOWN_OPTIONS>(socdCleanUpDownTo)) : SOCD_ALL_BUTTONS_MASK
+        );
+        socdCleaningConfiguration[bindingsSelector].leftRightMasks.insert_or_assign(
+            XUSB_GAMEPAD_DPAD_LEFT | XUSB_GAMEPAD_DPAD_RIGHT, 
+            socdCleaningEnabled ? socdCleaningLeftRightOptionsMapping.at(static_cast<SOCD_CLEANING_LEFT_RIGHT_OPTIONS>(socdCleanLeftRightTo)) : SOCD_ALL_BUTTONS_MASK
+        );
+        // Configure Bindings
         for (int xboArcadeStickButtonSelector = 0; xboArcadeStickButtonSelector < 15; xboArcadeStickButtonSelector++) {
-            auto key = QString("%1/%2/%3").arg(activeProfile, QString::number(bindingsSelector), QString::number(xboArcadeStickButtonSelector));
+            auto key = QString("%1/%2/%3").arg(activeProfile, bindingsSelectorQString, QString::number(xboArcadeStickButtonSelector));
             auto bindEnabled = settings.value(QString("%1/%2").arg(key, settings::BIND_ENABLED), false).toBool();
             for (int outputValueSelector = 0; outputValueSelector < 7; outputValueSelector++) {
                 auto value = bindingEnabled && bindEnabled
@@ -242,7 +257,7 @@ PACKET_TYPES WinUsbDevice::processInputFromXBOArcadeStick() {
         return PACKET_TYPES::HEARTBEAT;
     case 0x07: // Guide button
         guideButtonState = dataPacket.data[4] & 0x01;
-        if (!bindingEnabled) {
+        if (!bindingEnabled || guideButtonMode == GUIDE_BUTTON_MODE::NORMAL) {
             buttons[(int)XBO_ARCADE_STICK_BUTTONS::GUIDE] = guideButtonState;
         }
         else {
@@ -310,6 +325,13 @@ XUSB_REPORT WinUsbDevice::prepareInputForVigEmController() {
         controllerData.sThumbRX         |= rxValue;
         controllerData.sThumbRY         |= ryValue;
     }
+    // SOCD cleaning
+    auto upDownCheck = SOCD_UP_DOWN_MASK & controllerData.wButtons;
+    auto upDownMask = socdCleaningConfiguration[bindingSelector].upDownMasks.at(upDownCheck);
+    controllerData.wButtons &= upDownMask;
+    auto leftRightCheck = SOCD_LEFT_RIGHT_MASK & controllerData.wButtons;
+    auto leftRightMask = socdCleaningConfiguration[bindingSelector].leftRightMasks.at(leftRightCheck);
+    controllerData.wButtons &= leftRightMask;
     return controllerData;
 }
 

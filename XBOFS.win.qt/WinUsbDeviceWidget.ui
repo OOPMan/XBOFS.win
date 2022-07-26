@@ -295,6 +295,11 @@
              <string>Press Guide button to Switch between Bindings and Alternate Bindings</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Normal (Disables access to Alternate Bindings)</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>
