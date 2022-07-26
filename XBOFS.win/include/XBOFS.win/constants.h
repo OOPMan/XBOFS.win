@@ -20,6 +20,9 @@ namespace XBOFSWin {
         const QString THUMB_LY = QString::number(4);
         const QString THUMB_RX = QString::number(5);
         const QString THUMB_RY = QString::number(6);
+        const QString SOCD_CLEANING_ENABLED = "socdCleaningEnabled";
+        const QString SOCD_CLEAN_UP_DOWN_TO = "socdCleanUpDownTo";
+        const QString SOCD_CLEAN_LEFT_RIGHT_TO = "socdCleanLeftRightTo";
     }
 
     enum class XBO_ARCADE_STICK_BUTTONS {
@@ -42,7 +45,8 @@ namespace XBOFSWin {
 
     enum class GUIDE_BUTTON_MODE {
         HOLD,
-        TOGGLE
+        TOGGLE,
+        NORMAL
     };
 
     /*
@@ -267,4 +271,57 @@ namespace XBOFSWin {
         WCHAR   bString[126];
     };
 
+    /*
+    * SOCD constants
+    */
+    enum class SOCD_CLEANING_UP_DOWN_OPTIONS {
+        NEUTRAL,
+        UP,
+        DOWN
+    };
+
+    enum class SOCD_CLEANING_LEFT_RIGHT_OPTIONS {
+        NEUTRAL,
+        LEFT,
+        RIGHT
+    };
+
+    const int SOCD_UP_DOWN_MASK = XUSB_GAMEPAD_DPAD_UP | XUSB_GAMEPAD_DPAD_DOWN;
+    const int SOCD_LEFT_RIGHT_MASK = XUSB_GAMEPAD_DPAD_LEFT | XUSB_GAMEPAD_DPAD_RIGHT;
+    const int SOCD_ALL_BUTTONS_MASK =
+        XUSB_GAMEPAD_DPAD_UP | XUSB_GAMEPAD_DPAD_DOWN | XUSB_GAMEPAD_DPAD_LEFT | XUSB_GAMEPAD_DPAD_RIGHT |
+        XUSB_GAMEPAD_START | XUSB_GAMEPAD_BACK | XUSB_GAMEPAD_LEFT_THUMB | XUSB_GAMEPAD_RIGHT_THUMB |
+        XUSB_GAMEPAD_LEFT_SHOULDER | XUSB_GAMEPAD_RIGHT_SHOULDER | XUSB_GAMEPAD_GUIDE |
+        XUSB_GAMEPAD_A | XUSB_GAMEPAD_B | XUSB_GAMEPAD_X | XUSB_GAMEPAD_Y;
+    const int SOCD_NEGATE_UP_DOWN = SOCD_ALL_BUTTONS_MASK ^ (XUSB_GAMEPAD_DPAD_UP | XUSB_GAMEPAD_DPAD_DOWN);
+    const int SOCD_NEGATE_UP = SOCD_ALL_BUTTONS_MASK ^ XUSB_GAMEPAD_DPAD_UP;
+    const int SOCD_NEGATE_DOWN = SOCD_ALL_BUTTONS_MASK ^ XUSB_GAMEPAD_DPAD_DOWN;
+    const int SOCD_NEGATE_LEFT_RIGHT = SOCD_ALL_BUTTONS_MASK ^ (XUSB_GAMEPAD_DPAD_LEFT | XUSB_GAMEPAD_DPAD_RIGHT);
+    const int SOCD_NEGATE_LEFT = SOCD_ALL_BUTTONS_MASK ^ XUSB_GAMEPAD_DPAD_LEFT;
+    const int SOCD_NEGATE_RIGHT = SOCD_ALL_BUTTONS_MASK ^ XUSB_GAMEPAD_DPAD_RIGHT;
+
+    const std::map<SOCD_CLEANING_UP_DOWN_OPTIONS, int> socdCleaningUpDownOptionsMapping {
+        {SOCD_CLEANING_UP_DOWN_OPTIONS::NEUTRAL, SOCD_NEGATE_UP_DOWN},
+        {SOCD_CLEANING_UP_DOWN_OPTIONS::UP, SOCD_NEGATE_DOWN},
+        {SOCD_CLEANING_UP_DOWN_OPTIONS::DOWN, SOCD_NEGATE_UP}
+    };
+
+    const std::map<SOCD_CLEANING_LEFT_RIGHT_OPTIONS, int> socdCleaningLeftRightOptionsMapping{
+        {SOCD_CLEANING_LEFT_RIGHT_OPTIONS::NEUTRAL, SOCD_NEGATE_LEFT_RIGHT},
+        {SOCD_CLEANING_LEFT_RIGHT_OPTIONS::LEFT, SOCD_NEGATE_RIGHT},
+        {SOCD_CLEANING_LEFT_RIGHT_OPTIONS::RIGHT, SOCD_NEGATE_LEFT}
+    };
+
+    struct SOCD_CLEANING_CONFIGURATION {
+        std::map<int, int> upDownMasks {
+            {0, SOCD_ALL_BUTTONS_MASK},
+            {XUSB_GAMEPAD_DPAD_UP, SOCD_ALL_BUTTONS_MASK},
+            {XUSB_GAMEPAD_DPAD_DOWN, SOCD_ALL_BUTTONS_MASK}
+        };
+        std::map<int, int> leftRightMasks {
+            {0, SOCD_ALL_BUTTONS_MASK},
+            {XUSB_GAMEPAD_DPAD_LEFT, SOCD_ALL_BUTTONS_MASK},
+            {XUSB_GAMEPAD_DPAD_RIGHT, SOCD_ALL_BUTTONS_MASK}
+        };
+    };
 }
