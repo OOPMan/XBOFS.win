@@ -23,4 +23,8 @@ It's very likely. Take a look at the [device contributor guide](/device_contribu
 02. Click the *Apps* item
 03. Locate the **XBOFS.win** item in the *Apps & Features* list
 04. Click the **XBOFS.win** item
-05. Click the *Uninstall* button 
+05. Click the *Uninstall* button
+
+## Troubleshooting
+If you run into issues the [Troubleshooting](/troubleshooting.md) page is the first place to read to see if your question has already been
+answered. You'll also find details on how to submit a support ticket.
