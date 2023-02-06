@@ -38,7 +38,7 @@ If the issue persists then attempt the following:
    * `madcatz_te2_xbo.inf` if your stick is a **Madcatz TE2 XBO**
 
 09. Right-click on the file and click the *Install* item
-10. You should get a message dialog indicating the driver installed and **XBOFS.win** should no work as expected
+10. You should get a message dialog indicating the driver installed and **XBOFS.win** should now work as expected
 
 ## **XBOFS.win** doesn't detect **XBO Fight Stick**
 This usually indicates an issue with the **WinUSB** driver installation. Check the [installation guide](/installation_guide.md)
@@ -90,4 +90,3 @@ Please do one of the following:
 2. [Message](https://www.reddit.com/message/compose/?to=OOPManZA) me on Reddit
 3. Join the **XBOFS.win** [subreddit](https://www.reddit.com/r/XBOFS/) and post a question
 4. Join the [Nefarius Software Solutions](https://discord.vigem.org/) Discord server and ping **@OOPMan**
-
